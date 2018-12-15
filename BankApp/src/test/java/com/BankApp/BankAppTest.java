@@ -15,21 +15,21 @@ import people.Person;
 
 import java.util.ArrayList;
 
-public class AppTest /*extends TestClass*/
+public class BankAppTest
 {
 	private static ArrayList<Person> people;
-	private static Employee employee;
 	private static Admin admin;
+	private static Employee employee;
 	private static UnverifiedCustomer unverifiedCustomer;
 	private static Customer customer;
 	
 	@BeforeClass
 	public static void setUp() {
 		people = new ArrayList<Person>();
-		employee = new Employee("Jake", "Dog"); people.add(employee);
 		admin = new Admin ("Dr.", "Evil"); people.add(admin);
-		unverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker"); people.add(unverifiedCustomer);
+		employee = new Employee("Jake", "Dog"); people.add(employee);
 		customer = new Customer("Lindsay", "Lohan"); people.add(customer);
+		unverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker"); people.add(unverifiedCustomer);
 	}
 
 	@Test
@@ -48,7 +48,26 @@ public class AppTest /*extends TestClass*/
 	
 	@Test
 	public void checkClassSizes() {
+		// based on order of instantiations in .setUp test meth
+		// all Person IDs should begin indexing at 0
+		// employees. classes differ from customers. classes. because
+		// an Admin is an Employee but an UnverifiedCustomer is not 
+		// truly a Customer
+		assertEquals(admin.getID(), 0);
+		assertEquals(admin.getCount(), 1);
+		assertEquals(employee.getID(), 1);
+		assertEquals(employee.getCount(), 2);
 		
+		assertEquals(customer.getID(), 0);
+		assertEquals(customer.getCount(), 1);
+		assertEquals(unverifiedCustomer.getID(), 0);
+		assertEquals(unverifiedCustomer.getCount(), 1);
+		/*
+		Admin newAdmin = new Admin ("Dr.", "Evil");
+		Employee newEmployee = new Employee("Jake", "Dog");  
+		Customer newCustomer = new Customer("Lindsay", "Lohan"); 
+		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker");
+		*/
 	}
 }
 

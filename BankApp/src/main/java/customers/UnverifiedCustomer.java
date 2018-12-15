@@ -1,24 +1,33 @@
 package customers;
 
+import employees.Employee;
 import people.Person;
 
-public class UnverifiedCustomer extends Person{
+public class UnverifiedCustomer extends Person<Object>{
 	String firstName, lastName;
-	static int numUnverifiedCustomers = 0;
-	int custID = numUnverifiedCustomers;
+	protected static int numUnverifiedCustomers = 0;
+	private int unverifiedCustomerID = numUnverifiedCustomers;
 	boolean verified = false;
 	
 	public UnverifiedCustomer() { 
 		super(); 
-		custID = numUnverifiedCustomers;
+		unverifiedCustomerID = numUnverifiedCustomers;
+		++numUnverifiedCustomers;
+		//--Customer.numCustomers;
+	}
+	public UnverifiedCustomer(UnverifiedCustomer b) {
+		b.firstName = this.firstName;
+		b.lastName = this.lastName;
+		b.unverifiedCustomerID = this.unverifiedCustomerID;
 		++numUnverifiedCustomers;
 	}
 	public UnverifiedCustomer(String fName, String lName) {
 		super(fName, lName);
 		firstName = fName;
 		lastName = lName;
-		custID = numUnverifiedCustomers;
+		unverifiedCustomerID = numUnverifiedCustomers;
 		++numUnverifiedCustomers;
+		//--Customer.numCustomers;
 	}
 
 	@Override
@@ -29,6 +38,10 @@ public class UnverifiedCustomer extends Person{
 	@Override
 	public int getCount() {
 		return numUnverifiedCustomers;
+	}
+	@Override
+	public int getID() {
+		return unverifiedCustomerID;
 	}
 	
 	protected boolean verify() {

@@ -18,23 +18,15 @@ public class App
     public static void main( String[] args )
     {
     	ArrayList<Person> people = new ArrayList<Person>();
-    	UnverifiedCustomer unverified1 = new UnverifiedCustomer("Larry", "Lorry");
-    	people.add(unverified1);
-    	UnverifiedCustomer unverified2 = new UnverifiedCustomer("Fred", "Saggin");
-    	people.add(unverified2);
-    	Customer cust1 = new Customer("Dave", "Lennin");
-    	people.add(cust1);
-    	Customer cust2 = new Customer("Jake", "Bone");
-    	people.add(cust1);
-    	Employee employee1 = new Employee("Mark", "Pale");
-    	people.add(employee1);
-    	Employee employee2 = new Employee("Sara", "Tera");
-    	people.add(employee2);
+    	people.add(new UnverifiedCustomer("Larry", "Lorry"));
+    	people.add(new UnverifiedCustomer("Fred", "Saggin"));
+    	people.add(new Customer("Dave", "Lennin"));
+    	people.add(new Customer("Jake", "Bone"));
+    	people.add(new Employee("Mark", "Pale"));
+    	people.add(new Employee("Sara", "Tera"));
     	Admin admin1 = new Admin("Don", "Quervo");
     	people.add(admin1);
-    	Admin admin2 = new Admin("Jane", "Bora");
-    	people.add(admin2);
-		
+    	people.add(new Admin("Jane", "Bora"));
     	
     	System.out.println("Person Count: " + Person.numPeople + "\n");
     	String thisType = null, lastType = null;
@@ -51,6 +43,17 @@ public class App
     		lastType = thisType;
     	}
     	
+    	
     }
-
 }
+
+/*
+UnverifiedCustomer unverified1 = new UnverifiedCustomer("Larry", "Lorry");
+UnverifiedCustomer unverified2 = new UnverifiedCustomer("Fred", "Saggin");
+Customer cust1 = new Customer("Dave", "Lennin");
+Customer cust2 = new Customer("Jake", "Bone");
+Employee employee1 = new Employee("Mark", "Pale");
+Employee employee2 = new Employee("Sara", "Tera");
+Admin admin1 = new Admin("Don", "Quervo");
+Admin admin2 = new Admin("Jane", "Bora");
+*/

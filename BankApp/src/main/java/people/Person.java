@@ -1,11 +1,15 @@
 package people;
 
-public abstract class Person {
+public abstract class Person<T> {
 	String firstName;
 	String lastName;
 	public static int numPeople = 0;
 	
 	public Person() {}
+	public Person(Person<?> b) {
+		b.firstName = this.firstName;
+		b.lastName = this.lastName;
+	}
 	public Person(String fName, String lName){
 		this.firstName = fName;
 		this.lastName = lName;
@@ -13,6 +17,9 @@ public abstract class Person {
 	}
 	
 	public abstract void getInfo();
+	public int getID() {
+		return -1;
+	}
 	
 	public String getFirstName() {
 		if (firstName != null && firstName.length() > 0)
