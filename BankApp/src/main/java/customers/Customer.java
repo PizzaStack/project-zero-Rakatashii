@@ -1,7 +1,5 @@
 package customers;
 
-import employees.Admin;
-
 public class Customer extends UnverifiedCustomer{
 	String firstName, lastName;
 	protected static int numCustomers = 0;
@@ -11,8 +9,8 @@ public class Customer extends UnverifiedCustomer{
 	public Customer() { 
 		super(); 
 		custID = numCustomers;
-		++numCustomers;
-		--UnverifiedCustomer.numUnverifiedCustomers;
+		//++numCustomers;
+		//--UnverifiedCustomer.numUnverifiedCustomers;
 	}
 	public Customer(Customer b) {
 		b.firstName = this.firstName;

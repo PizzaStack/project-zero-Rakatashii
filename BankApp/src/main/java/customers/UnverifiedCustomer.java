@@ -12,8 +12,7 @@ public class UnverifiedCustomer extends Person<Object>{
 	public UnverifiedCustomer() { 
 		super(); 
 		unverifiedCustomerID = numUnverifiedCustomers;
-		++numUnverifiedCustomers;
-		//--Customer.numCustomers;
+		//++numUnverifiedCustomers;
 	}
 	public UnverifiedCustomer(UnverifiedCustomer b) {
 		b.firstName = this.firstName;
@@ -27,7 +26,6 @@ public class UnverifiedCustomer extends Person<Object>{
 		lastName = lName;
 		unverifiedCustomerID = numUnverifiedCustomers;
 		++numUnverifiedCustomers;
-		//--Customer.numCustomers;
 	}
 
 	@Override

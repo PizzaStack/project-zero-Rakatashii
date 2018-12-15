@@ -10,7 +10,7 @@ public class Employee extends Person<Object>{
 	public Employee() { 
 		super(); 
 		employeeID = numEmployees;
-		++numEmployees;
+		//++numEmployees;
 	}
 	public Employee(Employee b) {
 		b.firstName = this.firstName;

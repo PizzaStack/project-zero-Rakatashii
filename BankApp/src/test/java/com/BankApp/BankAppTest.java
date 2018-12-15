@@ -48,11 +48,12 @@ public class BankAppTest
 	
 	@Test
 	public void checkClassSizes() {
-		// based on order of instantiations in .setUp test meth
-		// all Person IDs should begin indexing at 0
-		// employees. classes differ from customers. classes. because
-		// an Admin is an Employee but an UnverifiedCustomer is not 
-		// truly a Customer
+		/** based on order of instantiations in .setUp test meth
+		all Person IDs should begin indexing at 0
+		employees. classes differ from customers. classes. because
+		an Admin is an Employee but an UnverifiedCustomer is not 
+		truly a Customer */
+		
 		assertEquals(admin.getID(), 0);
 		assertEquals(admin.getCount(), 1);
 		assertEquals(employee.getID(), 1);
@@ -62,12 +63,22 @@ public class BankAppTest
 		assertEquals(customer.getCount(), 1);
 		assertEquals(unverifiedCustomer.getID(), 0);
 		assertEquals(unverifiedCustomer.getCount(), 1);
-		/*
+		
+		/* Counts should still be correct for more than one of each type of Person object" */
 		Admin newAdmin = new Admin ("Dr.", "Evil");
 		Employee newEmployee = new Employee("Jake", "Dog");  
 		Customer newCustomer = new Customer("Lindsay", "Lohan"); 
 		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker");
-		*/
+		
+		assertEquals(newAdmin.getID(), 1);
+		assertEquals(newAdmin.getCount(), 2);
+		assertEquals(newEmployee.getID(), 3);
+		assertEquals(newEmployee.getCount(), 4);
+		
+		assertEquals(newCustomer.getID(), 1);
+		assertEquals(newCustomer.getCount(), 2);
+		assertEquals(newUnverifiedCustomer.getID(), 1);
+		assertEquals(newUnverifiedCustomer.getCount(), 2);
 	}
 }
 

@@ -8,7 +8,7 @@ public class Admin extends Employee{
 	public Admin() { 
 		super(); 
 		adminID = numAdmins;
-		++numAdmins;
+		//++numAdmins;
 	}
 	public Admin(Admin b) {
 		b.firstName = this.firstName;
