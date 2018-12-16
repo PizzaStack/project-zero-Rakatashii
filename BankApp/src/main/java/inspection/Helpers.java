@@ -7,10 +7,10 @@ import employees.Employee;
 import people.Person;
 
 public class Helpers {
-	static Person<?> sampleCustomer = new Customer();
-	static Person<?> sampleUnverified = new UnverifiedCustomer();
-	static Person<?> sampleEmployee = new Employee();
-	static Person<?> sampleAdmin = new Admin();
+	private static Person<?> sampleCustomer = new Customer();
+	private static Person<?> sampleUnverified = new UnverifiedCustomer();
+	private static Person<?> sampleEmployee = new Employee();
+	private static Person<?> sampleAdmin = new Admin();
 	static Person<?>[] people = {sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
 	
 	public static void printPeopleCounts() {
@@ -21,5 +21,6 @@ public class Helpers {
 	public static Person<?>[] getPeopleSampleArray(){
 		return people;
 	}
+	
 
 }
