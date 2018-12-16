@@ -4,6 +4,8 @@ import people.Person;
 
 public class Employee extends Person<Object>{
 	String firstName, lastName;
+	String username, password;
+	
 	protected static int numEmployees = 0;
 	private int employeeID = numEmployees; // is this really needed for Employees?
 	
@@ -28,12 +30,16 @@ public class Employee extends Person<Object>{
 	public void getInfo() {
 		// TODO Auto-generated method stub
 	}
-	@Override
 	public int getCount() {
 		return numEmployees;
 	}
 	public int getID() {
 		return employeeID;
+	}
+	@Override
+	public void setID(int id) {
+		this.employeeID = id;
+		
 	}
 	
 }

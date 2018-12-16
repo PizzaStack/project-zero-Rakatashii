@@ -1,4 +1,4 @@
-package consoleOutput;
+package views;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -116,6 +116,7 @@ public class Registration /* extends Customer */ {
 			if (errors == false) {
 				System.out.println("Success! Your application is pending administrative approval.");
 				this.unverifiedCustomer = new UnverifiedCustomerBuilder()
+						.withUnverifiedCustomerID(UnverifiedCustomer.getNumUnverifiedCustomers())
 						.withFirstName(firstName)
 						.withLastName(lastName)
 						.withTelephone(telephone)
@@ -150,7 +151,7 @@ public class Registration /* extends Customer */ {
 	}
 	public boolean validTelephone(String telephone) {
 		String pattern = "[\\d]{3}-?[\\d]{3}-?[\\d]{4}";
-		if (telephone != null && telephone.length() >=10 && telephone.length() <= 12) {
+		if (telephone != null && telephone.length() >= 10 && telephone.length() <= 12) {
 			if (telephone.matches(pattern))
 				return true;
 		}
@@ -158,7 +159,7 @@ public class Registration /* extends Customer */ {
 	}
 	public boolean validEmail(String email) {
 		String pattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
-		if (email != null && email.matches(pattern)) 
+		if (email != null && email.matches(pattern) && email.length() <= 40) 
 			return true;
 		return false;
 	}
@@ -187,7 +188,7 @@ public class Registration /* extends Customer */ {
 		return false;
 	}
 	public boolean validEmployer(String employer) {
-		if (employer != null && employer.length() > 0 && employer.length() <= 30) {
+		if (employer != null && employer.length() > 0 && employer.length() <= 40) {
 			if (employer.matches(name_pattern))
 				return true;
 		}

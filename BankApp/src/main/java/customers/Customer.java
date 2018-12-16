@@ -1,5 +1,7 @@
 package customers;
 
+import java.util.ArrayList;
+
 public class Customer extends UnverifiedCustomer{
 	String firstName, lastName;
 	protected static int numCustomers = 0;
@@ -7,7 +9,7 @@ public class Customer extends UnverifiedCustomer{
 	boolean verified = true;
 	
 	public Customer() { 
-		super(); 
+		//super(); 
 		custID = numCustomers;
 		//++numCustomers;
 		//--UnverifiedCustomer.numUnverifiedCustomers;
@@ -19,7 +21,7 @@ public class Customer extends UnverifiedCustomer{
 		++numCustomers;
 	}
 	public Customer(String fName, String lName) {
-		super(fName, lName);
+		//super(fName, lName); // Can't do this because that would increase numUnverifiedCustomers
 		firstName = fName;
 		lastName = lName;
 		custID = numCustomers;
@@ -31,7 +33,6 @@ public class Customer extends UnverifiedCustomer{
 	public void getInfo() {
 		// TODO Auto-generated method stub
 	}
-	@Override
 	public int getCount() {
 		return numCustomers;
 	}

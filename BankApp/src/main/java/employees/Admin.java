@@ -26,7 +26,6 @@ public class Admin extends Employee{
 	public void getInfo() {
 		// TODO Auto-generated method stub
 	}
-	@Override
 	public int getCount() {
 		return numAdmins;
 	}

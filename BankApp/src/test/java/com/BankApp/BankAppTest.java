@@ -1,9 +1,6 @@
 package com.BankApp;
 
 import org.junit.Test;
-
-import consoleOutput.Registration;
-
 //import org.junit.Before;
 import org.junit.BeforeClass;
 //import org.junit.After;
@@ -15,7 +12,9 @@ import customers.UnverifiedCustomer;
 import customers.UnverifiedCustomerBuilder;
 import employees.Admin;
 import employees.Employee;
+import inspection.Helpers;
 import people.Person;
+import views.Registration;
 
 import java.util.ArrayList;
 
@@ -33,21 +32,18 @@ public class BankAppTest
 		admin = new Admin ("Dr.", "Evil"); people.add(admin);
 		employee = new Employee("Jake", "Dog"); people.add(employee);
 		customer = new Customer("Lindsay", "Lohan"); people.add(customer);
-		unverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker"); people.add(unverifiedCustomer);
-	}
-
-	@Test
-	public void checkPeopleNames() {
-		System.out.println(people.size());
-		assertTrue(people.size() == 4);
-		for (Person<?> p : people) {
-			String first = p.getFirstName();
-			String last = p.getLastName();
-			if (first == null || first.length() == 0 || first.length() > 15)
-				fail();
-			if (last == null || last.length() == 0 || last.length() > 15)
-				fail();
-		}
+		//unverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker"); people.add(unverifiedCustomer);
+		unverifiedCustomer = new UnverifiedCustomerBuilder()
+				.withUnverifiedCustomerID(UnverifiedCustomer.getNumUnverifiedCustomers())
+				.withFirstName("Mark")
+				.withLastName("b")
+				.withTelephone("2342342345")
+				.withEmail("Markg@gmail.com")
+				.withIsCitizen(false)
+				.withIsEmployed(false)
+				.withEmployer(null)
+				.makeUnverifiedCustomer();
+		people.add(unverifiedCustomer);
 	}
 	
 	@Test
@@ -57,6 +53,8 @@ public class BankAppTest
 		employees. classes differ from customers. classes. because
 		an Admin is an Employee but an UnverifiedCustomer is not 
 		truly a Customer */
+		
+		Helpers.printPeopleCounts();
 		
 		assertEquals(admin.getID(), 0);
 		assertEquals(admin.getCount(), 1);

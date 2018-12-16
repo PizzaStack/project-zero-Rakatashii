@@ -1,5 +1,7 @@
 package people;
 
+import java.util.ArrayList;
+
 public abstract class Person<T> {
 	String firstName;
 	String lastName;
@@ -16,10 +18,11 @@ public abstract class Person<T> {
 		numPeople++;
 	}
 	
-	public abstract void getInfo();
 	public int getID() {
 		return -1;
 	}
+	
+	public abstract void getInfo();
 	
 	public String getFirstName() {
 		if (firstName != null && firstName.length() > 0)
@@ -41,6 +44,7 @@ public abstract class Person<T> {
 	public int getCount() {
 		return numPeople;
 	}
+	public abstract void setID(int id);
 }
 
 

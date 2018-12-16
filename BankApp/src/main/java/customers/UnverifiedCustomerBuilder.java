@@ -1,6 +1,7 @@
 package customers;
 
 public class UnverifiedCustomerBuilder {
+	private int unverifiedCustomerID = 0;
 	private String firstName = null;
 	private String lastName = null;
 	private String telephone = null;
@@ -9,6 +10,10 @@ public class UnverifiedCustomerBuilder {
 	private boolean isEmployed = false;
 	private String employer = null;
 	
+	public UnverifiedCustomerBuilder withUnverifiedCustomerID(int id) {
+		this.unverifiedCustomerID = UnverifiedCustomer.getNumUnverifiedCustomers();
+		return this;
+	} 
 	public UnverifiedCustomerBuilder withFirstName(String firstName) {
 		this.firstName = firstName;
 		return this;
@@ -38,6 +43,7 @@ public class UnverifiedCustomerBuilder {
 		return this;
 	}
 	public UnverifiedCustomer makeUnverifiedCustomer() {
-		return new UnverifiedCustomer(firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(unverifiedCustomerID, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		return newUnverifiedCustomer;
 	}
 }
