@@ -19,19 +19,16 @@ public class App
 	
     public static void main( String[] args )
     {
-    	ArrayList<Person> people = new ArrayList<Person>();
+    	// Sample data - don't erase for now..
+    	ArrayList<Person<?>> people = new ArrayList<Person<?>>();
     	people.add(new UnverifiedCustomer("Larry", "Lorry"));
     	people.add(new UnverifiedCustomer("Fred", "Saggin"));
     	people.add(new Customer("Dave", "Lennin"));
     	people.add(new Customer("Jake", "Bone"));
     	people.add(new Employee("Mark", "Pale"));
     	people.add(new Employee("Sara", "Tera"));
-    	Admin admin1 = new Admin("Don", "Quervo");
-    	people.add(admin1);
+    	people.add(new Admin("Don", "Quervo"));
     	people.add(new Admin("Jane", "Bora"));
-    	
-    	System.out.println();
-
     	
     	Registration newCustomerInfo = new Registration();
     	UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();
