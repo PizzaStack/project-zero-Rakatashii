@@ -89,6 +89,14 @@ public class UnverifiedCustomer extends Person<Object>{
 		//System.out.printf("%*s%*s%*s%*s%*i%*i%*s\n", 20, this.firstName, 20, this.lastName, 12, this.telephone, 30, this.email, 2, boolToInt(this.isCitizen), 2, boolToInt(this.isCitizen), 30, this.employer);
 		System.out.printf("%-4d%-20s%-20s%-14s%-40s%-10d%-10d%-40s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
+	public String getRow() {
+		int citizen = boolToInt(this.isCitizen);
+		int employed = boolToInt(this.isEmployed);
+		//System.out.printf("%*s%*s%*s%*s%*i%*i%*s\n", 20, this.firstName, 20, this.lastName, 12, this.telephone, 30, this.email, 2, boolToInt(this.isCitizen), 2, boolToInt(this.isCitizen), 30, this.employer);
+		String row = String.format("%-4d%-20s%-20s%-14s%-40s%-10d%-10d%-40s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		//System.out.printf("%-4d%-20s%-20s%-14s%-40s%-10d%-10d%-40s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		return row;
+	}
 	public int getCount() {
 		return numUnverifiedCustomers;
 	}
