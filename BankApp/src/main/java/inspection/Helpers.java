@@ -7,19 +7,27 @@ import employees.Employee;
 import people.Person;
 
 public class Helpers {
-	private static Person<?> sampleCustomer = new Customer();
-	private static Person<?> sampleUnverified = new UnverifiedCustomer();
-	private static Person<?> sampleEmployee = new Employee();
-	private static Person<?> sampleAdmin = new Admin();
-	static Person<?>[] people = {sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
+	private Person<?> sampleCustomer = new Customer();
+	private Person<?> sampleUnverified = new UnverifiedCustomer();
+	private Person<?> sampleEmployee = new Employee();
+	private Person<?> sampleAdmin = new Admin();
+	Person<?>[] people = { sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
 	
-	public static void printPeopleCounts() {
+	public Helpers(){
+		super();
+	}
+	
+	public void printPeopleCounts() {
 		for (Person<?> p : people) {
-			System.out.println(p.getType() + " Count: " + p.getCount());
+			System.out.println(p.getPersonClass() + " Count: " + p.getCount());
 		}
 	}
-	public static Person<?>[] getPeopleSampleArray(){
-		return people;
+	public int[] getPeopleCounts(){
+		int[] arr = {sampleCustomer.getCount(), sampleUnverified.getCount(), sampleEmployee.getCount(), sampleAdmin.getCount()};
+		return arr;
+	}
+	public int boolToInt(boolean b){
+		return (b) ? 1 : 0;
 	}
 	
 	

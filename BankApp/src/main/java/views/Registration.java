@@ -25,8 +25,8 @@ public class Registration /* extends Customer */ {
 	private String isEmployedAnswer = null;
 	private String employer = null;
 
-	static enum codes { FN, LN, T, EM, C, EMPLD, EMPLR };
-	static Hashtable<codes, String> errorMessages = new Hashtable<codes, String>();	
+	enum codes { FN, LN, T, EM, C, EMPLD, EMPLR }; // just use exceptions...
+	Hashtable<codes, String> errorMessages = new Hashtable<codes, String>();	
 	private ArrayList<String> registrationErrors = new ArrayList<String>();
 	
 	public Registration() { 
@@ -40,7 +40,10 @@ public class Registration /* extends Customer */ {
 	
 	public UnverifiedCustomer beginForm() {
 		boolean errors = true;
+		
 		Scanner cin = new Scanner(System.in);
+		//cin.reset();
+		
 		while (errors || registrationErrors.size() > 0) {
 			
 			if (errors && registrationErrors.size() > 0) {
@@ -54,7 +57,7 @@ public class Registration /* extends Customer */ {
 			}
 			errors = false;
 			
-			System.out.println("---- Customer Registration -----");
+			System.out.println("----- Customer Registration -----");
 			System.out.print("First Name: ");
 			this.firstName = cin.nextLine();
 			if (!(validFirstName(firstName))) {
@@ -115,8 +118,7 @@ public class Registration /* extends Customer */ {
 			
 			if (errors == false) {
 				System.out.println("Success! Your application is pending administrative approval.");
-				this.unverifiedCustomer = new UnverifiedCustomerBuilder()
-						.withUnverifiedCustomerID(UnverifiedCustomer.getNumUnverifiedCustomers())
+				unverifiedCustomer = new UnverifiedCustomerBuilder()
 						.withFirstName(firstName)
 						.withLastName(lastName)
 						.withTelephone(telephone)
@@ -125,7 +127,8 @@ public class Registration /* extends Customer */ {
 						.withIsEmployed(isEmployed)
 						.withEmployer(employer)
 						.makeUnverifiedCustomer();
-				cin.close();
+				System.gc();
+				//cin.close();
 			} 
 			
 			this.registrationErrors.clear();
@@ -136,15 +139,15 @@ public class Registration /* extends Customer */ {
 	
 	public boolean validFirstName(String firstName) {
 		if (firstName != null && firstName.length() > 0 && firstName.length() <= 20) {
-			if (firstName.matches(name_pattern))
+			if (firstName.matches(this.name_pattern))
 				return true;
 		}
 		return false;
 	}
 	public boolean validLastName(String lastName) {
-		String name_pattern = "[a-zA-Z]{0,20}";
+		//String name_pattern = "[a-zA-Z]{0,20}";
 		if (lastName != null && lastName.length() > 0 && lastName.length() <= 20) {
-			if (lastName.matches(name_pattern))
+			if (lastName.matches(this.name_pattern))
 				return true;
 		}
 		return false;
@@ -165,10 +168,10 @@ public class Registration /* extends Customer */ {
 	}
 	public boolean validCitizenAnswer(String isCitizenString) {
 		if (isCitizenString != null) {
-			if (isCitizenString.matches(yes_pattern)) {
+			if (isCitizenString.matches(this.yes_pattern)) {
 				this.isCitizen = true;
 				return true;
-			} else if (isCitizenString.matches(no_pattern)) {
+			} else if (isCitizenString.matches(this.no_pattern)) {
 				this.isCitizen = false;
 				return true;
 			}
@@ -177,10 +180,10 @@ public class Registration /* extends Customer */ {
 	}
 	public boolean validEmployedAnswer(String isEmployedString) {
 		if (isEmployedString != null) {
-			if (isEmployedString.matches(yes_pattern)) {
+			if (isEmployedString.matches(this.yes_pattern)) {
 				this.isEmployed = true;
 				return true;
-			} else if (isEmployedString.matches(no_pattern)) {
+			} else if (isEmployedString.matches(this.no_pattern)) {
 				this.isEmployed = false;
 				return true;
 			}
@@ -194,29 +197,5 @@ public class Registration /* extends Customer */ {
 		}
 		return false;
 	}
-	
-	/* // Moved to UnverifiedCustomer - TODO: delete when sure 
-	public void printFields() {
-		if (firstName != null) System.out.println("First name: " + firstName);
-		if (lastName != null) System.out.println("First name: " + lastName);
-		if (telephone != null) System.out.println("Telephone: " + firstName);
-		if (email != null) System.out.println("email: " + email);
-		if (citizenAnswer != null) 
-			if (isCitizen)
-				System.out.println("US Citizen: true");
-			else 
-				System.out.println("US Citizen: false");
-		if (isEmployedAnswer != null) {
-			if (isEmployed) {
-				System.out.println("Currently employed: true");
-				if (employer != null)
-					System.out.println("Employer: " + employer);
-			}
-			else 
-				System.out.println("Currently employed: false");
-		}
-	}
-	*/
-
 }
 

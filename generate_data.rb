@@ -12,7 +12,7 @@ def is_file_name?(obj)
 end
 
 #call this:
-#'./generate_data.rb 100 firstname lastname telephone email citizen employed employer BankApp/sample_unverified.txt'
+#'./generate_data.rb 100 firstname lastname telephone email citizen employed employer BankApp/text_files/sample_unverified.txt'
 
 dir = "/Users/christianmeyer/java/project-zero-Rakatashii/"
 filename = "/Users/christianmeyer/java/project-zero-Rakatashii/data.txt"

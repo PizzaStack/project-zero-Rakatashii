@@ -1,18 +1,18 @@
 package com.BankApp;
 
 import org.junit.Test;
-//import org.junit.Before;
+import org.junit.Before;
 import org.junit.BeforeClass;
-//import org.junit.After;
 
 import static org.junit.Assert.*;
 
 import customers.Customer;
 import customers.UnverifiedCustomer;
 import customers.UnverifiedCustomerBuilder;
+import data.EmployeeContainer;
+import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
-import inspection.Helpers;
 import people.Person;
 import views.Registration;
 
@@ -20,21 +20,32 @@ import java.util.ArrayList;
 
 public class BankAppTest
 {
-	private static ArrayList<Person<?>> people;
-	private static Admin admin;
-	private static Employee employee;
-	private static UnverifiedCustomer unverifiedCustomer;
-	private static Customer customer;
+	UnverifiedCustomerContainer unverified;
+	ArrayList<UnverifiedCustomer<?>> unverifiedContainer;
+	EmployeeContainer employees;
+	ArrayList<Employee<?>> employeeContainer;
+	EmployeeContainer admins;
+	ArrayList<Admin<?>> adminContainer;
 	
-	@BeforeClass
-	public static void setUp() {
-		people = new ArrayList<Person<?>>();
-		admin = new Admin ("Dr.", "Evil"); people.add(admin);
-		employee = new Employee("Jake", "Dog"); people.add(employee);
-		customer = new Customer("Lindsay", "Lohan"); people.add(customer);
-		//unverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker"); people.add(unverifiedCustomer);
-		unverifiedCustomer = new UnverifiedCustomerBuilder()
-				.withUnverifiedCustomerID(UnverifiedCustomer.getNumUnverifiedCustomers())
+	//protected ArrayList<Person<?>> people;
+	Admin admin1, admin2;
+	Employee employee1, employee2;
+	UnverifiedCustomer unverifiedCustomer1, unverifiedCustomer2;
+	Customer customer1, customer2;
+	
+	//@BeforeClas
+	/* public void setUp() { Apparently @BeforeClass -> setUp must be static... @Before prob worse } */
+	
+	@Test
+	public void checkPersonSubclassCountsDoNotInterfere() {
+		unverified = new UnverifiedCustomerContainer();
+    	unverifiedContainer = unverified.getArrayList();
+    	employees = new EmployeeContainer();
+    	employeeContainer = employees.getArrayList();
+    	
+		customer1 = new Customer("Lindsay", "Lohan"); //people.add(customer);
+		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); //people.add(unverifiedCustomer);
+		unverifiedCustomer2 = new UnverifiedCustomerBuilder()
 				.withFirstName("Mark")
 				.withLastName("b")
 				.withTelephone("2342342345")
@@ -43,19 +54,30 @@ public class BankAppTest
 				.withIsEmployed(false)
 				.withEmployer(null)
 				.makeUnverifiedCustomer();
-		people.add(unverifiedCustomer);
-	}
-	
-	@Test
-	public void checkPersonSubclassCountsDoNotInterfere() {
-		/** based on order of instantiations in .setUp test meth
-		all Person IDs should begin indexing at 0
-		employees. classes differ from customers. classes. because
-		an Admin is an Employee but an UnverifiedCustomer is not 
-		truly a Customer */
+
+		employee1 = new Employee("Jake", "Dog"); //people.add(employee);
+    	employee2 = new Employee("Sara", "Tera");
+    	admin1 = new Admin ("Dr.", "Evil"); //people.add(admin);
+    	admin2 = new Admin("Don", "Quervo");
 		
-		Helpers.printPeopleCounts();
+		unverifiedContainer.add(unverifiedCustomer1);
+		unverifiedContainer.add(unverifiedCustomer2);
 		
+		employeeContainer.add(employee1); 
+		employeeContainer.add(employee2);
+		employeeContainer.add(admin1); 
+		employeeContainer.add(admin2);
+		
+		admins = employees.getAdminArrayList();
+    	adminContainer = admins.getArrayList();
+
+		assertTrue(employeeContainer.size() == employeeContainer.get(0).getCount());
+		assertTrue(employeeContainer.size() == employees.getSize());
+		assertTrue(unverifiedContainer.size() == unverifiedContainer.get(0).getCount() && unverifiedContainer.size() == unverified.getSize());
+		assertTrue(adminContainer.size() == adminContainer.get(0).getCount() && adminContainer.size() == admins.getSize());
+		
+		//helper.printPeopleCounts(
+		/*
 		assertEquals(admin.getID(), 0);
 		assertEquals(admin.getCount(), 1);
 		assertEquals(employee.getID(), 1);
@@ -65,8 +87,11 @@ public class BankAppTest
 		assertEquals(customer.getCount(), 1);
 		assertEquals(unverifiedCustomer.getID(), 0);
 		assertEquals(unverifiedCustomer.getCount(), 1);
+		*/
 		
 		/* Counts should still be correct for more than one of each type of Person object" */
+		
+		/*
 		Admin newAdmin = new Admin ("Dr.", "Evil");
 		Employee newEmployee = new Employee("Jake", "Dog");  
 		Customer newCustomer = new Customer("Lindsay", "Lohan"); 
@@ -84,6 +109,7 @@ public class BankAppTest
 		
 		// Check UnverifiedCustomerBuilder
 		UnverifiedCustomer anotherUnverifiedCustomer = new UnverifiedCustomerBuilder()
+				.withId(2)
 				.withFirstName("George")
 				.withLastName("Bush")
 				.withTelephone("394-292-1923")
@@ -96,6 +122,7 @@ public class BankAppTest
 		assertEquals(anotherUnverifiedCustomer.getID(), 2);
 		assertEquals(anotherUnverifiedCustomer.getCount(), 3);
 		assertEquals(newCustomer.getCount(), 2);
+		*/
 	}
 	
 	@Test

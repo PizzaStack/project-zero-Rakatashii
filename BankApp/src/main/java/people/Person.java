@@ -8,43 +8,23 @@ public abstract class Person<T> {
 	public static int numPeople = 0;
 	
 	public Person() {}
-	public Person(Person<?> b) {
-		b.firstName = this.firstName;
-		b.lastName = this.lastName;
-	}
-	public Person(String fName, String lName){
-		this.firstName = fName;
-		this.lastName = lName;
-		numPeople++;
-	}
 	
-	public int getID() {
-		return -1;
-	}
-	
+	public abstract String getUsername();
+	public abstract String getPassword();
+	public abstract int getID();
+	public abstract void setID(int id);
+	public abstract void printRow();
+	public abstract String getRow();
 	public abstract void getInfo();
 	
-	public String getFirstName() {
-		if (firstName != null && firstName.length() > 0)
-			return firstName;
-		else
-			return "";
-	}
-	public String getLastName() {
-		if (lastName != null && lastName.length() > 0)
-			return lastName;
-		else
-			return "";
-	}
-	
-	
-	public String getType() { 
+	public String getPersonClass() { 
 		return this.getClass().getSimpleName();
 	}
 	public int getCount() {
 		return numPeople;
 	}
-	public abstract void setID(int id);
+
+	public abstract boolean isAdmin();
 }
 
 
