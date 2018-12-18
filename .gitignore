@@ -2,7 +2,9 @@
 # Created by https://www.gitignore.io/api/java,maven,eclipse,netbeans,visualstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=java,maven,eclipse,netbeans,visualstudio,visualstudiocode
 
+# Self-Documenting
 annoying_to_retype.java
+*.project_requisites
 
 ### Eclipse ###
 
