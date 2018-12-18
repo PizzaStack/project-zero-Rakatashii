@@ -2,7 +2,7 @@ package employees;
 
 import people.Person;
 
-public class Admin <T extends Employee<T>> extends Employee<T>{
+public class Admin <T> extends Employee<T>{
 	private String username, password;
 	private String firstName, lastName;
 	private boolean admin = true;

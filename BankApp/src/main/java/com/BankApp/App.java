@@ -30,16 +30,14 @@ public class App
     	 *  Should also turn UnverifiedCustomerContainer back into a non-generic class, since it being generic isnt 
     	 *  useful anyway. Don't delete uncommented main until test finished. Finish the main menu for the love of god
     	 */
-    	
-    	@SuppressWarnings("rawtypes")
-		UnverifiedCustomerContainer unverified = new UnverifiedCustomerContainer();
-    	ArrayList<UnverifiedCustomer<?>> unverifiedContainer = unverified.getArrayList();
-    	unverified.push(new UnverifiedCustomer("Larry", "Lorry"));
-    	unverified.push(new UnverifiedCustomer("Fred", "Saggin"));
-    	//unverifiedContainer.add(new UnverifiedCustomer("Fred", "Saggin"));
+
+		UnverifiedCustomerContainer<Object> unverified = new UnverifiedCustomerContainer<Object>();
+		ArrayList<Person<Object>> unverifiedContainer = unverified.getArrayList();
+    	unverified.push(new UnverifiedCustomer<Object>("Larry", "Lorry"));
+    	unverified.push(new UnverifiedCustomer<Object>("Fred", "Saggin"));
     	int idx = 0;
     	System.out.println("UNVERIFIED");
-    	for (UnverifiedCustomer<?> c : unverifiedContainer) {
+    	for (Person<Object> c : unverifiedContainer) {
     		System.out.println("unverifiedContainer[" + (idx++) +"]: ");
     		c.getInfo(); System.out.println();
     	}
@@ -49,12 +47,12 @@ public class App
     	System.out.println("unverifiedContainer.get(0).getCount() = " + unverifiedContainer.get(0).getCount());
     	System.out.println();
     	
-    	EmployeeContainer employees = new EmployeeContainer();
-    	ArrayList<Employee<?>> employeeContainer = employees.getArrayList();
-    	employees.push(new Employee("Mark", "Pale"));
-    	employeeContainer.add(new Employee("Sara", "Tera"));
-    	employees.push(new Admin("Don", "Quervo"));
-    	employeeContainer.add(new Admin("Jane", "Bora"));
+    	EmployeeContainer<Object> employees = new EmployeeContainer<Object>();
+    	ArrayList<Employee<Object>> employeeContainer = employees.getArrayList();
+    	employees.push(new Employee<Object>("Mark", "Pale"));
+    	employeeContainer.add(new Employee<Object>("Sara", "Tera"));
+    	employees.push(new Admin<Object>("Don", "Quervo"));
+    	employeeContainer.add(new Admin<Object>("Jane", "Bora"));
     	idx = 0;
     	System.out.println("EMPLOYEES");
     	for (Employee<?> c : employeeContainer) {
@@ -65,12 +63,13 @@ public class App
     	System.out.println("employeeContainer.size() = " + employeeContainer.size());
     	System.out.println("employees.getSize() = " + employees.getSize());
     	System.out.println("employeeContainer.get(0).getCount() = " + employeeContainer.get(0).getCount());
+    	System.out.println();
     	
-    	EmployeeContainer admins = employees.getAdminArrayList();
-    	ArrayList<Admin<?>> adminContainer = admins.getArrayList();
+    	EmployeeContainer<Object> admins = employees.getAdminArrayList();
+    	ArrayList<Employee<Object>> adminContainer = admins.getArrayList();
     	idx = 0;
     	System.out.println("ADMINS");
-    	for (Admin<?> a : adminContainer) {
+    	for (Employee<Object> a : adminContainer) {
     		System.out.println("adminsContainer[" + (idx++) + "]: ");
     		a.getInfo(); System.out.println();
     	}
@@ -80,26 +79,9 @@ public class App
     	System.out.println("adminContainer.get(0).getCount() = " + adminContainer.get(0).getCount());
     	System.out.println();
     	
+    	Helpers helper = new Helpers(); 
     
-    	/*
-    	for (Person<?> p : peopleContainer) {
-    		if (p.getClass() == unverified.getType()) 
-    			unverifiedContainer.push(p);
-    		else if (p.getClass() == employees.getType()) 
-    			employeeContainer.push(p);
-    	}
-    	*/
-    	
-    	/*
-    	System.out.println("unverifiedContainer:");
-    	unverifiedContainer.printAll();
-    	System.out.println("employeeContainer:");
-    	employeesContainer.printAll();
-    	*/
-    	
-    	Helpers helper = new Helpers(); // Good idea for test would be to create several objects and their corresponding containers
-    	// then assert that the two size counts are equal
-    	//helper.printPeopleCounts();
+    	helper.printPeopleCounts();
     	
     	//RegistrationController.call();
     	

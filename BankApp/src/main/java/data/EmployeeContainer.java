@@ -20,10 +20,10 @@ import employees.EmployeeBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class EmployeeContainer<T extends Person<T>> extends PersonContainer<Person<T>>{
+public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
 
-	private ArrayList<Person<T>> employees = new ArrayList<Person<T>>(); 
-	private Class<?> type = new Employee().getClass();
+	private ArrayList<Employee<T>> employees = new ArrayList<Employee<T>>(); 
+	private Class<?> type = new Employee<T>().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
@@ -34,13 +34,13 @@ public class EmployeeContainer<T extends Person<T>> extends PersonContainer<Pers
 	public Class<?> getType(){
 		return type;
 	}
-	public ArrayList<Person<T>> getArrayList(){
+	public ArrayList<Employee<T>> getArrayList(){
 		return this.employees;
 	}
 	
-	public EmployeeContainer getAdminArrayList(){
-		EmployeeContainer adminContainer = new EmployeeContainer();
-		ArrayList<Person<T>> admins = new ArrayList<Person<T>>(); 
+	public EmployeeContainer<T> getAdminArrayList(){
+		EmployeeContainer<T> adminContainer = new EmployeeContainer<T>();
+		ArrayList<Employee<T>> admins = new ArrayList<Employee<T>>(); 
 		adminContainer.employees = admins;
 		for (int i = this.employees.size()-1; i >= 0; i--) {
 			if (this.employees.get(i).isAdmin()) {
@@ -50,7 +50,7 @@ public class EmployeeContainer<T extends Person<T>> extends PersonContainer<Pers
 		return adminContainer;
 	}
 		 
-	public ArrayList<Person<T>> getArrayListFromSample() {
+	public ArrayList<Employee<T>> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -78,7 +78,7 @@ public class EmployeeContainer<T extends Person<T>> extends PersonContainer<Pers
 	public void printNthRow(int index) {
 		this.employees.get(index).printRow();
 	}
-	public void push(Employee person) {
+	public void push(Employee<T> person) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
 			return;
@@ -123,7 +123,7 @@ public class EmployeeContainer<T extends Person<T>> extends PersonContainer<Pers
 		}
 		String line;
 		String[] fields = new String[3];
-		ArrayList<String[]> all_fields; // was this even needed?
+		//ArrayList<String[]> all_fields; // was this even needed?
     	try {
 			Scanner cin = new Scanner(file, "UTF-8");
 			int oldArraySize = getSize();

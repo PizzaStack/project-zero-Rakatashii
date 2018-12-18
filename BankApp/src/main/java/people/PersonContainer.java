@@ -10,7 +10,7 @@ public class PersonContainer<Person> {
 	public PersonContainer() {
 		container = new ArrayList<Person>();
 	}
-	public ArrayList<Person> getArrayList(){
+	public ArrayList<? extends Person> getArrayList(){
 		return container;
 	}
 }

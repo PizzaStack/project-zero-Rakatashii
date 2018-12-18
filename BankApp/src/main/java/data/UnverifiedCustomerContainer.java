@@ -21,7 +21,7 @@ import customers.UnverifiedCustomerBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class UnverifiedCustomerContainer<T extends Person<T>> extends PersonContainer<Person<T>>{
+public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
 
 	private ArrayList<Person<T>> unverified = new ArrayList<Person<T>>(); 
 	private Class<?> type = new UnverifiedCustomer<T>().getClass();

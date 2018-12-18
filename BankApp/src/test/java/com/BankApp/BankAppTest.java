@@ -1,8 +1,6 @@
 package com.BankApp;
 
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 import static org.junit.Assert.*;
 
@@ -13,7 +11,6 @@ import data.EmployeeContainer;
 import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
-import people.Person;
 import views.Registration;
 
 import java.util.ArrayList;
@@ -71,58 +68,9 @@ public class BankAppTest
 		admins = employees.getAdminArrayList();
     	adminContainer = admins.getArrayList();
 
-		assertTrue(employeeContainer.size() == employeeContainer.get(0).getCount());
-		assertTrue(employeeContainer.size() == employees.getSize());
+		assertTrue(employeeContainer.size() == employees.getSize() && employeeContainer.size() == employeeContainer.get(0).getCount());
 		assertTrue(unverifiedContainer.size() == unverifiedContainer.get(0).getCount() && unverifiedContainer.size() == unverified.getSize());
 		assertTrue(adminContainer.size() == adminContainer.get(0).getCount() && adminContainer.size() == admins.getSize());
-		
-		//helper.printPeopleCounts(
-		/*
-		assertEquals(admin.getID(), 0);
-		assertEquals(admin.getCount(), 1);
-		assertEquals(employee.getID(), 1);
-		assertEquals(employee.getCount(), 2);
-		
-		assertEquals(customer.getID(), 0);
-		assertEquals(customer.getCount(), 1);
-		assertEquals(unverifiedCustomer.getID(), 0);
-		assertEquals(unverifiedCustomer.getCount(), 1);
-		*/
-		
-		/* Counts should still be correct for more than one of each type of Person object" */
-		
-		/*
-		Admin newAdmin = new Admin ("Dr.", "Evil");
-		Employee newEmployee = new Employee("Jake", "Dog");  
-		Customer newCustomer = new Customer("Lindsay", "Lohan"); 
-		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer("Harry", "Hacker");
-		
-		assertEquals(newAdmin.getID(), 1);
-		assertEquals(newAdmin.getCount(), 2);
-		assertEquals(newEmployee.getID(), 3);
-		assertEquals(newEmployee.getCount(), 4);
-		
-		assertEquals(newCustomer.getID(), 1);
-		assertEquals(newCustomer.getCount(), 2);
-		assertEquals(newUnverifiedCustomer.getID(), 1);
-		assertEquals(newUnverifiedCustomer.getCount(), 2);
-		
-		// Check UnverifiedCustomerBuilder
-		UnverifiedCustomer anotherUnverifiedCustomer = new UnverifiedCustomerBuilder()
-				.withId(2)
-				.withFirstName("George")
-				.withLastName("Bush")
-				.withTelephone("394-292-1923")
-				.withEmail("president@war.gov")
-				.withIsCitizen(true)
-				.withIsEmployed(true)
-				.withEmployer("SkullBones")
-				.makeUnverifiedCustomer();
-		
-		assertEquals(anotherUnverifiedCustomer.getID(), 2);
-		assertEquals(anotherUnverifiedCustomer.getCount(), 3);
-		assertEquals(newCustomer.getCount(), 2);
-		*/
 	}
 	
 	@Test
