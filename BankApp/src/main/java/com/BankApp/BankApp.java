@@ -9,7 +9,8 @@ import people.Person;
 import views.MenuOptions;
 import customers.Customer;
 import customers.UnverifiedCustomer;
-import customers.UnverifiedCustomerBuilder;
+import customers.CustomerBuilder;
+import data.CustomerContainer;
 import data.EmployeeContainer;
 import data.UnverifiedCustomerContainer;
 import employees.Admin;
@@ -22,32 +23,42 @@ import inspection.Helpers;
  */
 public class BankApp 
 {
-    public static void main( String[] args ) throws IOException
-    {
-    	/** Definitely seems bad to have so many rawtypes [and unchecked conversions?] - Prob refactor 
-    	 *  admin into an employee object with an isAdmin field, if making a separate admin table is even necessary. 
-    	 *  First try to see if better way to implement polymorphic collections with derived classes - maybe 
-    	 *  a container class with a generic ArrayList only - not generic class with a generic list. 
-    	 *  Should also turn UnverifiedCustomerContainer back into a non-generic class, since it being generic isnt 
-    	 *  useful anyway. Don't delete uncommented main until test finished. Finish the main menu for the love of god
-    	 */ // sike, no more raw types - still refactor and get rid of UnverifiedCustomerContainer generics if they seem
-    	// overdone or inefficient
+    public static void main( String[] args ) throws IOException {
     	
-    	/*
 		UnverifiedCustomerContainer<UnverifiedCustomer> unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
 		ArrayList<UnverifiedCustomer> unverifiedContainer = unverified.getArrayList();
     	unverified.push(new UnverifiedCustomer("Larry", "Lorry"));
     	unverified.push(new UnverifiedCustomer("Fred", "Saggin"));
     	int idx = 0;
     	System.out.println("UNVERIFIED");
+    	unverifiedContainer.get(0).printColumnNames();
     	for (UnverifiedCustomer uc : unverifiedContainer) {
     		System.out.println("unverifiedContainer[" + (idx++) +"]: ");
-    		uc.getInfo(); System.out.println();
+    		uc.printRow(); 
     	}
+    	System.out.println();
     	System.out.println("UnverifiedCustomer Sizes");
     	System.out.println("unverifiedContainer.size() = " + unverifiedContainer.size());
     	System.out.println("unverified.getSize() = " + unverified.getSize());
     	System.out.println("unverifiedContainer.get(0).getCount() = " + unverifiedContainer.get(0).getCount());
+    	System.out.println();
+    	
+		CustomerContainer customers = new CustomerContainer();
+		ArrayList<Customer> customerContainer = customers.getArrayList();
+    	customers.push(new Customer("heytherer23", "qwertyu789"));
+    	customers.push(new Customer("redlion23", "Saggin"));
+    	idx = 0;
+    	System.out.println("CUSTOMERS");
+    	customerContainer.get(0).printColumnNames();
+    	for (Customer c : customerContainer) {
+    		System.out.println("customerContainer[" + (idx++) +"]: ");
+    		c.printRow(); 
+    	}
+    	System.out.println();
+    	System.out.println("Customer Sizes");
+    	System.out.println("customerContainer.size() = " + customerContainer.size());
+    	System.out.println("customers.getSize() = " + customers.getSize());
+    	System.out.println("customersContainer.get(0).getCount() = " + customerContainer.get(0).getCount());
     	System.out.println();
     	
     	EmployeeContainer<Employee> employees = new EmployeeContainer<Employee>();
@@ -58,10 +69,12 @@ public class BankApp
     	employeeContainer.add(new Admin("Jane", "Bora"));
     	idx = 0;
     	System.out.println("EMPLOYEES");
+    	employeeContainer.get(0).printColumnNames();
     	for (Employee c : employeeContainer) {
     		System.out.println("employeesContainer[" + (idx++) + "]: ");
-    		c.getInfo(); System.out.println();
+    		c.printRow();
     	}
+    	System.out.println();
     	System.out.println("Employee Sizes");
     	System.out.println("employeeContainer.size() = " + employeeContainer.size());
     	System.out.println("employees.getSize() = " + employees.getSize());
@@ -72,10 +85,12 @@ public class BankApp
     	ArrayList<Employee> adminContainer = admins.getArrayList();
     	idx = 0;
     	System.out.println("ADMINS");
+    	adminContainer.get(0).printColumnNames();
     	for (Employee a : adminContainer) {
     		System.out.println("adminsContainer[" + (idx++) + "]: ");
-    		a.getInfo(); System.out.println();
+    		a.printRow();
     	}
+    	System.out.println();
     	System.out.println("Admins Sizes");
     	System.out.println("adminContainer.size() = " + adminContainer.size());
     	System.out.println("admins.getSize() = " + admins.getSize());
@@ -84,10 +99,10 @@ public class BankApp
     	
     	Helpers helper = new Helpers(); 
     	helper.printPeopleCounts();
-    	*/
     	
-    	MainMenuController mainController = new MainMenuController();
-    	mainController.begin();
+    	
+    	//MainMenuController mainController = new MainMenuController();
+    	//mainController.begin();
     	
     	/*
 		UnverifiedCustomer anotherUnverified = new UnverifiedCustomerBuilder()

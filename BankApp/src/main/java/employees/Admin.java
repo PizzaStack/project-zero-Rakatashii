@@ -1,5 +1,6 @@
 package employees;
 
+import inspection.Helpers;
 import people.Person;
 
 public class Admin extends Employee{
@@ -37,6 +38,22 @@ public class Admin extends Employee{
 		if (password != null) System.out.println("Password: " + password);
 		if (admin) 
 			System.out.println("isAdmin?: " + Boolean.toString(admin));
+	}
+	@Override
+	public void printColumnNames() {
+		System.out.printf("%-4s%-20s%-20s%-8s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
+	}
+	@Override
+	public void printRow() {
+		Helpers helper = new Helpers();
+		int isAdmin = helper.boolToInt(this.admin);
+		System.out.printf("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
+	}
+	@Override
+	public String getRow() {
+		Helpers helper = new Helpers();
+		int isAdmin = helper.boolToInt(this.admin);
+		return String.format("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
 	}
 	@Override
 	public int getCount() {

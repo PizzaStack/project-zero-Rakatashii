@@ -4,17 +4,18 @@ import inspection.Helpers;
 import people.Person;
 
 public class UnverifiedCustomer extends Person{
-	private String firstName = null;
-	private String lastName = null;
-	private String telephone = null;
-	private String email = null;
-	private boolean isCitizen = false;
-	private boolean isEmployed = false;
-	private String employer = null;
+	protected String firstName = null;
+	protected String lastName = null;
+	protected String telephone = null;
+	protected String email = null;
+	protected boolean isCitizen = false;
+	protected boolean isEmployed = false;
+	protected String employer = null;
+	protected boolean verified = false;
 	
 	protected static int numUnverifiedCustomers = 0;
 	private int unverifiedCustomerID = numUnverifiedCustomers;
-	boolean verified = false;
+	protected static int numTotalCustomers = 0;
 	
 	public UnverifiedCustomer() { 
 		super(); 
@@ -40,7 +41,26 @@ public class UnverifiedCustomer extends Person{
 		++numUnverifiedCustomers;
 		++numPeople;
 	}
-
+	public Customer convertToCustomer(String username, String password) {
+		Customer newCustomer = new CustomerBuilder()
+				.withUsername(username)
+				.withPassword(password)
+				.makeCustomer(this);
+		numUnverifiedCustomers--;
+		return newCustomer;
+	}
+	public int getID() {
+		return unverifiedCustomerID;
+	}
+	public void setID(int id) {
+		this.unverifiedCustomerID = id;
+	}
+	public int getCount() {
+		return numUnverifiedCustomers;
+	}
+	public void setCount(int count) {
+		numUnverifiedCustomers = count;
+	}
 	public void getInfo() {
 		System.out.println("ID: " + this.unverifiedCustomerID);
 		if (firstName != null) System.out.println("First name: " + firstName);
@@ -61,49 +81,23 @@ public class UnverifiedCustomer extends Person{
 			System.out.println("Currently employed: false");
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-14s%-40s%-10s%-10s%-40s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
+		System.out.printf("%-4s%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
 	public void printRow() {
 		Helpers helper = new Helpers();
 		int citizen = helper.boolToInt(this.isCitizen);
 		int employed = helper.boolToInt(this.isEmployed);
-		System.out.printf("%-4d%-20s%-20s%-14s%-40s%-10d%-10d%-40s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		System.out.printf("%-4d%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	public String getRow() {
 		Helpers helper = new Helpers();
 		int citizen = helper.boolToInt(this.isCitizen);
 		int employed = helper.boolToInt(this.isEmployed);
-		String row = String.format("%-4d%-20s%-20s%-14s%-40s%-10d%-10d%-40s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
-		return row;
-	}
-	public int getCount() {
-		return numUnverifiedCustomers;
-	}
-	public int getID() {
-		return unverifiedCustomerID;
-	}
-	public void setID(int id) {
-		this.unverifiedCustomerID = id;
-	}
-	public void setCount(int count) {
-		numUnverifiedCustomers = count;
-	}
-	protected boolean verify() {
-		this.verified = true;
-		return verified;
+		return String.format("%-4d%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return "";
-	}
+	public String getUsername() { return null; }
 	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return "";
-	}
-	@Override
-	public boolean isAdmin() {
-		return false;
-	}
+	public String getPassword() { return null; }
+
 }

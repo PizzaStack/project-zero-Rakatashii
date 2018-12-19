@@ -17,11 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import customers.UnverifiedCustomer;
-import customers.UnverifiedCustomerBuilder;
+import customers.CustomerBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
+public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 
 	private ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>(); 
 	private Class<?> type = new UnverifiedCustomer().getClass();
@@ -58,10 +58,10 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
 		return unverified;
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-14s%-40s%-10s%-10s%-40s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
+		System.out.printf("%-4s%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
-	public void printAll() {
-		//printColumnNames();
+	public void printAll(boolean columnHeaders) {
+		if (columnHeaders) printColumnNames();
 		for (int i = 0; i < unverified.size(); i++) {
 			unverified.get(i).printRow();
 		}
@@ -123,7 +123,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				UnverifiedCustomer newUnverified = new UnverifiedCustomerBuilder()
+				UnverifiedCustomer newUnverified = new CustomerBuilder()
 						.withFirstName(fields[0])
 						.withLastName(fields[1])
 						.withTelephone(fields[2])
@@ -132,6 +132,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
 						.withIsEmployed(Boolean.parseBoolean(fields[5]))
 						.withEmployer(fields[6])
 						.makeUnverifiedCustomer();
+				unverified.add(newUnverified);
 			}
 			reindex(oldArraySize);
 			// TODO - add newUnverified to this.unverified
@@ -257,6 +258,12 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
 			file.createNewFile();
 			writeToBinaryFile(false);
 		} 
+	}
+	@Override
+	public void printAll() {
+		for (UnverifiedCustomer e : this.unverified) {
+			e.printRow();
+		}
 	}
 	
 	/* // TODO Implement these

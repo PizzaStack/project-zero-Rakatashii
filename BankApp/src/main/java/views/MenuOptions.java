@@ -69,7 +69,7 @@ public class MenuOptions { // TODO refacter without statics
 		while (!inBounds(selection)) {
 			
 			selection = getSelection();
-			System.out.println("selection in display: " + selection);
+			//System.out.println("selection in display: " + selection);
 		
 			if (inBounds(selection))
 				return selection;
@@ -82,20 +82,19 @@ public class MenuOptions { // TODO refacter without statics
 	}
 	
 	public int getSelection() throws IOException {
-		int selection = 0;
 		@SuppressWarnings("resource")
 		Scanner cin = new Scanner(System.in);
 		
+		int selection = 0;
 		while (!(inBounds(selection))) {
 			selection = 0;
-			
-			System.out.println();
+			System.out.print(lineSeparator);
 			System.out.print("* Select option number: "); 
 			
 			selection = cin.nextInt();
-			
-	    	System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
-	    	if (inBounds(selection)) { /*cin.close();*/ return selection; }
+			System.out.print("- Selection = " + selection + lineSeparator.substring(15) + "\n");
+	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
+	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}
 		System.out.print("Should not be at the end of getSelection()");
 		return 0;

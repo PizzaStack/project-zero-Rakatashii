@@ -5,8 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import customers.Customer;
+import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
-import customers.UnverifiedCustomerBuilder;
 import data.EmployeeContainer;
 import data.UnverifiedCustomerContainer;
 import employees.Admin;
@@ -46,7 +46,7 @@ public class BankAppTest
     	
 		customer1 = new Customer("Lindsay", "Lohan"); 
 		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); 
-		unverifiedCustomer2 = new UnverifiedCustomerBuilder()
+		unverifiedCustomer2 = new CustomerBuilder()
 				.withFirstName("Mark")
 				.withLastName("b")
 				.withTelephone("2342342345")

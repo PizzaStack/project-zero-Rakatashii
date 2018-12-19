@@ -15,42 +15,32 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import customers.UnverifiedCustomer;
-import employees.Admin;
-import employees.Employee;
-import employees.EmployeeBuilder;
+import customers.Customer;
+import customers.CustomerBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class EmployeeContainer<T> implements PersonContainer<Person>{
+public class CustomerContainer implements PersonContainer<Person>{
 
-	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
-	private Class<? extends Person> type = new Employee().getClass();
-	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
+	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
+	private Class<?> type = new Customer().getClass();
+	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_customers.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 
-	public EmployeeContainer() {
+	public CustomerContainer() {
 		super();
 	}
-	public Class<? extends Person> getType(){
+	public Person Get(int index){
+		return customers.get(index);
+	}
+	public ArrayList<Customer> getArrayList(){
+		return customers;
+	}
+	public Class<?> getType(){
 		return type;
 	}
-	public ArrayList<Employee> getArrayList(){
-		return this.employees;
-	}
-	public EmployeeContainer<Employee> getAdminArrayList(){
-		EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
-		ArrayList<Employee> admins = new ArrayList<Employee>(); 
-		adminContainer.employees = admins;
-		for (int i = this.employees.size()-1; i >= 0; i--) {
-			if (this.employees.get(i).isAdmin()) {
-				adminContainer.employees.add(0, this.employees.get(i));
-			}
-		}
-		return adminContainer;
-	}
-	public ArrayList<Employee> getArrayListFromSample() { 
+	public ArrayList<Customer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -64,41 +54,46 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return this.employees;
+		return customers;
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-10s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
+		System.out.printf("%-4s%-20s-20s-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
-	public void printAll() {
-		printColumnNames();
-		for (int i = 0; i < employees.size(); i++) {
-			this.employees.get(i).printRow();
+	public void printAll(boolean columnHeaders) {
+		if (columnHeaders) printColumnNames();
+		for (int i = 0; i < customers.size(); i++) {
+			customers.get(i).printRow();
 		}
 	}
 	public void printNthRow(int index) {
-		this.employees.get(index).printRow();
+		customers.get(index).printRow();
 	}
-	public void push(Employee person) {
- 		this.employees.add(person);
-		if (person.getID() < employees.size()-1) reindex(0);
+	public void push(Customer customer) {
+		/*if (this.type != person.getClass()) {
+			System.out.println("Failed to push. Object must be of same type as Container class.");
+			return;
+		}*/
+ 		customers.add(customer);
+		if (customer.getID() < customers.size()-1) reindex(0);
 	}
 	public void removeAt(int index) {
-		this.employees.remove(index);
+		customers.remove(index);
 		reindex(index);
 	}
 	public void clear() {
-		this.employees.clear();
+		customers.clear();
 	}
 	public int getSize() {
-		return this.employees.size();
+		return customers.size();
 	}
 	public void reindex(int start) {
-		if (start >= this.employees.size()) return;
-		for (int i = start; i < employees.size(); i++) {
-			this.employees.get(i).setID(i);
+		if (start >= customers.size()) return;
+		for (int i = start; i < customers.size(); i++) {
+			customers.get(i).setID(i);
 		}
+		new Customer().setCount(customers.size());
+		//System.gc();
 	}
-	
 	public void setTextFileName(String textName) {
 		textFileName = textName;
 	}
@@ -108,7 +103,12 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
-	
+	@Override
+	public void printAll() {
+		for (Customer c : customers) {
+			c.printRow();
+		}
+	}
 	public void readIn(File file) throws IOException {
 		if (file.exists() == false) {
 			try {
@@ -118,7 +118,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		String line;
-		String[] fields = new String[3];
+		String[] fields = new String[7];
     	try {
 			Scanner cin = new Scanner(file, "UTF-8");
 			int oldArraySize = getSize();
@@ -126,14 +126,18 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				Employee newUnverified = new EmployeeBuilder()
-						.withUsername(fields[0])
-						.withPassword(fields[1])
-						.withIsAdmin(Boolean.parseBoolean(fields[2]))
-						.makeEmployee();
+				Customer newUnverified = new CustomerBuilder()
+						.withFirstName(fields[0])
+						.withLastName(fields[1])
+						.withTelephone(fields[2])
+						.withEmail(fields[3])
+						.withIsCitizen(Boolean.parseBoolean(fields[4]))
+						.withIsEmployed(Boolean.parseBoolean(fields[5]))
+						.withEmployer(fields[6])
+						.makeCustomer();
 			}
 			reindex(oldArraySize);
-			//TODO this.employees.add(newUnverified)
+			// TODO - add newUnverified to this.customers
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -147,7 +151,6 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		numString = matcher.matches() ? matcher.group(1) : "0";
 		return Integer.parseInt(numString);
 	}
-	
 	public void writeToTextFile(boolean truncate, boolean binary) throws IOException {
 		File file = new File(textFileName);
 		boolean append = (truncate) ? false : true;
@@ -157,11 +160,12 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	    PrintStream ps = null;
 	    try {
 	        ps = new PrintStream(new FileOutputStream(textFileName, append));
-        	for (int i = 0; i < employees.size(); i++) {
-        		String row = employees.get(i).getRow();
+        	for (int i = 0; i < customers.size(); i++) {
+        		String row = customers.get(i).getRow();
         		ps.print(row);
         	}
 	    } catch (IOException e) {
+	        // TODO System.err.println("Error in writing to file");
 	        throw e;
 	    } finally {
 	        if (ps != null) ps.close();
@@ -184,17 +188,16 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 				throw e;
 			}
 		}
-		
 		reindex(0);
 		
 		byte data[];
-		for (int i = 0; i < employees.size(); i++) {
-			int size = employees.get(i).getRow().length();
-			String row = employees.get(i).getRow();
+		for (int i = 0; i < customers.size(); i++) {
+			int size = customers.get(i).getRow().length();
+			String row = customers.get(i).getRow();
 			data = new byte[size];
 			data = row.getBytes();
 			if (i == 0 && row.charAt(0) != 0) {
-				// TODO LOG: //System.out.println("reindexing EmployeeArray...");
+				// TODO LOG: //System.out.println("reindexing CustomerArray...");
 				reindex(0);
 			}
 			if (i == 0 && truncate) {
@@ -207,20 +210,20 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 			else Files.write(path, data, StandardOpenOption.APPEND);
 			int lastIndex = getRowIndex(row);
-			if ((i == employees.size() - 1) && (lastIndex > getSize())) {
+			if ((i == customers.size() - 1) && (lastIndex > getSize())) {
 				reindex(0);
 				writeToBinaryFile(true);
 			}
 		}
 	}
-	public void appendToTextFile(Employee employee, boolean binary) {
+	public void appendToTextFile(Customer customer, boolean binary) {
 		File file = new File(textFileName);
 		try (
     		FileOutputStream fos = new FileOutputStream(file, true);
     		PrintStream ps = new PrintStream(fos);
     	){
         	System.setOut(ps);
-    		String row = employee.getRow();
+    		String row = customer.getRow();
     		System.out.print(row);
         	fos.flush();
         	ps.flush();
@@ -240,14 +243,14 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
-	public void appendToBinaryFile(Employee employee, boolean create) throws IOException {
+	public void appendToBinaryFile(Customer customer, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
 		reindex(0);
 		byte data[];
 		
-		int size = employee.getRow().length();
-		String row = employee.getRow();
+		int size = customer.getRow().length();
+		String row = customer.getRow();
 		data = new byte[size];
 		data = row.getBytes();
 		try {
@@ -257,7 +260,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			writeToBinaryFile(false);
 		} 
 	}
-
+	
 	/* // TODO Implement these
 	public boolean hasDuplicate(Employee e) { return false; } 
 	public static void rebase(String fileName) throws IOException {}

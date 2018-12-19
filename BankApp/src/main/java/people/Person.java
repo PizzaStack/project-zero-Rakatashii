@@ -24,7 +24,7 @@ public abstract class Person {
 		return numPeople;
 	}
 
-	public abstract boolean isAdmin();
+	public boolean isAdmin() { return false; } // changed from abstract - watch
 }
 
 

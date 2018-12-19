@@ -1,5 +1,6 @@
 package employees;
 
+import inspection.Helpers;
 import people.Person;
 
 public class Employee extends Person{
@@ -54,14 +55,20 @@ public class Employee extends Person{
 	public void setID(int id) {
 		this.employeeID = id;	
 	}
+	public void printColumnNames() {
+		System.out.printf("%-4s%-20s%-20s%-8s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
+	}
 	@Override
 	public void printRow() {
-		// TODO Auto-generated method stub
+		Helpers helper = new Helpers();
+		int isAdmin = helper.boolToInt(this.admin);
+		System.out.printf("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
 	}
 	@Override
 	public String getRow() {
-		// TODO Auto-generated method stub
-		return null;
+		Helpers helper = new Helpers();
+		int isAdmin = helper.boolToInt(this.admin);
+		return String.format("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
 	}
 	@Override
 	public String getUsername() {

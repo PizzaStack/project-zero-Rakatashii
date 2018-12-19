@@ -16,7 +16,6 @@ public class Helpers {
 	public Helpers(){
 		super();
 	}
-	
 	public void printPeopleCounts() {
 		for (Person p : people) {
 			System.out.println(p.getPersonClass() + " Count: " + p.getCount());
@@ -28,6 +27,10 @@ public class Helpers {
 	}
 	public int boolToInt(boolean b){
 		return (b) ? 1 : 0;
+	}
+	public String getStringIfNull(String s) {
+		if (s == null) return "null";
+		else return s;
 	}
 	
 

@@ -7,8 +7,8 @@ import java.util.Scanner;
 import com.BankApp.BankApp;
 
 import controller.MainMenuController;
+import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
-import customers.UnverifiedCustomerBuilder;
 
 public class Registration /* extends Customer */ {
 	private UnverifiedCustomer unverifiedCustomer;
@@ -123,7 +123,7 @@ public class Registration /* extends Customer */ {
 			
 			if (errors == false) {
 				System.out.println("Success! Your application is pending administrative approval.");
-				unverifiedCustomer = new UnverifiedCustomerBuilder()
+				unverifiedCustomer = new CustomerBuilder()
 						.withFirstName(firstName)
 						.withLastName(lastName)
 						.withTelephone(telephone)
@@ -132,7 +132,6 @@ public class Registration /* extends Customer */ {
 						.withIsEmployed(isEmployed)
 						.withEmployer(employer)
 						.makeUnverifiedCustomer();
-				//cin.close();
 			} 
 			
 			this.registrationErrors.clear();
