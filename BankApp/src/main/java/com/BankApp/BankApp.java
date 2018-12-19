@@ -6,6 +6,7 @@ import java.util.*;
 import controller.MainMenuController;
 import controller.RegistrationController;
 import people.Person;
+import utility.Helpers;
 import views.MenuOptions;
 import customers.Customer;
 import customers.UnverifiedCustomer;
@@ -15,7 +16,6 @@ import data.EmployeeContainer;
 import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
-import inspection.Helpers;
 
 /**
  * Hello world!
@@ -183,8 +183,22 @@ public class BankApp
     	*/
     }
     
-    
-    
-    final static String project_dir = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/";
-    
+    /** TODO
+     * (Clean up main())
+     * Create import/export from  containers to controller in order to populate
+     * Create sample data for Admin and Employee, maybe Customer too to verify that Unverified is being converted correctly
+     * Finish login pages for Admin, Employee, Customer
+     * Create accounts class and update all customer classes with account numbers and balances (Savings/Checking)
+     * Tests for controller and account classes
+     * Probably a good time for joint accounts feature (Just give a reference to primary accounts holders account number
+     and set the primary account holder field in the Accounts classes to the id of that person
+     * Connect to the database and create sample tables to get basic inserts, updates, and removes working
+     * Normalize tables
+     * Finalize containers for storing and removing persistant data (rebase, reindex, removeduplicates, etc)
+     * Give priveleges to Employees and Admins to manipulate data
+     * More Tests
+     * Look into Serialization
+     * Look into Logging
+     * Expand database features
+     */
 }

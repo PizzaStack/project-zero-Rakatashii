@@ -1,7 +1,7 @@
 package employees;
 
-import inspection.Helpers;
 import people.Person;
+import utility.Helpers;
 
 public class Employee extends Person{
 	String username, password;

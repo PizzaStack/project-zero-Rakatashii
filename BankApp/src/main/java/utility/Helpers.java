@@ -1,4 +1,4 @@
-package inspection;
+package utility;
 
 import customers.Customer;
 import customers.UnverifiedCustomer;

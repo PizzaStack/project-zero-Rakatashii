@@ -1,7 +1,7 @@
 package customers;
 
-import inspection.Helpers;
 import people.Person;
+import utility.Helpers;
 
 public class Customer extends UnverifiedCustomer{
 	String username, password;
