@@ -21,10 +21,10 @@ import customers.UnverifiedCustomerBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
+public class UnverifiedCustomerContainer<T> extends PersonContainer<Person>{
 
-	private ArrayList<Person<T>> unverified = new ArrayList<Person<T>>(); 
-	private Class<?> type = new UnverifiedCustomer<T>().getClass();
+	private ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>(); 
+	private Class<?> type = new UnverifiedCustomer().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_unverified.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
@@ -32,16 +32,16 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
 	public UnverifiedCustomerContainer() {
 		super();
 	}
-	public Person<T> Get(int index){
+	public Person Get(int index){
 		return unverified.get(index);
 	}
-	public ArrayList<Person<T>> getArrayList(){
+	public ArrayList<UnverifiedCustomer> getArrayList(){
 		return unverified;
 	}
 	public Class<?> getType(){
 		return type;
 	}
-	public ArrayList<Person<T>> getArrayListFromSample() {
+	public ArrayList<UnverifiedCustomer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -69,7 +69,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
 	public void printNthRow(int index) {
 		unverified.get(index).printRow();
 	}
-	public void push(UnverifiedCustomer<T> unverifiedCustomer) {
+	public void push(UnverifiedCustomer unverifiedCustomer) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
 			return;
@@ -134,6 +134,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
 						.makeUnverifiedCustomer();
 			}
 			reindex(oldArraySize);
+			// TODO - add newUnverified to this.unverified
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -213,7 +214,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
 			}
 		}
 	}
-	public void appendToTextFile(UnverifiedCustomer<T> unverifiedCustomer, boolean binary) {
+	public void appendToTextFile(UnverifiedCustomer unverifiedCustomer, boolean binary) {
 		File file = new File(textFileName);
 		try (
     		FileOutputStream fos = new FileOutputStream(file, true);
@@ -240,7 +241,7 @@ public class UnverifiedCustomerContainer<T> extends PersonContainer<Person<T>>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
-	public void appendToBinaryFile(UnverifiedCustomer<T> unverifiedCustomer, boolean create) throws IOException {
+	public void appendToBinaryFile(UnverifiedCustomer unverifiedCustomer, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
 		reindex(0);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 
+import com.BankApp.BankApp;
+
+import controller.MainMenuController;
 import customers.UnverifiedCustomer;
 import customers.UnverifiedCustomerBuilder;
 
@@ -29,6 +32,8 @@ public class Registration /* extends Customer */ {
 	Hashtable<codes, String> errorMessages = new Hashtable<codes, String>();	
 	private ArrayList<String> registrationErrors = new ArrayList<String>();
 	
+	Scanner cin;
+	
 	public Registration() { 
 		errorMessages.put(codes.FN, "Invalid first name.");
 		errorMessages.put(codes.LN, "Invalid last name.");
@@ -41,8 +46,8 @@ public class Registration /* extends Customer */ {
 	public UnverifiedCustomer beginForm() {
 		boolean errors = true;
 		
+		@SuppressWarnings("resource")
 		Scanner cin = new Scanner(System.in);
-		//cin.reset();
 		
 		while (errors || registrationErrors.size() > 0) {
 			
@@ -127,13 +132,11 @@ public class Registration /* extends Customer */ {
 						.withIsEmployed(isEmployed)
 						.withEmployer(employer)
 						.makeUnverifiedCustomer();
-				System.gc();
 				//cin.close();
 			} 
 			
 			this.registrationErrors.clear();
 		}
-		cin.close();
 		return unverifiedCustomer;
 	}
 	

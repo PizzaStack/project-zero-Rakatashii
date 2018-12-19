@@ -15,15 +15,16 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import employees.Admin;
 import employees.Employee;
 import employees.EmployeeBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
+public class EmployeeContainer<T> extends PersonContainer<Person>{
 
-	private ArrayList<Employee<T>> employees = new ArrayList<Employee<T>>(); 
-	private Class<?> type = new Employee<T>().getClass();
+	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
+	private Class<?> type = new Employee().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
@@ -34,13 +35,12 @@ public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
 	public Class<?> getType(){
 		return type;
 	}
-	public ArrayList<Employee<T>> getArrayList(){
+	public ArrayList<Employee> getArrayList(){
 		return this.employees;
 	}
-	
-	public EmployeeContainer<T> getAdminArrayList(){
-		EmployeeContainer<T> adminContainer = new EmployeeContainer<T>();
-		ArrayList<Employee<T>> admins = new ArrayList<Employee<T>>(); 
+	public EmployeeContainer<Employee> getAdminArrayList(){
+		EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
+		ArrayList<Employee> admins = new ArrayList<Employee>(); 
 		adminContainer.employees = admins;
 		for (int i = this.employees.size()-1; i >= 0; i--) {
 			if (this.employees.get(i).isAdmin()) {
@@ -49,8 +49,7 @@ public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
 		}
 		return adminContainer;
 	}
-		 
-	public ArrayList<Employee<T>> getArrayListFromSample() {
+	public ArrayList<Employee> getArrayListFromSample() { 
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -78,7 +77,7 @@ public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
 	public void printNthRow(int index) {
 		this.employees.get(index).printRow();
 	}
-	public void push(Employee<T> person) {
+	public void push(Employee person) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
 			return;
@@ -138,6 +137,7 @@ public class EmployeeContainer<T> extends PersonContainer<Person<T>>{
 						.makeEmployee();
 			}
 			reindex(oldArraySize);
+			//TODO this.employees.add(newUnverified)
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();

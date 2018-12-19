@@ -3,7 +3,7 @@ package customers;
 import inspection.Helpers;
 import people.Person;
 
-public class UnverifiedCustomer<T> extends Person{
+public class UnverifiedCustomer extends Person{
 	private String firstName = null;
 	private String lastName = null;
 	private String telephone = null;

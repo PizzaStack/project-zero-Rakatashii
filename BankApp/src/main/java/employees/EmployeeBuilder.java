@@ -22,4 +22,9 @@ public class EmployeeBuilder {
 		Employee newEmployee = new Employee(username, password, admin);
 		return newEmployee;
 	}
+	public Admin makeAdmin() {
+		this.admin = true;
+		Admin newAdmin = new Admin(username, password, admin);
+		return newAdmin;
+	}
 }

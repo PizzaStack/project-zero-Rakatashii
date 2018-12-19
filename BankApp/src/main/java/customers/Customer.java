@@ -2,7 +2,7 @@ package customers;
 
 import people.Person;
 
-public class Customer extends Person<Object>{
+public class Customer extends Person{
 	String firstName, lastName;
 	protected static int numCustomers = 0;
 	private int custID = numCustomers;

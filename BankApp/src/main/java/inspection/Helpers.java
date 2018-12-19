@@ -7,18 +7,18 @@ import employees.Employee;
 import people.Person;
 
 public class Helpers {
-	private Person<?> sampleCustomer = new Customer();
-	private Person<?> sampleUnverified = new UnverifiedCustomer();
-	private Person<?> sampleEmployee = new Employee();
-	private Person<?> sampleAdmin = new Admin();
-	Person<?>[] people = { sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
+	private Customer sampleCustomer = new Customer();
+	private UnverifiedCustomer sampleUnverified = new UnverifiedCustomer();
+	private Employee sampleEmployee = new Employee();
+	private Admin sampleAdmin = new Admin();
+	Person[] people = { sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
 	
 	public Helpers(){
 		super();
 	}
 	
 	public void printPeopleCounts() {
-		for (Person<?> p : people) {
+		for (Person p : people) {
 			System.out.println(p.getPersonClass() + " Count: " + p.getCount());
 		}
 	}
@@ -29,7 +29,6 @@ public class Helpers {
 	public int boolToInt(boolean b){
 		return (b) ? 1 : 0;
 	}
-	
 	
 
 }

@@ -2,7 +2,7 @@ package people;
 
 import java.util.ArrayList;
 
-public abstract class Person<T> {
+public abstract class Person {
 	String firstName;
 	String lastName;
 	public static int numPeople = 0;

@@ -11,37 +11,41 @@ import data.EmployeeContainer;
 import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
+import employees.EmployeeBuilder;
 import views.Registration;
 
 import java.util.ArrayList;
 
 public class BankAppTest
-{
-	UnverifiedCustomerContainer unverified;
-	ArrayList<UnverifiedCustomer<?>> unverifiedContainer;
-	EmployeeContainer employees;
-	ArrayList<Employee<?>> employeeContainer;
-	EmployeeContainer admins;
-	ArrayList<Admin<?>> adminContainer;
-	
-	//protected ArrayList<Person<?>> people;
+{	
+	EmployeeContainer<Employee> admins;
+	ArrayList<Employee> adminContainer;
 	Admin admin1, admin2;
+	
+	EmployeeContainer<Employee> employees;
+	ArrayList<Employee> employeeContainer;
 	Employee employee1, employee2;
+	
+	UnverifiedCustomerContainer<UnverifiedCustomer> unverified;
+	ArrayList<UnverifiedCustomer> unverifiedContainer;
 	UnverifiedCustomer unverifiedCustomer1, unverifiedCustomer2;
+	
+	//TODO include Customer Container and add to test.
 	Customer customer1, customer2;
 	
 	//@BeforeClas
 	/* public void setUp() { Apparently @BeforeClass -> setUp must be static... @Before prob worse } */
+	// opting to redefine in each @test..
 	
 	@Test
 	public void checkPersonSubclassCountsDoNotInterfere() {
-		unverified = new UnverifiedCustomerContainer();
+		unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
     	unverifiedContainer = unverified.getArrayList();
-    	employees = new EmployeeContainer();
+    	employees = new EmployeeContainer<Employee>();
     	employeeContainer = employees.getArrayList();
     	
-		customer1 = new Customer("Lindsay", "Lohan"); //people.add(customer);
-		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); //people.add(unverifiedCustomer);
+		customer1 = new Customer("Lindsay", "Lohan"); 
+		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); 
 		unverifiedCustomer2 = new UnverifiedCustomerBuilder()
 				.withFirstName("Mark")
 				.withLastName("b")
@@ -53,9 +57,17 @@ public class BankAppTest
 				.makeUnverifiedCustomer();
 
 		employee1 = new Employee("Jake", "Dog"); //people.add(employee);
-    	employee2 = new Employee("Sara", "Tera");
+    	Employee employee2 = new EmployeeBuilder()
+    			.withUsername("crazyhacker")
+    			.withPassword("Illhacku")
+    			.withIsAdmin(false)
+    			.makeEmployee();
     	admin1 = new Admin ("Dr.", "Evil"); //people.add(admin);
-    	admin2 = new Admin("Don", "Quervo");
+    	Admin admin2 = new EmployeeBuilder()
+    			.withUsername("crazyhacker")
+    			.withPassword("Illhacku")
+    			.withIsAdmin(true)
+    			.makeAdmin();
 		
 		unverifiedContainer.add(unverifiedCustomer1);
 		unverifiedContainer.add(unverifiedCustomer2);

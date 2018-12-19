@@ -4,7 +4,7 @@ import customers.UnverifiedCustomer;
 import views.Registration;
 
 public class RegistrationController {
-	public static void call() {
+	public void call() {
 		Registration newCustomerInfo = new Registration();
 		UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();
 		System.out.println();

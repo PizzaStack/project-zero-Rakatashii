@@ -3,6 +3,7 @@ package com.BankApp;
 import java.io.IOException;
 import java.util.*;
 
+import controller.MainMenuController;
 import controller.RegistrationController;
 import people.Person;
 import views.MenuOptions;
@@ -19,7 +20,7 @@ import inspection.Helpers;
  * Hello world!
  *
  */
-public class App 
+public class BankApp 
 {
     public static void main( String[] args ) throws IOException
     {
@@ -29,17 +30,19 @@ public class App
     	 *  a container class with a generic ArrayList only - not generic class with a generic list. 
     	 *  Should also turn UnverifiedCustomerContainer back into a non-generic class, since it being generic isnt 
     	 *  useful anyway. Don't delete uncommented main until test finished. Finish the main menu for the love of god
-    	 */
-
-		UnverifiedCustomerContainer<Object> unverified = new UnverifiedCustomerContainer<Object>();
-		ArrayList<Person<Object>> unverifiedContainer = unverified.getArrayList();
-    	unverified.push(new UnverifiedCustomer<Object>("Larry", "Lorry"));
-    	unverified.push(new UnverifiedCustomer<Object>("Fred", "Saggin"));
+    	 */ // sike, no more raw types - still refactor and get rid of UnverifiedCustomerContainer generics if they seem
+    	// overdone or inefficient
+    	
+    	/*
+		UnverifiedCustomerContainer<UnverifiedCustomer> unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+		ArrayList<UnverifiedCustomer> unverifiedContainer = unverified.getArrayList();
+    	unverified.push(new UnverifiedCustomer("Larry", "Lorry"));
+    	unverified.push(new UnverifiedCustomer("Fred", "Saggin"));
     	int idx = 0;
     	System.out.println("UNVERIFIED");
-    	for (Person<Object> c : unverifiedContainer) {
+    	for (UnverifiedCustomer uc : unverifiedContainer) {
     		System.out.println("unverifiedContainer[" + (idx++) +"]: ");
-    		c.getInfo(); System.out.println();
+    		uc.getInfo(); System.out.println();
     	}
     	System.out.println("UnverifiedCustomer Sizes");
     	System.out.println("unverifiedContainer.size() = " + unverifiedContainer.size());
@@ -47,15 +50,15 @@ public class App
     	System.out.println("unverifiedContainer.get(0).getCount() = " + unverifiedContainer.get(0).getCount());
     	System.out.println();
     	
-    	EmployeeContainer<Object> employees = new EmployeeContainer<Object>();
-    	ArrayList<Employee<Object>> employeeContainer = employees.getArrayList();
-    	employees.push(new Employee<Object>("Mark", "Pale"));
-    	employeeContainer.add(new Employee<Object>("Sara", "Tera"));
-    	employees.push(new Admin<Object>("Don", "Quervo"));
-    	employeeContainer.add(new Admin<Object>("Jane", "Bora"));
+    	EmployeeContainer<Employee> employees = new EmployeeContainer<Employee>();
+    	ArrayList<Employee> employeeContainer = employees.getArrayList();
+    	employees.push(new Employee("Mark", "Pale"));
+    	employeeContainer.add(new Employee("Sara", "Tera"));
+    	employees.push(new Admin("Don", "Quervo"));
+    	employeeContainer.add(new Admin("Jane", "Bora"));
     	idx = 0;
     	System.out.println("EMPLOYEES");
-    	for (Employee<?> c : employeeContainer) {
+    	for (Employee c : employeeContainer) {
     		System.out.println("employeesContainer[" + (idx++) + "]: ");
     		c.getInfo(); System.out.println();
     	}
@@ -65,11 +68,11 @@ public class App
     	System.out.println("employeeContainer.get(0).getCount() = " + employeeContainer.get(0).getCount());
     	System.out.println();
     	
-    	EmployeeContainer<Object> admins = employees.getAdminArrayList();
-    	ArrayList<Employee<Object>> adminContainer = admins.getArrayList();
+    	EmployeeContainer<Employee> admins = employees.getAdminArrayList();
+    	ArrayList<Employee> adminContainer = admins.getArrayList();
     	idx = 0;
     	System.out.println("ADMINS");
-    	for (Employee<Object> a : adminContainer) {
+    	for (Employee a : adminContainer) {
     		System.out.println("adminsContainer[" + (idx++) + "]: ");
     		a.getInfo(); System.out.println();
     	}
@@ -80,10 +83,11 @@ public class App
     	System.out.println();
     	
     	Helpers helper = new Helpers(); 
-    
     	helper.printPeopleCounts();
+    	*/
     	
-    	//RegistrationController.call();
+    	MainMenuController mainController = new MainMenuController();
+    	mainController.begin();
     	
     	/*
 		UnverifiedCustomer anotherUnverified = new UnverifiedCustomerBuilder()
@@ -102,7 +106,6 @@ public class App
 		*/
     	//Helpers.printPeopleCounts();
     	//System.out.println();
-    	
 		/*
 		boolean newMenu = true;
 		while (newMenu) {
