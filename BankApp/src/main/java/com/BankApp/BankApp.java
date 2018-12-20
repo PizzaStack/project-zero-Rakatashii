@@ -64,7 +64,8 @@ public class BankApp
     	System.out.println("Iteration 2");
     	containers.printContainerSizes();
     	
-    	//MainMenuController mainController = new MainMenuController();
+    	MainMenuController mainController = new MainMenuController();
+    	mainController.passContainers(containers);
     	//mainController.begin();
     	
     }

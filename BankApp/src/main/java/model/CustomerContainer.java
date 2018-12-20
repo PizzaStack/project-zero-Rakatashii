@@ -43,6 +43,14 @@ public class CustomerContainer implements PersonContainer<Person>{
 	public Class<?> getType(){
 		return type;
 	}
+	public boolean userExists(Customer customer) {
+		for (Customer c : customers) {
+			if (customer.getUsername() == c.getUsername()) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public ArrayList<Customer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
@@ -260,6 +268,15 @@ public class CustomerContainer implements PersonContainer<Person>{
 			file.createNewFile();
 			writeToBinaryFile(false);
 		} 
+	}
+	@Override
+	public boolean verifyLoginCredentials(String username, String password) {
+		for (Customer c : customers) {
+			if (c.getUsername() == username)
+				if (c.getPassword() == password)
+					return true;
+		}
+		return false;
 	}
 	
 	/* // TODO Implement these

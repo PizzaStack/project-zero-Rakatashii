@@ -276,6 +276,15 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			writeToBinaryFile(false);
 		} 
 	}
+	@Override
+	public boolean verifyLoginCredentials(String username, String password) {
+		for (Employee e : employees) {
+			if (e.getUsername() == username)
+				if (e.getPassword() == password)
+					return true;
+		}
+		return false;
+	}
 
 	/* // TODO Implement these
 	public boolean hasDuplicate(Employee e) { return false; } 

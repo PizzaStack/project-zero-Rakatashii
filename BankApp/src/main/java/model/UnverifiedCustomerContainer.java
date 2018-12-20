@@ -275,6 +275,15 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			e.printRow();
 		}
 	}
+	@Override
+	public boolean verifyLoginCredentials(String username, String password) {
+		for (UnverifiedCustomer u : unverified) {
+			if (u.getUsername() == username)
+				if (u.getPassword() == password)
+					return true;
+		}
+		return false;
+	}
 	
 	/* // TODO Implement these
 	public boolean hasDuplicate(Employee e) { return false; } 

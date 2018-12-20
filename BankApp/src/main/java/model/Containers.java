@@ -25,10 +25,6 @@ public class Containers {
 	boolean employeeIsSet = false;
 	boolean adminIsSet = false;
 	
-	public Containers importContainers() {
-		return this;
-	}
-	
 	public void setCustomerContainer(CustomerContainer customersContainer) {
 		this.customerContainer = customersContainer;
 	}
