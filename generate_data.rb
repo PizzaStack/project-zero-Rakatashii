@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+#!/usr/local/bin/ruby -w
+##!/usr/bin/env ruby
 require 'Faker'
 
 args = ARGV

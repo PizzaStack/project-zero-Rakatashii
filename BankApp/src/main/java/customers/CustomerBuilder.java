@@ -9,7 +9,12 @@ public class CustomerBuilder {
 	private boolean isEmployed = false;
 	private String employer = null;
 	private String username, password; // Customers only
+	private int id = -1; 
 
+	public CustomerBuilder withID(int id) {
+		this.id = id;
+		return this;
+	}
 	public CustomerBuilder withUsername(String username) {
 		this.username = username;
 		return this;
@@ -48,14 +53,17 @@ public class CustomerBuilder {
 	}
 	public UnverifiedCustomer makeUnverifiedCustomer() {
 		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		if (this.id != -1) newUnverifiedCustomer.setID(this.id);
 		return newUnverifiedCustomer;
 	}
 	public Customer makeCustomer() {
 		Customer newCustomer = new Customer(username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		if (this.id != -1) newCustomer.setID(this.id);
 		return newCustomer;
 	}
 	public Customer makeCustomer(UnverifiedCustomer u) {
 		Customer newCustomer = new Customer(username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
+		if (this.id != -1) newCustomer.setID(this.id);
 		newCustomer.verified = true;
 		return newCustomer;
 	}

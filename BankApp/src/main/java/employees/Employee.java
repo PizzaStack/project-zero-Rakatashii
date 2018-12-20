@@ -1,5 +1,6 @@
 package employees;
 
+import model.EmployeeContainer;
 import people.Person;
 import utility.Helpers;
 
@@ -12,6 +13,9 @@ public class Employee extends Person{
 	private static int numEmployees = 0;
 	protected int employeeID = numEmployees; // is this really needed for Employees?
 	
+	static EmployeeContainer<Employee> employeeContainer;
+	static boolean employeeContainerIsSet = false;
+	
 	public Employee() { 
 		super(); 
 		//employeeID = numEmployees;
@@ -22,18 +26,22 @@ public class Employee extends Person{
 		this.username = username;
 		this.password = password;
 		employeeID = numEmployees;
-		
 		++numEmployees;
 		++numPeople;
+		if (employeeContainerIsSet) employeeContainer.push(this);
 	}
 	public Employee(String username, String password, boolean isAdmin) {
 		super();
 		this.employeeID = numEmployees;
 		this.username = username;
 		this.password = password;
-				
 		++numEmployees;
 		++numPeople;
+		if (employeeContainerIsSet) employeeContainer.push(this);
+	}
+	public static void passEmployeeContainer(EmployeeContainer<Employee> employees) {
+		employeeContainer = employees;
+		employeeContainerIsSet = true;
 	}
 	@Override
 	public void getInfo() {

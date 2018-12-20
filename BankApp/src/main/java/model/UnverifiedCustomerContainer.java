@@ -1,4 +1,5 @@
-package data;
+
+package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,32 +16,39 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import customers.UnverifiedCustomer;
 import customers.Customer;
 import customers.CustomerBuilder;
 import people.Person;
 import people.PersonContainer;
 
-public class CustomerContainer implements PersonContainer<Person>{
+public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 
-	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
-	private Class<?> type = new Customer().getClass();
-	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_customers.txt";
+	private ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>(); 
+	private Class<?> type = new UnverifiedCustomer().getClass();
+	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_unverified.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 
-	public CustomerContainer() {
+	public UnverifiedCustomerContainer() {
 		super();
 	}
 	public Person Get(int index){
-		return customers.get(index);
+		return unverified.get(index);
 	}
-	public ArrayList<Customer> getArrayList(){
-		return customers;
+	public void Remove(UnverifiedCustomer unverifiedCustomer) {
+		unverified.remove(unverifiedCustomer);
+	}
+	public ArrayList<UnverifiedCustomer> getArrayList(){
+		return unverified;
+	}
+	public void setArrayList(ArrayList<UnverifiedCustomer> unverified) {
+		this.unverified = unverified;
 	}
 	public Class<?> getType(){
 		return type;
 	}
-	public ArrayList<Customer> getArrayListFromSample() {
+	public ArrayList<UnverifiedCustomer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -54,46 +62,50 @@ public class CustomerContainer implements PersonContainer<Person>{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return customers;
+		return unverified;
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s-20s-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
+		System.out.printf("%-4s%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
 	public void printAll(boolean columnHeaders) {
 		if (columnHeaders) printColumnNames();
-		for (int i = 0; i < customers.size(); i++) {
-			customers.get(i).printRow();
+		for (int i = 0; i < unverified.size(); i++) {
+			unverified.get(i).printRow();
 		}
 	}
 	public void printNthRow(int index) {
-		customers.get(index).printRow();
+		unverified.get(index).printRow();
 	}
-	public void push(Customer customer) {
+	public void push(UnverifiedCustomer unverifiedCustomer) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
 			return;
 		}*/
- 		customers.add(customer);
-		if (customer.getID() < customers.size()-1) reindex(0);
+ 		unverified.add(unverifiedCustomer);
+ 		unverifiedCustomer.setID(unverified.size()-1);
+		if (unverifiedCustomer.getID() < unverified.size()-1) reindex(0);
 	}
 	public void removeAt(int index) {
-		customers.remove(index);
+		unverified.remove(index);
 		reindex(index);
 	}
+	
 	public void clear() {
-		customers.clear();
+		unverified.clear();
 	}
 	public int getSize() {
-		return customers.size();
+		if (unverified != null) return unverified.size();
+		else return 0;
 	}
 	public void reindex(int start) {
-		if (start >= customers.size()) return;
-		for (int i = start; i < customers.size(); i++) {
-			customers.get(i).setID(i);
+		if (start >= unverified.size()) return;
+		for (int i = start; i < unverified.size(); i++) {
+			unverified.get(i).setID(i);
 		}
-		new Customer().setCount(customers.size());
-		//System.gc();
+		new UnverifiedCustomer().setCount(unverified.size());
+		System.gc();
 	}
+	
 	public void setTextFileName(String textName) {
 		textFileName = textName;
 	}
@@ -103,11 +115,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
-	public void printAll() {
-		for (Customer c : customers) {
-			c.printRow();
-		}
-	}
+	
 	public void readIn(File file) throws IOException {
 		if (file.exists() == false) {
 			try {
@@ -125,7 +133,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				Customer newUnverified = new CustomerBuilder()
+				UnverifiedCustomer newUnverified = new CustomerBuilder()
 						.withFirstName(fields[0])
 						.withLastName(fields[1])
 						.withTelephone(fields[2])
@@ -133,10 +141,11 @@ public class CustomerContainer implements PersonContainer<Person>{
 						.withIsCitizen(Boolean.parseBoolean(fields[4]))
 						.withIsEmployed(Boolean.parseBoolean(fields[5]))
 						.withEmployer(fields[6])
-						.makeCustomer();
+						.makeUnverifiedCustomer();
+				unverified.add(newUnverified);
 			}
 			reindex(oldArraySize);
-			// TODO - add newUnverified to this.customers
+			// TODO - add newUnverified to this.unverified
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -150,6 +159,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 		numString = matcher.matches() ? matcher.group(1) : "0";
 		return Integer.parseInt(numString);
 	}
+	
 	public void writeToTextFile(boolean truncate, boolean binary) throws IOException {
 		File file = new File(textFileName);
 		boolean append = (truncate) ? false : true;
@@ -159,8 +169,8 @@ public class CustomerContainer implements PersonContainer<Person>{
 	    PrintStream ps = null;
 	    try {
 	        ps = new PrintStream(new FileOutputStream(textFileName, append));
-        	for (int i = 0; i < customers.size(); i++) {
-        		String row = customers.get(i).getRow();
+        	for (int i = 0; i < unverified.size(); i++) {
+        		String row = unverified.get(i).getRow();
         		ps.print(row);
         	}
 	    } catch (IOException e) {
@@ -190,13 +200,13 @@ public class CustomerContainer implements PersonContainer<Person>{
 		reindex(0);
 		
 		byte data[];
-		for (int i = 0; i < customers.size(); i++) {
-			int size = customers.get(i).getRow().length();
-			String row = customers.get(i).getRow();
+		for (int i = 0; i < unverified.size(); i++) {
+			int size = unverified.get(i).getRow().length();
+			String row = unverified.get(i).getRow();
 			data = new byte[size];
 			data = row.getBytes();
 			if (i == 0 && row.charAt(0) != 0) {
-				// TODO LOG: //System.out.println("reindexing CustomerArray...");
+				// TODO LOG: //System.out.println("reindexing UnverifiedCustomerArray...");
 				reindex(0);
 			}
 			if (i == 0 && truncate) {
@@ -209,20 +219,20 @@ public class CustomerContainer implements PersonContainer<Person>{
 			}
 			else Files.write(path, data, StandardOpenOption.APPEND);
 			int lastIndex = getRowIndex(row);
-			if ((i == customers.size() - 1) && (lastIndex > getSize())) {
+			if ((i == unverified.size() - 1) && (lastIndex > getSize())) {
 				reindex(0);
 				writeToBinaryFile(true);
 			}
 		}
 	}
-	public void appendToTextFile(Customer customer, boolean binary) {
+	public void appendToTextFile(UnverifiedCustomer unverifiedCustomer, boolean binary) {
 		File file = new File(textFileName);
 		try (
     		FileOutputStream fos = new FileOutputStream(file, true);
     		PrintStream ps = new PrintStream(fos);
     	){
         	System.setOut(ps);
-    		String row = customer.getRow();
+    		String row = unverifiedCustomer.getRow();
     		System.out.print(row);
         	fos.flush();
         	ps.flush();
@@ -242,14 +252,14 @@ public class CustomerContainer implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
-	public void appendToBinaryFile(Customer customer, boolean create) throws IOException {
+	public void appendToBinaryFile(UnverifiedCustomer unverifiedCustomer, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
 		reindex(0);
 		byte data[];
 		
-		int size = customer.getRow().length();
-		String row = customer.getRow();
+		int size = unverifiedCustomer.getRow().length();
+		String row = unverifiedCustomer.getRow();
 		data = new byte[size];
 		data = row.getBytes();
 		try {
@@ -258,6 +268,12 @@ public class CustomerContainer implements PersonContainer<Person>{
 			file.createNewFile();
 			writeToBinaryFile(false);
 		} 
+	}
+	@Override
+	public void printAll() {
+		for (UnverifiedCustomer e : this.unverified) {
+			e.printRow();
+		}
 	}
 	
 	/* // TODO Implement these

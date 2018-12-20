@@ -1,5 +1,6 @@
 package customers;
 
+import model.CustomerContainer;
 import people.Person;
 import utility.Helpers;
 
@@ -14,6 +15,9 @@ public class Customer extends UnverifiedCustomer{
 	private static int numCustomers = 0;
 	private int custID = numCustomers;
 	
+	static CustomerContainer customerContainer;
+	static boolean customerContainerIsSet = false;
+	
 	public Customer() { 
 		super();		
 	}
@@ -25,6 +29,7 @@ public class Customer extends UnverifiedCustomer{
 		++numCustomers;
 		++numTotalCustomers;
 		++numPeople;
+		if (customerContainerIsSet) customerContainer.push(this);
 	}
 	public Customer(String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
 		super(firstName, lastName, telephone, email, citizen, employed, employer);
@@ -42,6 +47,11 @@ public class Customer extends UnverifiedCustomer{
 		++numTotalCustomers;
 		++numPeople;
 		--numUnverifiedCustomers;
+		if (customerContainerIsSet) customerContainer.push(this);
+	}
+	public static void passCustomerContainer(CustomerContainer customers) {
+		customerContainer = customers;
+		customerContainerIsSet = true;
 	}
 	@Override
 	public int getID() {
@@ -80,10 +90,6 @@ public class Customer extends UnverifiedCustomer{
 		}
 		else 
 			System.out.println("Currently employed: false");
-	}
-	@Override
-	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-15s%-15s%-14s%-35s%-10s%-10s%-35s", "ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
 	@Override
 	public void printRow() {

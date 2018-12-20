@@ -7,11 +7,12 @@ import static org.junit.Assert.*;
 import customers.Customer;
 import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
-import data.EmployeeContainer;
-import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
 import employees.EmployeeBuilder;
+import model.CustomerContainer;
+import model.EmployeeContainer;
+import model.UnverifiedCustomerContainer;
 import views.Registration;
 
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class BankAppTest
 	ArrayList<UnverifiedCustomer> unverifiedContainer;
 	UnverifiedCustomer unverifiedCustomer1, unverifiedCustomer2;
 	
-	//TODO include Customer Container and add to test.
+	CustomerContainer customers;
+	ArrayList<Customer> customerContainer;
 	Customer customer1, customer2;
 	
 	//@BeforeClas
@@ -41,11 +43,19 @@ public class BankAppTest
 	public void checkPersonSubclassCountsDoNotInterfere() {
 		unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
     	unverifiedContainer = unverified.getArrayList();
+    	customers = new CustomerContainer();
+    	customerContainer = customers.getArrayList();
     	employees = new EmployeeContainer<Employee>();
     	employeeContainer = employees.getArrayList();
+    	admins = new EmployeeContainer<Employee>();
+    	adminContainer = admins.getArrayList();
     	
 		customer1 = new Customer("Lindsay", "Lohan"); 
 		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); 
+		customer2 = new CustomerBuilder()
+				.withUsername("user")
+				.withPassword("password")
+				.makeCustomer(customer1);
 		unverifiedCustomer2 = new CustomerBuilder()
 				.withFirstName("Mark")
 				.withLastName("b")
@@ -57,32 +67,34 @@ public class BankAppTest
 				.makeUnverifiedCustomer();
 
 		employee1 = new Employee("Jake", "Dog"); //people.add(employee);
-    	Employee employee2 = new EmployeeBuilder()
+    	employee2 = new EmployeeBuilder()
     			.withUsername("crazyhacker")
     			.withPassword("Illhacku")
     			.withIsAdmin(false)
     			.makeEmployee();
     	admin1 = new Admin ("Dr.", "Evil"); //people.add(admin);
-    	Admin admin2 = new EmployeeBuilder()
+    	admin2 = new EmployeeBuilder()
     			.withUsername("crazyhacker")
     			.withPassword("Illhacku")
     			.withIsAdmin(true)
     			.makeAdmin();
 		
 		unverifiedContainer.add(unverifiedCustomer1);
+		customerContainer.add(customer1);
 		unverifiedContainer.add(unverifiedCustomer2);
+		customerContainer.add(customer2);
 		
 		employeeContainer.add(employee1); 
+		adminContainer.add(admin1);
 		employeeContainer.add(employee2);
-		employeeContainer.add(admin1); 
-		employeeContainer.add(admin2);
-		
-		admins = employees.getAdminArrayList();
-    	adminContainer = admins.getArrayList();
-
-		assertTrue(employeeContainer.size() == employees.getSize() && employeeContainer.size() == employeeContainer.get(0).getCount());
-		assertTrue(unverifiedContainer.size() == unverifiedContainer.get(0).getCount() && unverifiedContainer.size() == unverified.getSize());
-		assertTrue(adminContainer.size() == adminContainer.get(0).getCount() && adminContainer.size() == admins.getSize());
+		adminContainer.add(admin2); 
+    	
+		assertTrue(employeeContainer.size() == employees.getSize());
+		assertTrue(employees.getSize() == employee1.getCount() - admin1.getCount());
+		assertTrue(adminContainer.size() == admins.getSize());
+		assertTrue(admins.getSize() == admin1.getCount());
+		assertTrue(customerContainer.size() == customers.getSize() && customers.getSize() == customer1.getCount());
+		assertTrue(unverifiedContainer.size() == unverified.getSize() && unverified.getSize() == unverifiedCustomer1.getCount());
 	}
 	
 	@Test

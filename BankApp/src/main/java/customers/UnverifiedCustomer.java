@@ -1,5 +1,7 @@
 package customers;
 
+import model.CustomerContainer;
+import model.UnverifiedCustomerContainer;
 import people.Person;
 import utility.Helpers;
 
@@ -17,6 +19,9 @@ public class UnverifiedCustomer extends Person{
 	private int unverifiedCustomerID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
 	
+	static UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer;
+	static boolean unverifiedContainerIsSet = false;
+	
 	public UnverifiedCustomer() { 
 		super(); 
 	}
@@ -27,6 +32,7 @@ public class UnverifiedCustomer extends Person{
 		this.unverifiedCustomerID = numUnverifiedCustomers;
 		++numUnverifiedCustomers;
 		++numPeople;
+		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class) unverifiedContainer.push(this); // when customers call super, don't push them into unverified
 	}
 	public UnverifiedCustomer(String firstName, String lastName, String telephone, String email, boolean isCitizen, boolean isEmployed, String employer) {
 		super();
@@ -40,14 +46,20 @@ public class UnverifiedCustomer extends Person{
 		this.employer = employer;
 		++numUnverifiedCustomers;
 		++numPeople;
+		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class) unverifiedContainer.push(this); // when customers call super, don't push them into unverified
 	}
 	public Customer convertToCustomer(String username, String password) {
+		if (unverifiedContainerIsSet) unverifiedContainer.Remove(this);
 		Customer newCustomer = new CustomerBuilder()
 				.withUsername(username)
 				.withPassword(password)
 				.makeCustomer(this);
 		numUnverifiedCustomers--;
 		return newCustomer;
+	}
+	public static void passUnverifiedContainer(UnverifiedCustomerContainer<UnverifiedCustomer> unverified) {
+		unverifiedContainer = unverified;
+		unverifiedContainerIsSet = true;
 	}
 	public int getID() {
 		return unverifiedCustomerID;
@@ -79,9 +91,6 @@ public class UnverifiedCustomer extends Person{
 		}
 		else 
 			System.out.println("Currently employed: false");
-	}
-	public void printColumnNames() {
-		System.out.printf("%-4s%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
 	public void printRow() {
 		Helpers helper = new Helpers();

@@ -14,10 +14,19 @@ public class MainMenuController {
 		stop = options.getEndCondition();
 	}
 	public void selectOption(int selection) {
+		boolean isVerified = false;
+		Login login = new Login();
 		if (selection == 1) {
 			RegistrationController registrationController = new RegistrationController();
 			registrationController.call();
-		} else if (selection == stop) System.out.println("Shutting down...");
+		} else if (selection == 2) {
+			while (!isVerified) isVerified = login.call(2);
+		} else if (selection == 3) {
+			while (!isVerified) isVerified = login.call(3);
+		} else if (selection == 4) {
+			while (!isVerified) isVerified = login.call(4);
+		}
+		else if (selection == stop) System.out.println("Shutting down...");
 		else System.out.println("No option selected!");
 	}
 	public void begin() {

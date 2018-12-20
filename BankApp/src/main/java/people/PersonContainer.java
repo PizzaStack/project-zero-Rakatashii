@@ -8,10 +8,8 @@ import people.Person;
 public interface PersonContainer<Person> {
 	public abstract ArrayList<? extends Person> getArrayList();
 	public abstract Class<?> getType();
-	public abstract ArrayList<? extends Person> getArrayListFromSample();
 	public abstract void printColumnNames();
 	public abstract void printAll();
-	public abstract void printNthRow(int index);
 	public abstract void removeAt(int index);
 	public abstract void clear();
 	public abstract int getSize();
@@ -20,6 +18,7 @@ public interface PersonContainer<Person> {
 	public abstract void setBinaryFileName(String bin);
 	public abstract String getSampleFileName(); 
 	public abstract int getRowIndex(String row);	
+	public abstract boolean verifyLoginCredentials(String username, String password);
 	
 	// EmployeeContainer will also need push and the 4 file writing meths
 	

@@ -4,7 +4,18 @@ public class EmployeeBuilder {
 	private String username = null;
 	private String password = null;
 	private boolean admin = false;
+	
+	int employeeID = -1;
+	int adminID = -1;
 
+	public EmployeeBuilder withEmployeeID(int id) {
+		this.employeeID = id;
+		return this;
+	}
+	public EmployeeBuilder withAdminID(int id) {
+		this.adminID = id;
+		return this;
+	}
 	public EmployeeBuilder withUsername(String username) {
 		this.username = username;
 		return this;
@@ -19,12 +30,23 @@ public class EmployeeBuilder {
 	}
 	
 	public Employee makeEmployee() {
-		Employee newEmployee = new Employee(username, password, admin);
+		Employee newEmployee;
+		if (employeeID == -1) newEmployee = new Employee(username, password, admin);
+		else {
+			newEmployee = new Employee(username, password, admin);
+			newEmployee.setID(employeeID);
+		}
 		return newEmployee;
 	}
 	public Admin makeAdmin() {
 		this.admin = true;
-		Admin newAdmin = new Admin(username, password, admin);
+		Admin newAdmin;
+		if (employeeID == -1) newAdmin = new Admin(username, password, admin);
+		else {
+			newAdmin = new Admin(username, password, admin);
+			newAdmin.setID(adminID);
+			newAdmin.setEmployeeID(employeeID);
+		}
 		return newAdmin;
 	}
 }

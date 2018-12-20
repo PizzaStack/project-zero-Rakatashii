@@ -11,183 +11,71 @@ import views.MenuOptions;
 import customers.Customer;
 import customers.UnverifiedCustomer;
 import customers.CustomerBuilder;
-import data.CustomerContainer;
-import data.EmployeeContainer;
-import data.UnverifiedCustomerContainer;
 import employees.Admin;
 import employees.Employee;
+import model.Containers;
+import model.CustomerContainer;
+import model.EmployeeContainer;
+import model.UnverifiedCustomerContainer;
 
-/**
- * Hello world!
- *
- */
 public class BankApp 
 {
     public static void main( String[] args ) throws IOException {
+
+    	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+		//ArrayList<UnverifiedCustomer> unverified = unverifiedContainer.getArrayList();
+		CustomerContainer customerContainer = new CustomerContainer();
+		//ArrayList<Customer> customers = customerContainer.getArrayList();
+    	EmployeeContainer<Employee> employeeContainer = new EmployeeContainer<Employee>();
+    	//ArrayList<Employee> employees = employeeContainer.getArrayList();
+    	EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
+    	//ArrayList<Employee> admins = adminContainer.getArrayList();
     	
-		UnverifiedCustomerContainer<UnverifiedCustomer> unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
-		ArrayList<UnverifiedCustomer> unverifiedContainer = unverified.getArrayList();
-    	unverified.push(new UnverifiedCustomer("Larry", "Lorry"));
-    	unverified.push(new UnverifiedCustomer("Fred", "Saggin"));
-    	int idx = 0;
-    	System.out.println("UNVERIFIED");
-    	unverifiedContainer.get(0).printColumnNames();
-    	for (UnverifiedCustomer uc : unverifiedContainer) {
-    		System.out.println("unverifiedContainer[" + (idx++) +"]: ");
-    		uc.printRow(); 
-    	}
-    	System.out.println();
-    	System.out.println("UnverifiedCustomer Sizes");
-    	System.out.println("unverifiedContainer.size() = " + unverifiedContainer.size());
-    	System.out.println("unverified.getSize() = " + unverified.getSize());
-    	System.out.println("unverifiedContainer.get(0).getCount() = " + unverifiedContainer.get(0).getCount());
-    	System.out.println();
+    	Containers containers = new Containers();
+    	containers.setUnverifiedContainer(unverifiedContainer);
+    	containers.setCustomerContainer(customerContainer);
+    	containers.setEmployeeContainer(employeeContainer);
+    	containers.setAdminContainer(adminContainer);
     	
-		CustomerContainer customers = new CustomerContainer();
-		ArrayList<Customer> customerContainer = customers.getArrayList();
-    	customers.push(new Customer("heytherer23", "qwertyu789"));
-    	customers.push(new Customer("redlion23", "Saggin"));
-    	idx = 0;
-    	System.out.println("CUSTOMERS");
-    	customerContainer.get(0).printColumnNames();
-    	for (Customer c : customerContainer) {
-    		System.out.println("customerContainer[" + (idx++) +"]: ");
-    		c.printRow(); 
-    	}
-    	System.out.println();
-    	System.out.println("Customer Sizes");
-    	System.out.println("customerContainer.size() = " + customerContainer.size());
-    	System.out.println("customers.getSize() = " + customers.getSize());
-    	System.out.println("customersContainer.get(0).getCount() = " + customerContainer.get(0).getCount());
-    	System.out.println();
+    	UnverifiedCustomer.passUnverifiedContainer(containers.getUnverifiedContainer());
+    	Customer.passCustomerContainer(containers.getCustomerContainer());
+    	Employee.passEmployeeContainer(containers.getEmployeeContainer());
+    	Admin.passAdminContainer(containers.getAdminContainer());
     	
-    	EmployeeContainer<Employee> employees = new EmployeeContainer<Employee>();
-    	ArrayList<Employee> employeeContainer = employees.getArrayList();
-    	employees.push(new Employee("Mark", "Pale"));
-    	employeeContainer.add(new Employee("Sara", "Tera"));
-    	employees.push(new Admin("Don", "Quervo"));
-    	employeeContainer.add(new Admin("Jane", "Bora"));
-    	idx = 0;
-    	System.out.println("EMPLOYEES");
-    	employeeContainer.get(0).printColumnNames();
-    	for (Employee c : employeeContainer) {
-    		System.out.println("employeesContainer[" + (idx++) + "]: ");
-    		c.printRow();
-    	}
-    	System.out.println();
-    	System.out.println("Employee Sizes");
-    	System.out.println("employeeContainer.size() = " + employeeContainer.size());
-    	System.out.println("employees.getSize() = " + employees.getSize());
-    	System.out.println("employeeContainer.get(0).getCount() = " + employeeContainer.get(0).getCount());
-    	System.out.println();
+    	UnverifiedCustomer u1 = new UnverifiedCustomer("Larry", "Lorry");
+    	UnverifiedCustomer u2 = new UnverifiedCustomer("Fred", "Saggin");
     	
-    	EmployeeContainer<Employee> admins = employees.getAdminArrayList();
-    	ArrayList<Employee> adminContainer = admins.getArrayList();
-    	idx = 0;
-    	System.out.println("ADMINS");
-    	adminContainer.get(0).printColumnNames();
-    	for (Employee a : adminContainer) {
-    		System.out.println("adminsContainer[" + (idx++) + "]: ");
-    		a.printRow();
-    	}
-    	System.out.println();
-    	System.out.println("Admins Sizes");
-    	System.out.println("adminContainer.size() = " + adminContainer.size());
-    	System.out.println("admins.getSize() = " + admins.getSize());
-    	System.out.println("adminContainer.get(0).getCount() = " + adminContainer.get(0).getCount());
-    	System.out.println();
+    	Customer c1 = new Customer("heytherer23", "qwertyu789");
+    	Customer c2 = new Customer("redlion23", "Saggin");
     	
-    	Helpers helper = new Helpers(); 
-    	helper.printPeopleCounts();
+    	Employee e1 = new Employee("Mark", "Pale");
+    	Employee e2 = new Employee("Tom", "Kat");
     	
+    	Admin a1 = new Admin("Jay", "Cool");
+    	Admin a2 = new Admin("Quack", "David");
+    	Admin a3 = new Admin("Jen", "Baxter");
+    	Admin a4 = new Admin("hell", "boy");
+    	
+    	System.out.println("Iteration 1");
+    	containers.printContainerSizes();
+    	
+    	u1.convertToCustomer("username", "password");
+    	
+    	System.out.println("Iteration 2");
+    	containers.printContainerSizes();
     	
     	//MainMenuController mainController = new MainMenuController();
     	//mainController.begin();
     	
-    	/*
-		UnverifiedCustomer anotherUnverified = new UnverifiedCustomerBuilder()
-				.withFirstName("Mark")
-				.withLastName("b")
-				.withTelephone("2342342345")
-				.withEmail("Markg@gmail.com")
-				.withIsCitizen(false)
-				.withIsEmployed(false)
-				.withEmployer(null)
-				.makeUnverifiedCustomer();
-		unverifiedContainer.add(anotherUnverified);
-		unverified.printAll();
-		System.out.println("Unverified Class = " + unverified.getType().getSimpleName());
-		System.out.println("Number of Unverified Employees = " + unverified.getSize());
-		*/
-    	//Helpers.printPeopleCounts();
-    	//System.out.println();
-		/*
-		boolean newMenu = true;
-		while (newMenu) {
-			newMenu = MenuOptions.display();
-			if (!newMenu) {
-				System.out.println("Program Terminated.");
-				break;
-			}
-		}
-		*/
-
-    	//RegistrationController.call();
-    	
-    	/*
-    	try {
-    		MenuOptions.display();
-    	} catch ( NullPointerException e ) {
-    		throw e;
-    	}
-    	*/
-    	
-  
-    	//File sampleUnverified = new File(project_dir + "text_files/sample_unverified.txt");
-    	//unverified = UnverifiedCustomerData.getArrayListFromSample();
-    	//UnverifiedCustomerData.printAll();
-    	
-    	//UnverifiedCustomerData.readIn(new File(UnverifiedCustomerData.getSampleFileName()));
-    	//^ Do not do this manually! Already set #getArrayListFromSample to readin the sample so that I don't have to worry about it anymore.
-    	
-    	/*
-    	String unverifiedCustomersTextTable = project_dir + "text_files/unverified_customers_text_file_table.txt";
-    	UnverifiedCustomerData.setTextFileName(unverifiedCustomersTextTable);
-    	String unverifiedCustomersBinaryTable = project_dir + "text_files/unverified_customers_binary_file_table.bin";
-    	UnverifiedCustomerData.setBinaryFileName(unverifiedCustomersBinaryTable);
-    	UnverifiedCustomerData.writeToTextFile(true, true);
-    	*/
-    	
-    	/*
-    	//UnverifiedCustomerData.writeToBinaryFile(unverifiedCustomersBinaryTable, true);
-    	
-		UnverifiedCustomer anotherUnverified2 = new UnverifiedCustomerBuilder()
-				.withUnverifiedCustomerID(UnverifiedCustomer.getNumUnverifiedCustomers())
-				.withFirstName("Jackie")
-				.withLastName("Chan")
-				.withTelephone("1233454567")
-				.withEmail("N@ninja.com")
-				.withIsCitizen(false)
-				.withIsEmployed(true)
-				.withEmployer("Hollywood")
-				.makeUnverifiedCustomer();
-		
-		UnverifiedCustomerData.appendToTextFile(anotherUnverified2, true);
-    	
-    	System.out.println();
-    	System.out.println("5th row:");
-    	UnverifiedCustomerData.printNthRow(5);
-    	
-    	System.out.println();
-    	UnverifiedCustomerData.printAll();
-    	*/
     }
     
     /** TODO
-     * (Clean up main())
-     * Create import/export from  containers to controller in order to populate
+     + * (Clean up main()) 
+     + * Create import/export from  containers to controller in order to populate
      * Create sample data for Admin and Employee, maybe Customer too to verify that Unverified is being converted correctly
+       - (need to be able to run ruby to generate sample data) 
      * Finish login pages for Admin, Employee, Customer
+       - would be better to have the sample data first to populate customers with usernames and passwords
      * Create accounts class and update all customer classes with account numbers and balances (Savings/Checking)
      * Tests for controller and account classes
      * Probably a good time for joint accounts feature (Just give a reference to primary accounts holders account number

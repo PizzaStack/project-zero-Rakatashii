@@ -1,4 +1,4 @@
-package data;
+package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import customers.Customer;
 import customers.UnverifiedCustomer;
 import employees.Admin;
 import employees.Employee;
@@ -25,6 +26,7 @@ import people.PersonContainer;
 public class EmployeeContainer<T> implements PersonContainer<Person>{
 
 	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
+	private ArrayList<Employee> admins = new ArrayList<Employee>();
 	private Class<? extends Person> type = new Employee().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_set";
@@ -39,6 +41,9 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public ArrayList<Employee> getArrayList(){
 		return this.employees;
 	}
+	public void setArrayList(ArrayList<Employee> employees) {
+		this.employees = employees;
+	}
 	public EmployeeContainer<Employee> getAdminArrayList(){
 		EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
 		ArrayList<Employee> admins = new ArrayList<Employee>(); 
@@ -50,7 +55,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		}
 		return adminContainer;
 	}
-	public ArrayList<Employee> getArrayListFromSample() { 
+	public ArrayList<Employee> getArrayListFromSample(boolean includeEmployees, boolean includeAdmins) { 
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -60,14 +65,15 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		try {
-			readIn(new File(sampleTextFileName));
+			readIn(new File(sampleTextFileName), includeEmployees, includeAdmins);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return this.employees;
 	}
+	@Override
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-10s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
+		System.out.printf("%-10s%-20s%-20s%-8s%-10s\n", "EMPL_ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
 	}
 	public void printAll() {
 		printColumnNames();
@@ -109,7 +115,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		return sampleTextFileName;
 	}
 	
-	public void readIn(File file) throws IOException {
+	public void readIn(File file, boolean includeEmployees, boolean includeAdmins) throws IOException {
 		if (file.exists() == false) {
 			try {
 				file.createNewFile();
@@ -118,7 +124,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		String line;
-		String[] fields = new String[3];
+		String[] fields = new String[5];
     	try {
 			Scanner cin = new Scanner(file, "UTF-8");
 			int oldArraySize = getSize();
@@ -126,11 +132,24 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				Employee newUnverified = new EmployeeBuilder()
-						.withUsername(fields[0])
-						.withPassword(fields[1])
-						.withIsAdmin(Boolean.parseBoolean(fields[2]))
-						.makeEmployee();
+				boolean adminStatus = Boolean.parseBoolean(fields[2]);
+				if (includeEmployees && (adminStatus == false)) {
+					Employee newEmployee = new EmployeeBuilder()
+							.withEmployeeID(Integer.parseInt(fields[0]))
+							.withUsername(fields[1])
+							.withPassword(fields[2])
+							.withIsAdmin(adminStatus)
+							.makeEmployee();
+				}
+				if (includeAdmins && (adminStatus == true)) {
+					Employee newEmployee = new EmployeeBuilder()
+							.withEmployeeID(Integer.parseInt(fields[0]))
+							.withUsername(fields[1])
+							.withPassword(fields[2])
+							.withIsAdmin(adminStatus)
+							.withAdminID(Integer.parseInt(fields[4]))
+							.makeAdmin();
+				}
 			}
 			reindex(oldArraySize);
 			//TODO this.employees.add(newUnverified)

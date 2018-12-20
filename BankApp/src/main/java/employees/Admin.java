@@ -1,5 +1,7 @@
 package employees;
 
+import model.CustomerContainer;
+import model.EmployeeContainer;
 import people.Person;
 import utility.Helpers;
 
@@ -11,7 +13,10 @@ public class Admin extends Employee{
 	private int adminID = numAdmins; // is this really needed for admins?
 	private int employeeID;
 	
-	public boolean isAdmin() { return admin; }
+	static EmployeeContainer<? extends Employee> adminContainer;
+	static boolean adminContainerIsSet = false;
+	
+	public boolean isAdmin() { return super.isAdmin(); }
 	public Admin() { 
 		super();
 		//adminID = numAdmins;
@@ -22,12 +27,19 @@ public class Admin extends Employee{
 		adminID = numAdmins;
 		this.employeeID = super.employeeID;
 		numAdmins++;
+		if (adminContainerIsSet) adminContainer.push(this);
 	}
 	public Admin(String username, String password, boolean isAdmin) {
 		super(username, password, true);
 		adminID = numAdmins;
 		this.employeeID = super.employeeID;
 		numAdmins++;
+		if (adminContainerIsSet) adminContainer.push(this);
+	}
+	
+	public static void passAdminContainer(EmployeeContainer<? extends Employee> admins) {
+		adminContainer = admins;
+		adminContainerIsSet = true;
 	}
 
 	@Override
@@ -40,20 +52,16 @@ public class Admin extends Employee{
 			System.out.println("isAdmin?: " + Boolean.toString(admin));
 	}
 	@Override
-	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-8s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
-	}
-	@Override
 	public void printRow() {
 		Helpers helper = new Helpers();
 		int isAdmin = helper.boolToInt(this.admin);
-		System.out.printf("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
+		System.out.printf("%-10d%-20s%-20s%-8d%-10d\n", this.employeeID, this.username, this.password, isAdmin, this.adminID);
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
 		int isAdmin = helper.boolToInt(this.admin);
-		return String.format("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
+		return String.format("%-10d%-20s%-20s%-8d-10d\n", this.employeeID, this.username, this.password, isAdmin, this.adminID);
 	}
 	@Override
 	public int getCount() {
@@ -62,6 +70,12 @@ public class Admin extends Employee{
 	@Override
 	public int getID() {
 		return adminID;
+	}
+	public void setID(int id) {
+		this.adminID = id;
+	}
+	public void setEmployeeID(int id) {
+		this.employeeID = id;
 	}
 	@Override
 	public String getUsername() {
