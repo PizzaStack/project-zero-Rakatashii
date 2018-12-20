@@ -43,7 +43,7 @@ public class Registration /* extends Customer */ {
 		errorMessages.put(codes.EMPLR, "If you selected \"Yes\" for \'isEmployed\' field, you must specify employer.");
 	}
 	
-	public UnverifiedCustomer beginForm() {
+	public UnverifiedCustomer beginForm() throws InterruptedException {
 		boolean errors = true;
 		
 		@SuppressWarnings("resource")
@@ -119,10 +119,12 @@ public class Registration /* extends Customer */ {
 					continue;
 				} 
 			}
-			System.out.println();
+			//System.out.println();
 			
 			if (errors == false) {
+				System.out.println();
 				System.out.println("Success! Your application is pending administrative approval.");
+				Thread.sleep(3000);
 				unverifiedCustomer = new CustomerBuilder()
 						.withFirstName(firstName)
 						.withLastName(lastName)
@@ -133,9 +135,9 @@ public class Registration /* extends Customer */ {
 						.withEmployer(employer)
 						.makeUnverifiedCustomer();
 			} 
-			
 			this.registrationErrors.clear();
 		}
+		System.out.println();
 		return unverifiedCustomer;
 	}
 	

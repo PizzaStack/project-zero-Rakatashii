@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import com.BankApp.BankApp;
 
+import controller.LoginController;
 import controller.MainMenuController;
 
 public class MenuOptions { // TODO refacter without statics
@@ -16,6 +17,8 @@ public class MenuOptions { // TODO refacter without statics
 	private int endCondition;
 	private int maxLineLength;
 	private String lineSeparator, menuEndLine;
+	
+	LoginController loginStatus;
 	
 	public MenuOptions() {
 		setArrayValues();
@@ -92,7 +95,7 @@ public class MenuOptions { // TODO refacter without statics
 			System.out.print("* Select option number: "); 
 			
 			selection = cin.nextInt();
-			System.out.print("- Selection = " + selection + lineSeparator.substring(15) + "\n");
+			System.out.print("- Selection = " + selection + lineSeparator.substring(15));
 	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}

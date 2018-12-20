@@ -24,6 +24,8 @@ public class Admin extends Employee{
 	}
 	public Admin(String username, String password) {
 		super(username, password);
+		this.username = username;
+		this.password = password;
 		adminID = numAdmins;
 		this.employeeID = super.employeeID;
 		numAdmins++;
@@ -31,6 +33,8 @@ public class Admin extends Employee{
 	}
 	public Admin(String username, String password, boolean isAdmin) {
 		super(username, password, true);
+		this.username = username;
+		this.password = password;
 		adminID = numAdmins;
 		this.employeeID = super.employeeID;
 		numAdmins++;
@@ -79,11 +83,11 @@ public class Admin extends Employee{
 	}
 	@Override
 	public String getUsername() {
-		return "";
+		return this.username;
 	}
 	@Override
 	public String getPassword() {
-		return "";
+		return this.password;
 	}
 	
 	

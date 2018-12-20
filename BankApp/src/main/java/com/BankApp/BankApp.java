@@ -20,7 +20,7 @@ import model.UnverifiedCustomerContainer;
 
 public class BankApp 
 {
-    public static void main( String[] args ) throws IOException {
+    public static void main( String[] args ) throws IOException, InterruptedException {
 
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
 		//ArrayList<UnverifiedCustomer> unverified = unverifiedContainer.getArrayList();
@@ -56,6 +56,7 @@ public class BankApp
     	Admin a3 = new Admin("Jen", "Baxter");
     	Admin a4 = new Admin("hell", "boy");
     	
+    	/*
     	System.out.println("Iteration 1");
     	containers.printContainerSizes();
     	
@@ -63,10 +64,11 @@ public class BankApp
     	
     	System.out.println("Iteration 2");
     	containers.printContainerSizes();
+    	*/
     	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
-    	//mainController.begin();
+    	mainController.begin();
     	
     }
     
@@ -89,5 +91,13 @@ public class BankApp
      * Look into Serialization
      * Look into Logging
      * Expand database features
+     */
+    
+    /** Pres
+     * MVC may not be best here. May be better to organize in a way that would exploit Java's
+       strenghts - i.e., grouping related classes in the same package. 
+       - Evident especially in problems arrising from having the controllers and views
+           communicate with one another between packages.
+     * 
      */
 }

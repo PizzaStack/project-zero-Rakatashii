@@ -26,7 +26,7 @@ import people.PersonContainer;
 public class EmployeeContainer<T> implements PersonContainer<Person>{
 
 	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
-	private ArrayList<Employee> admins = new ArrayList<Employee>();
+	//private ArrayList<Employee> admins = new ArrayList<Employee>();
 	private Class<? extends Person> type = new Employee().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_set";
@@ -44,6 +44,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public void setArrayList(ArrayList<Employee> employees) {
 		this.employees = employees;
 	}
+	/*
 	public EmployeeContainer<Employee> getAdminArrayList(){
 		EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
 		ArrayList<Employee> admins = new ArrayList<Employee>(); 
@@ -54,7 +55,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		return adminContainer;
-	}
+	}*/
 	public ArrayList<Employee> getArrayListFromSample(boolean includeEmployees, boolean includeAdmins) { 
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
@@ -279,9 +280,8 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	@Override
 	public boolean verifyLoginCredentials(String username, String password) {
 		for (Employee e : employees) {
-			if (e.getUsername() == username)
-				if (e.getPassword() == password)
-					return true;
+			if (e.getUsername().equals(username) && e.getPassword().equals(password))
+				return true;
 		}
 		return false;
 	}

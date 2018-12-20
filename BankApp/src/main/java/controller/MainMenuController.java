@@ -7,10 +7,12 @@ import com.BankApp.BankApp;
 
 import model.Containers;
 import model.CustomerContainer;
+import views.Login;
 import views.MenuOptions;
 
 public class MainMenuController {
 	MenuOptions options;
+	LoginController login;
 	private int stop;
 	private Containers containers = null;
 	
@@ -18,9 +20,9 @@ public class MainMenuController {
 		options = new MenuOptions();
 		stop = options.getEndCondition();
 	}
-	public void selectOption(int selection) {
+	public void selectOption(int selection) throws InterruptedException {
 		boolean isVerified = false;
-		LoginController login = new LoginController();
+		login = new LoginController();
 		if (selection == 1) {
 			RegistrationController registrationController = new RegistrationController();
 			registrationController.passContainers(containers);
@@ -38,7 +40,7 @@ public class MainMenuController {
 		else if (selection == stop) System.out.println("Shutting down...");
 		else System.out.println("No option selected!");
 	}
-	public void begin() {
+	public void begin() throws InterruptedException {
 		int selection = -1;
 		while (selection != stop) {
 			
@@ -55,9 +57,13 @@ public class MainMenuController {
 			}
 		}
 	}
-	public void passContainers(Containers container) {
-		this.containers = container;
+	public void passContainers(Containers containers) {
+		this.containers = containers;
 	}
+	void passLoginInfo(LoginController loginInfo){
+		this.login = loginInfo;
+	}
+
 	/*
 	public void passContainers(Containers containers) {
 		this.containers = containers;

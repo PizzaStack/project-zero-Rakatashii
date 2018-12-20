@@ -21,10 +21,10 @@ public class Customer extends UnverifiedCustomer{
 	public Customer() { 
 		super();		
 	}
-	public Customer(String firstName, String lastName) {
+	public Customer(String username, String password) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.username = username;
+		this.password = password;
 		custID = numCustomers;
 		++numCustomers;
 		++numTotalCustomers;

@@ -272,9 +272,10 @@ public class CustomerContainer implements PersonContainer<Person>{
 	@Override
 	public boolean verifyLoginCredentials(String username, String password) {
 		for (Customer c : customers) {
-			if (c.getUsername() == username)
-				if (c.getPassword() == password)
-					return true;
+			//System.out.println("Got here          (c): c.getUsername() = " + c.getUsername() + " - c.getPassword() = " + c.getPassword());
+			//System.out.println("Got here (from login):        username = " +        username + " -        password = " + password);
+			if (c.getUsername().equals(username) && c.getPassword().equals(password))
+				return true;
 		}
 		return false;
 	}

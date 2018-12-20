@@ -80,11 +80,11 @@ public class Employee extends Person{
 	}
 	@Override
 	public String getUsername() {
-		return "";
+		return this.username;
 	}
 	@Override
 	public String getPassword() {
-		return "";
+		return this.password;
 	}
 	
 }

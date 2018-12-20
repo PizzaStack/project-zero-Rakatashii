@@ -6,7 +6,7 @@ import views.Registration;
 
 public class RegistrationController {
 	Containers containers;
-	public void call() {
+	public void call() throws InterruptedException {
 		Registration newCustomerInfo = new Registration();
 		UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();
 		containers.getUnverifiedContainer().push(newUnverifiedCustomer);
