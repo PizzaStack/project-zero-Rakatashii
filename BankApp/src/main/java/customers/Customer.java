@@ -11,6 +11,7 @@ public class Customer extends UnverifiedCustomer{
 	boolean isCitizen, isEmployed;
 	String employer;
 	boolean verified = true;
+	private boolean isLocked = false;
 	
 	private static int numCustomers = 0;
 	private int custID = numCustomers;

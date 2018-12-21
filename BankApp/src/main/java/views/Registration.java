@@ -95,7 +95,7 @@ public class Registration /* extends Customer */ {
 				continue;
 			}
 			
-			System.out.print("Are you a US Citizen? ");
+			System.out.print("Are You A US Citizen? ");
 			this.citizenAnswer = cin.nextLine();
 			if (!(validCitizenAnswer(citizenAnswer))) {
 				errors = true;
@@ -103,7 +103,7 @@ public class Registration /* extends Customer */ {
 				continue;
 			} 
 			
-			System.out.print("Are you currently employed? ");
+			System.out.print("Are You Currently Employed? ");
 			this.isEmployedAnswer = cin.nextLine();
 			if (!(validEmployedAnswer(isEmployedAnswer))) {
 				errors = true;
@@ -112,7 +112,7 @@ public class Registration /* extends Customer */ {
 			} 
 			
 			if (this.isEmployed) {
-				System.out.print("What is the name of your employer? ");
+				System.out.print("What Is The Name Of Your Employer? ");
 				this.employer = cin.nextLine();
 				if (!(validEmployer(employer))){
 					errors = true;
@@ -123,9 +123,6 @@ public class Registration /* extends Customer */ {
 			//System.out.println();
 			
 			if (errors == false) {
-				System.out.println();
-				System.out.println("Success! Your application is pending administrative approval.");
-				//Thread.sleep(2500);
 				unverifiedCustomer = new CustomerBuilder()
 						.withFirstName(firstName)
 						.withLastName(lastName)
@@ -138,7 +135,6 @@ public class Registration /* extends Customer */ {
 			} 
 			this.registrationErrors.clear();
 		}
-		System.out.println();
 		return unverifiedCustomer;
 	}
 	

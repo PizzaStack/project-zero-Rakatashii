@@ -7,6 +7,7 @@ import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
 import views.Login;
+import views.MenuOptions;
 
 public class LoginController {
 	private boolean verified;
@@ -51,39 +52,36 @@ public class LoginController {
 				if (containers != null) customers = containers.getCustomerContainer();
 				if (customers.verifyLoginCredentials(username, password)) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
-					//if (!isLoggedIn()) Thread.sleep(2500); 
+					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
 					System.out.println();
 					return true; 
 				}
-				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
 			} else if (selection == 3) {
 				if (containers != null) employees = containers.getEmployeeContainer();
 				if (employees.verifyLoginCredentials(username,  password)) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
-					//if (!isLoggedIn()) Thread.sleep(2500); 
+					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
 					System.out.println();
 					return true;
 				}
-				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
 			} else if (selection == 4) {
 				if (containers != null) admins = containers.getAdminContainer();
 				if (admins.verifyLoginCredentials(username, password)) { 
-					System.out.println("\nSuccess! Welcome " + username + "."); 
-					//if (!isLoggedIn()) Thread.sleep(2500); 
+					System.out.println("Success! Welcome " + username + "."); 
+					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
 					System.out.println();
 					return true; 
 				}
-				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
 			}
 			tries--;
-			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.\n");
+			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
 				if (!isLoggedIn()) Thread.sleep(2500);
-				System.out.println("\n");
+				System.out.println();
 				return false;
 			}
 		}

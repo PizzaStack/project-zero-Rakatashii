@@ -275,9 +275,9 @@ public class CustomerContainer implements PersonContainer<Person>{
 			//System.out.println("Got here          (c): c.getUsername() = " + c.getUsername() + " - c.getPassword() = " + c.getPassword());
 			//System.out.println("Got here (from login):        username = " +        username + " -        password = " + password);
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
-				return true;
+				return true; // c.getID();
 		}
-		return false;
+		return false; //-1;
 	}
 	
 	/* // TODO Implement these

@@ -20,7 +20,7 @@ public class MenuOptions {
 	private int size;
 	
 	private int maxLineLength;
-	private String lineSeparator, menuEndLine;
+	private static String lineSeparator, menuEndLine;
 	
 	LoginController loginStatus;
 	
@@ -32,6 +32,7 @@ public class MenuOptions {
 			mainOptions.clear();
 		}
 		if (menuType == Menus.DEFAULT) setHomeViewArrayValues();
+		else if (menuType == Menus.EXIT) return;
 		size = mainOptions.size();
 	}
 	private void setHomeViewArrayValues() {
@@ -84,11 +85,12 @@ public class MenuOptions {
 		int selection = 0;
 		while (!(inBounds(selection))) {
 			selection = 0;
-			System.out.print(lineSeparator);
+			System.out.println();
+			//System.out.print(lineSeparator);
 			System.out.print("* Select option number: "); 
-			
 			selection = cin.nextInt();
-			System.out.print("- Selection = " + selection + lineSeparator.substring(15));
+			//System.out.println();
+			System.out.print("  --------- Selection = " + selection + lineSeparator.substring(15, lineSeparator.length()-1));
 	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}
@@ -116,5 +118,11 @@ public class MenuOptions {
 	}
 	public void passLoginInfo(LoginController loginInfo){
 		this.loginStatus = loginInfo;
+	}
+	public static String getLineSeparator() {
+		return lineSeparator.substring(0, lineSeparator.length()-1 );
+	}
+	public static String getMenuEndLine() {
+		return menuEndLine.substring(0,  menuEndLine.length() - 1);
 	}
 }
