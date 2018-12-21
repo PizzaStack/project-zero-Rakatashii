@@ -3,67 +3,66 @@ package views;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-
-import com.BankApp.BankApp;
 
 import controller.LoginController;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
-import controller.CustomerController.CustomerMenus;
+import controller.EmployeeController.EmployeeMenus;
 
-public class MenuOptions { 
-	private ArrayList<String> mainOptions = new ArrayList<String>(); 
+
+public class EmployeeOptions{
 	private int endCondition;
-	private int size;
+	ArrayList<String> employeeOptions = new ArrayList<String>();
 	
 	private int maxLineLength;
 	private String lineSeparator, menuEndLine;
 	
-	LoginController loginStatus;
+	MainMenuController mainMenuController;
+	//LoginController loginStatus;
 	
-	public MenuOptions() { 
-		
-	}
-	public MenuOptions(Menus menuType) {
-		if (mainOptions.size() > 0) {
-			mainOptions.clear();
+	public EmployeeOptions() { }
+	public EmployeeOptions(EmployeeMenus employeeMenuOption) throws InterruptedException {
+		mainMenuController = new MainMenuController();
+		if (employeeOptions != null && employeeOptions.size() > 0) employeeOptions.clear();
+		if (employeeMenuOption == EmployeeMenus.EMPLOYEE) {
+			setEmployeeViewArrayValues();
+		} else {
+			mainMenuController.begin(Menus.DEFAULT);
 		}
-		if (menuType == Menus.DEFAULT) setHomeViewArrayValues();
-		size = mainOptions.size();
 	}
-	private void setHomeViewArrayValues() {
-		addFormattedOption(1, "To Register (If You Are A New Customer)");
-		addFormattedOption(2, "For Customer Login");
-		addFormattedOption(3, "For Employee Login");
-		addFormattedOption(4, "For Admin Login");
+
+	private void setEmployeeViewArrayValues() {
+		addFormattedOption(1, "Employee Option 1");
+		addFormattedOption(2, "Employee Option 2");
+		addFormattedOption(3, "to Logout");
 		
-		maxLineLength = maxOptionLength()-1;
-		lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		this.maxLineLength = maxOptionLength()-1;
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Main Menu";
+		String title = "Employee Database Access";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
 		String menuLeftHalf = menuSideLine + " ";
 		String menuRightHalf = " " + menuSideLine + "-";
 		
-		mainOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
-		endCondition = mainOptions.size();
-		addFormattedOption(mainOptions.size(), "Save Progress and Quit");
-		mainOptions.add(mainOptions.size(), menuEndLine);
+		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = employeeOptions.size();
+		//addFormattedOption(employeeOptions.size(), "Go back to Main Menu");
+		if (endCondition == employeeOptions.size()) endCondition--;
+		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
 	} 
-	public int displayHomeMenu() throws IOException {
-		for (int i = 0; i < mainOptions.size(); i++){
+	public int displayAccountsMenu() throws IOException {
+		
+		for (int i = 0; i < employeeOptions.size(); i++){
 			if (i != 0) System.out.print(lineSeparator);
 			if (i == 1 && LoginController.isLoggedIn()) {
-				System.out.println("* (Logged in as " + LoginController.getLoggedInUsername() + ")");
+				System.out.println("* (Logged in as  " + LoginController.getLoggedInUsername() + ")");
 				System.out.print(lineSeparator);
-			} 
-			System.out.print(mainOptions.get(i));
+			}
+			System.out.print(employeeOptions.get(i));
 		}
 		int selection = 0;
 		while (!inBounds(selection)) {
@@ -97,24 +96,26 @@ public class MenuOptions {
 	}	
 	public int maxOptionLength() {
 		int max = 0;
-		for (String option : mainOptions) {
+		for (String option : employeeOptions) {
 			max = (option.length() >= max) ? option.length() : max;
 		}
 		return max;
 	}
 	public void addFormattedOption(int i, String optionName) {
-		mainOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
+		employeeOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
 	}
 	public int getEndCondition() {
 		return endCondition;
 	}
+	public int getSize() {
+		return employeeOptions.size();
+	}
 	public boolean inBounds(int selection) {
 		return (selection > 0 && selection <= endCondition) ? true : false;
 	}
-	public int getSize() {
-		return mainOptions.size();
-	}
+	/*
 	public void passLoginInfo(LoginController loginInfo){
 		this.loginStatus = loginInfo;
 	}
+	*/
 }

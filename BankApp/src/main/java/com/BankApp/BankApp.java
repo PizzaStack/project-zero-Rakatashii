@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.*;
 
 import controller.MainMenuController;
+import controller.MainMenuController.Menus;
+import controller.CustomerController.CustomerMenus;
+import controller.EmployeeController.EmployeeMenus;
 import controller.RegistrationController;
 import people.Person;
 import utility.Helpers;
-import views.MenuOptions;
 import customers.Customer;
 import customers.UnverifiedCustomer;
 import customers.CustomerBuilder;
@@ -23,13 +25,9 @@ public class BankApp
     public static void main( String[] args ) throws IOException, InterruptedException {
 
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
-		//ArrayList<UnverifiedCustomer> unverified = unverifiedContainer.getArrayList();
 		CustomerContainer customerContainer = new CustomerContainer();
-		//ArrayList<Customer> customers = customerContainer.getArrayList();
     	EmployeeContainer<Employee> employeeContainer = new EmployeeContainer<Employee>();
-    	//ArrayList<Employee> employees = employeeContainer.getArrayList();
     	EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
-    	//ArrayList<Employee> admins = adminContainer.getArrayList();
     	
     	Containers containers = new Containers();
     	containers.setUnverifiedContainer(unverifiedContainer);
@@ -42,34 +40,23 @@ public class BankApp
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
     	Admin.passAdminContainer(containers.getAdminContainer());
     	
-    	UnverifiedCustomer u1 = new UnverifiedCustomer("Larry", "Lorry");
-    	UnverifiedCustomer u2 = new UnverifiedCustomer("Fred", "Saggin");
+    	UnverifiedCustomer u1 = new UnverifiedCustomer("unverified", "customer");
+    	UnverifiedCustomer u2 = new UnverifiedCustomer("redlion", "saggin5");
     	
-    	Customer c1 = new Customer("heytherer23", "qwertyu789");
-    	Customer c2 = new Customer("redlion23", "Saggin");
+    	Customer c1 = new Customer("customer", "password");
+    	Customer c2 = new Customer("heytherer23", "qwertyu789");
     	
-    	Employee e1 = new Employee("Mark", "Pale");
-    	Employee e2 = new Employee("Tom", "Kat");
+    	Employee e1 = new Employee("employee", "password");
+    	Employee e2 = new Employee("Tom", "Kats");
     	
-    	Admin a1 = new Admin("Jay", "Cool");
-    	Admin a2 = new Admin("Quack", "David");
-    	Admin a3 = new Admin("Jen", "Baxter");
-    	Admin a4 = new Admin("hell", "boy");
-    	
-    	/*
-    	System.out.println("Iteration 1");
-    	containers.printContainerSizes();
-    	
-    	u1.convertToCustomer("username", "password");
-    	
-    	System.out.println("Iteration 2");
-    	containers.printContainerSizes();
-    	*/
+    	Admin a1 = new Admin("admin", "password");
+    	Admin a2 = new Admin("Jay", "Kool");
+    	Admin a3 = new Admin("Glen", "Baxter");
+    	Admin a4 = new Admin("Hell", "Boy");
     	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
-    	mainController.begin();
-    	
+    	mainController.begin(Menus.DEFAULT);
     }
     
     /** TODO

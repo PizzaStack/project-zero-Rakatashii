@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.BankApp.BankApp;
 
+import controller.LoginController;
 import controller.MainMenuController;
 import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
@@ -124,7 +125,7 @@ public class Registration /* extends Customer */ {
 			if (errors == false) {
 				System.out.println();
 				System.out.println("Success! Your application is pending administrative approval.");
-				Thread.sleep(3000);
+				//Thread.sleep(2500);
 				unverifiedCustomer = new CustomerBuilder()
 						.withFirstName(firstName)
 						.withLastName(lastName)

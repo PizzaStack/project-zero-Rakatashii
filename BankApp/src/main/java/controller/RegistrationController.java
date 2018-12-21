@@ -9,6 +9,7 @@ public class RegistrationController {
 	public void call() throws InterruptedException {
 		Registration newCustomerInfo = new Registration();
 		UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();
+		if (newUnverifiedCustomer != null);
 		containers.getUnverifiedContainer().push(newUnverifiedCustomer);
 	}
 	public void passContainers(Containers containers) {

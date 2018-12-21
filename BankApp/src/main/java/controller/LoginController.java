@@ -18,29 +18,32 @@ public class LoginController {
 	String username;
 	String password;
 	
+	private int tries = 3;
 	private Login login = new Login();
 	
-	static boolean loggedIn = false;
-	static String loggedInUsername = null;
+	// Only one person, whatever type, can be logged in at once - so makes sense to make static
+	static boolean loggedIn;
+	static String loggedInUsername;
 	
-	public void logInAs(String username) {
-		loggedIn = true;
-		loggedInUsername = username;
-	}
-	public boolean isLoggedIn() { return loggedIn; } // only static so far
-	public String getLoggedInUsername() { 
+	public static boolean isLoggedIn() { 
+		return loggedIn; 
+	} 
+	public static String getLoggedInUsername() { 
 		if (loggedInUsername != null) 
 			return loggedInUsername; 
 		else loggedIn = false;
 		return "";
 	}
-	public void logout() { 
+	public static void logout() { 
 		loggedIn = false; 
 		loggedInUsername = null; 
 	}
+	public void logInAs(String username) {
+		loggedIn = true;
+		loggedInUsername = username;
+	}
 	
 	public boolean call(int selection) throws InterruptedException{
-		int tries = 3;
 		while (!verified && tries > 0) {
 			username = login.getUsername();
 			password = login.getPassword();
@@ -48,9 +51,9 @@ public class LoginController {
 				if (containers != null) customers = containers.getCustomerContainer();
 				if (customers.verifyLoginCredentials(username, password)) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
-					Thread.sleep(3000); 
-					this.loggedIn = true;
-					this.loggedInUsername = username;
+					//if (!isLoggedIn()) Thread.sleep(2500); 
+					logInAs(username);
+					System.out.println();
 					return true; 
 				}
 				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
@@ -58,9 +61,9 @@ public class LoginController {
 				if (containers != null) employees = containers.getEmployeeContainer();
 				if (employees.verifyLoginCredentials(username,  password)) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
-					Thread.sleep(3000); 
-					this.loggedIn = true;
-					this.loggedInUsername = username;
+					//if (!isLoggedIn()) Thread.sleep(2500); 
+					logInAs(username);
+					System.out.println();
 					return true;
 				}
 				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
@@ -68,11 +71,9 @@ public class LoginController {
 				if (containers != null) admins = containers.getAdminContainer();
 				if (admins.verifyLoginCredentials(username, password)) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
-					Thread.sleep(3000); 
+					//if (!isLoggedIn()) Thread.sleep(2500); 
+					logInAs(username);
 					System.out.println();
-					this.loggedIn = true;
-					this.loggedInUsername = username;
-					
 					return true; 
 				}
 				//else System.out.println("Invalid Login Credentials, " + tries + " attempts remaining.");
@@ -81,12 +82,15 @@ public class LoginController {
 			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.\n");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
-				Thread.sleep(3000);
+				if (!isLoggedIn()) Thread.sleep(2500);
 				System.out.println("\n");
 				return false;
 			}
 		}
 		return false;
+	}
+	public int getNumTries() {
+		return tries;
 	}
 	public void passContainers(Containers containers) {
 		if (containers != null) this.containers = containers;
