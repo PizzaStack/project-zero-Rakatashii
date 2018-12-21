@@ -7,7 +7,6 @@ import utility.Helpers;
 public class Employee extends Person{
 	String username, password;
 	boolean admin = false;
-	//String firstName, lastName;
 	public boolean isAdmin() { return admin; }
 	
 	private static int numEmployees = 0;
@@ -18,8 +17,6 @@ public class Employee extends Person{
 	
 	public Employee() { 
 		super(); 
-		//employeeID = numEmployees;
-		//++numEmployees;
 	}
 	public Employee(String username, String password) {
 		super();

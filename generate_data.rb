@@ -1,9 +1,8 @@
-#!/usr/local/bin/ruby -w
-##!/usr/bin/env ruby
+#!/usr/bin/env ruby
 require 'Faker'
 
 args = ARGV
-valid_inputs = %w{firstname lastname telephone email social salary employed employer citizen}
+valid_inputs = %w{firstname username password checking saving checking_balance saving_balance id lastname telephone email social salary employed employer citizen}
 
 def is_numeric?(obj)
    obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
@@ -12,11 +11,17 @@ def is_file_name?(obj)
    obj.to_s.match(/\w+(\.\w+)\Z/) == nil ? false : true
 end
 
-#call this:
+#call this: (MAC)
 #'./generate_data.rb 100 firstname lastname telephone email citizen employed employer BankApp/text_files/sample_unverified.txt'
+#call this: (WINDOWS)
+#./generate_data.rb 1000 username password firstname lastname telephone email citizen employed employer account_number balance account_number balance sample_data.csv
+#dir = "/Users/christianmeyer/java/project-zero-Rakatashii/"
+dir = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/"
+#filename = "/Users/christianmeyer/java/project-zero-Rakatashii/data.txt"
+filename = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/default.txt"
+#1(means share account) + 2 digit share id + Member Number** = 13 digits
+#**Member number needs to have proceeding zeros to fill the number out to 13 digits.
 
-dir = "/Users/christianmeyer/java/project-zero-Rakatashii/"
-filename = "/Users/christianmeyer/java/project-zero-Rakatashii/data.txt"
 file_given = 0
 if is_file_name?(ARGV[ARGV.size-1].to_s)
     filename = dir + ARGV[ARGV.size-1].to_s
@@ -33,7 +38,8 @@ args.each_with_index do |arg, i|
         print "#{arg}(#{i})\n"
     end
 end
-
+savings = [ ]
+checking = [ ]
 File.open(filename, 'w') { |f|
     Faker::Config.random.seed
     if (ARGV.size > 2)
@@ -45,13 +51,64 @@ File.open(filename, 'w') { |f|
         n = args[0].to_i
         number_given = 1
     end
+    id_idx = 0;
     n.times do
         num_args = ARGV.size - number_given - file_given
         print_line = "";
         args.any? {|arg|
-            if arg == "name"
-                name = Faker::Name.name;
-                print_line += name
+            if arg == "id"
+                id = id_idx
+                id_idx++
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+            end
+            if arg == "username"
+                username = Faker::Internet.username;
+                print_line += username
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+            end
+            if arg == "password"
+                password = Faker::Internet.password;
+                print_line += password;
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+            end
+            if arg == "checking"
+                account = (rand(1000000)+rand(10000000)).to_s
+                print_line += account
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+                checking.push(account)
+            end
+            if arg == "saving"
+                account = (rand(1000000)+rand(10000000)).to_s
+                print_line += account
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+                savings.push(account)
+            end
+            if arg == "checking_balance"
+                balance = rand(-10000.0..100000.0).round(2).to_s
+                print_line += balance
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+            end
+            if arg == "saving_balance"
+                balance = rand(-100000.0..1000000.0).round(2).to_s
+                print_line += balance
                 num_args -= 1
                 if num_args > 0
                     print_line += "|"
@@ -85,12 +142,12 @@ File.open(filename, 'w') { |f|
                 end
             end
             if arg == "email"
-                    email = Faker::Internet.email;
-                    print_line += email
-                    num_args -= 1
-                    if num_args > 0
-                        print_line += "|"
-                    end
+                email = Faker::Internet.email;
+                print_line += email
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
             end
             if arg == "salary"
                 salary = "$" + rand(0..500000).to_s
@@ -139,10 +196,23 @@ File.open(filename, 'w') { |f|
                     print_line += "|"
                 end
             end
+            if arg == "joint"
+                joint = rand(4)
+                print_line += "#{joint}"
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+                if (joint == 1 && savings.size > 0) #25% chance
+                    print_line += "|"
+                    print_line += "#{savings[rand(savings.size)]}"
+                else 
+                    print_line += "|"
+                    print_line += "null"
+                end
+            end
         }
         print_line += "\n"
-        if print_line.length > 1 && num_args == 0
-            f.write(print_line)
-        end
+        f.write(print_line)
     end
 }

@@ -18,7 +18,7 @@ public interface PersonContainer<Person> {
 	public abstract void setBinaryFileName(String bin);
 	public abstract String getSampleFileName(); 
 	public abstract int getRowIndex(String row);	
-	public abstract boolean verifyLoginCredentials(String username, String password);
+	public abstract int verifyLoginCredentials(String username, String password);
 	
 	// EmployeeContainer will also need push and the 4 file writing meths
 	

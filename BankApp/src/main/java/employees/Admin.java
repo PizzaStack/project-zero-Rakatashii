@@ -89,6 +89,9 @@ public class Admin extends Employee{
 	public String getPassword() {
 		return this.password;
 	}
+	public int getEmployeeID() {
+		return this.employeeID;
+	}
 	
 	
 }

@@ -276,13 +276,13 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		}
 	}
 	@Override
-	public boolean verifyLoginCredentials(String username, String password) {
+	public int verifyLoginCredentials(String username, String password) {
 		for (UnverifiedCustomer u : unverified) {
 			if (u.getUsername() == username)
 				if (u.getPassword() == password)
-					return true;
+					return u.getID();
 		}
-		return false;
+		return -1;
 	}
 	
 	/* // TODO Implement these

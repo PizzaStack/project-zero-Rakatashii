@@ -270,18 +270,11 @@ public class CustomerContainer implements PersonContainer<Person>{
 		} 
 	}
 	@Override
-	public boolean verifyLoginCredentials(String username, String password) {
+	public int verifyLoginCredentials(String username, String password) {
 		for (Customer c : customers) {
-			//System.out.println("Got here          (c): c.getUsername() = " + c.getUsername() + " - c.getPassword() = " + c.getPassword());
-			//System.out.println("Got here (from login):        username = " +        username + " -        password = " + password);
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
-				return true; // c.getID();
+				return c.getID();
 		}
-		return false; //-1;
-	}
-	
-	/* // TODO Implement these
-	public boolean hasDuplicate(Employee e) { return false; } 
-	public static void rebase(String fileName) throws IOException {}
-	*/
+		return -1;
+	} 
 }

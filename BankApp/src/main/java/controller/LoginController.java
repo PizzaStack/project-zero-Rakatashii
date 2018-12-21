@@ -15,6 +15,8 @@ public class LoginController {
 	private CustomerContainer customers;
 	private EmployeeContainer<Employee> employees;
 	private EmployeeContainer<Employee> admins;
+	int customerID = -1;
+	int employeeID = -1;
 	
 	String username;
 	String password;
@@ -50,7 +52,8 @@ public class LoginController {
 			password = login.getPassword();
 			if (selection == 2) {
 				if (containers != null) customers = containers.getCustomerContainer();
-				if (customers.verifyLoginCredentials(username, password)) { 
+				customerID = customers.verifyLoginCredentials(username, password);
+				if (customerID > 0) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
@@ -59,7 +62,8 @@ public class LoginController {
 				}
 			} else if (selection == 3) {
 				if (containers != null) employees = containers.getEmployeeContainer();
-				if (employees.verifyLoginCredentials(username,  password)) { 
+				int employeeID = employees.verifyLoginCredentials(username,  password);
+				if (employeeID > 0) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
@@ -68,7 +72,8 @@ public class LoginController {
 				}
 			} else if (selection == 4) {
 				if (containers != null) admins = containers.getAdminContainer();
-				if (admins.verifyLoginCredentials(username, password)) { 
+				int employeeID = admins.verifyLoginCredentials(username, password);
+				if (employeeID > 0) { 
 					System.out.println("Success! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);

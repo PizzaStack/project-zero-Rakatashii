@@ -1,5 +1,8 @@
 package customers;
 
+import accounts.Account;
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import model.CustomerContainer;
 import people.Person;
 import utility.Helpers;
@@ -19,6 +22,9 @@ public class Customer extends UnverifiedCustomer{
 	static CustomerContainer customerContainer;
 	static boolean customerContainerIsSet = false;
 	
+	SavingsAccount savingsAccount = null;
+	CheckingAccount checkingAccount = null;
+	
 	public Customer() { 
 		super();		
 	}
@@ -31,6 +37,7 @@ public class Customer extends UnverifiedCustomer{
 		++numTotalCustomers;
 		++numPeople;
 		if (customerContainerIsSet) customerContainer.push(this);
+		makeNewAccounts();
 	}
 	public Customer(String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
 		super(firstName, lastName, telephone, email, citizen, employed, employer);
@@ -49,6 +56,7 @@ public class Customer extends UnverifiedCustomer{
 		++numPeople;
 		--numUnverifiedCustomers;
 		if (customerContainerIsSet) customerContainer.push(this);
+		makeNewAccounts();
 	}
 	public static void passCustomerContainer(CustomerContainer customers) {
 		customerContainer = customers;
@@ -110,4 +118,37 @@ public class Customer extends UnverifiedCustomer{
 	public String getUsername() { return this.username; }
 	@Override
 	public String getPassword() { return this.password; }
+	
+	public void setSavingsAccount(SavingsAccount savings) {
+		savingsAccount = savings;
+		if (checkingAccount != null) {
+			if (checkingAccount.isJoint()) savingsAccount.setJointCustomer(checkingAccount.getJointCustomer());
+		}
+	}
+	public SavingsAccount getSavingsAccount() {
+		return savingsAccount;
+	}
+	public void setCheckingAccount(CheckingAccount checking) {
+		checkingAccount = checking;
+		if (savingsAccount != null) {
+			if (savingsAccount.isJoint()) savingsAccount.setJointCustomer(savingsAccount.getJointCustomer());
+		}
+	}
+	public CheckingAccount getCheckingAccount() {
+		return checkingAccount;
+	}
+	public boolean hasSavingsAccount() {
+		if (savingsAccount != null) return true;
+		return false;
+	}
+	public boolean hasCheckingAccount() {
+		if (savingsAccount != null) return true;
+		return false;
+	}
+	private void makeNewAccounts() {
+		this.savingsAccount = new SavingsAccount();
+		this.checkingAccount = new CheckingAccount();
+		this.savingsAccount.setPairedAccount(this.checkingAccount);
+		this.checkingAccount.setPairedAccount(this.savingsAccount);
+	}
 }
