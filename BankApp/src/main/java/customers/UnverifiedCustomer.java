@@ -24,6 +24,7 @@ public class UnverifiedCustomer extends Person{
 	
 	public UnverifiedCustomer() { 
 		super(); 
+		unverifiedCustomerID = -1;
 	}
 	public UnverifiedCustomer(String fName, String lName) { 
 		super();

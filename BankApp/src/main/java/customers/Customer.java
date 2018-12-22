@@ -14,7 +14,7 @@ public class Customer extends UnverifiedCustomer{
 	boolean isCitizen, isEmployed;
 	String employer;
 	boolean verified = true;
-	private boolean isLocked = false;
+	private boolean accountsAreFlagged = false;
 	
 	private static int numCustomers = 0;
 	private int custID = numCustomers;
@@ -26,7 +26,8 @@ public class Customer extends UnverifiedCustomer{
 	CheckingAccount checkingAccount = null;
 	
 	public Customer() { 
-		super();		
+		super();
+		custID = -1;
 	}
 	public Customer(String username, String password) {
 		super();
@@ -145,10 +146,14 @@ public class Customer extends UnverifiedCustomer{
 		if (savingsAccount != null) return true;
 		return false;
 	}
-	private void makeNewAccounts() {
+	public void makeNewAccounts() {
 		this.savingsAccount = new SavingsAccount();
 		this.checkingAccount = new CheckingAccount();
 		this.savingsAccount.setPairedAccount(this.checkingAccount);
 		this.checkingAccount.setPairedAccount(this.savingsAccount);
+	}
+	public void flagAccounts(boolean flag) {
+		this.savingsAccount.flag();
+		this.checkingAccount.flag();
 	}
 }

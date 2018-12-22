@@ -19,6 +19,8 @@ public class Admin extends Employee{
 	public boolean isAdmin() { return super.isAdmin(); }
 	public Admin() { 
 		super();
+		adminID = -1;
+		employeeID = -1;
 		//adminID = numAdmins;
 		//++numAdmins;
 	}

@@ -132,8 +132,11 @@ public class CheckingAccount implements Account {
 		if (this.pairedSavingsAccount != null) return this.pairedSavingsAccount;
 		else return null;
 	}
-	public void flag(boolean flagged) {
-		this.flagged = flagged;
+	public void flag() {
+		this.flagged = true;
+	}
+	public void unflag() {
+		this.flagged = false;
 	}
 	public boolean isFlagged() {
 		return flagged;

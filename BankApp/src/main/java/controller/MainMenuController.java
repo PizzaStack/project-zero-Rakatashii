@@ -35,7 +35,9 @@ public class MainMenuController {
 			RegistrationController registrationController = new RegistrationController();
 			registrationController.passContainers(containers);
 			registrationController.call();
-		} else if (selection == 2) {
+		} else if (selection == 2) { // if still having trouble logging in again at main menu
+			// consider reimplementing w while loop and change value of selection when 
+			// need to relog.
 			if (LoginController.isLoggedIn()) isVerified = true;
 			else while (isVerified == false && login.getNumTries() > 0) { 
 				isVerified = login.call(2); 

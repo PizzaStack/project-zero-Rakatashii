@@ -17,6 +17,7 @@ public interface Account {
 	Customer getJointCustomer();
 	
 	boolean verifyID();
-	public void flag(boolean flagged);
+	public void flag();
+	public void unflag();
 	public boolean isFlagged();
 }

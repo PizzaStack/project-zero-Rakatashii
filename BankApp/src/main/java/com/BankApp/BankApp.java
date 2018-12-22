@@ -24,12 +24,8 @@ import model.UnverifiedCustomerContainer;
 public class BankApp 
 {
     public static void main( String[] args ) throws IOException, InterruptedException {
-    	try {
-			H2Test.H2();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("Could not update H2.");
-		}
+
+    	//H2Test.H2();
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
 		CustomerContainer customerContainer = new CustomerContainer();
     	EmployeeContainer<Employee> employeeContainer = new EmployeeContainer<Employee>();

@@ -31,7 +31,11 @@ public class CustomerController{
 		else System.out.println(selection + " is not a valid input.\n");
 	}
 	public void begin(CustomerMenus customerMenu) throws InterruptedException {
-		if (customerMenu == CustomerMenus.LOGOUT) return;
+		if (customerMenu == CustomerMenus.LOGOUT) {
+			LoginController.logout();
+			new MainMenuController().begin(Menus.DEFAULT); // WATCH
+			//return;
+		}
 		customerOptions = new CustomerOptions(customerMenu);
 		//customerOptions.passLoginInfo(login);
 		stop = customerOptions.getEndCondition();

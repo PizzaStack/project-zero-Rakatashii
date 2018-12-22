@@ -17,6 +17,7 @@ public class Employee extends Person{
 	
 	public Employee() { 
 		super(); 
+		employeeID = -1;
 	}
 	public Employee(String username, String password) {
 		super();

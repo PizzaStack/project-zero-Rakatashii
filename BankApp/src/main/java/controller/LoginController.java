@@ -50,10 +50,11 @@ public class LoginController {
 		while (!verified && tries > 0) {
 			username = login.getUsername();
 			password = login.getPassword();
+			if (containers == null) System.out.println("CONTAINERS ARE NULL IN LOGIN");
 			if (selection == 2) {
 				if (containers != null) customers = containers.getCustomerContainer();
-				customerID = customers.verifyLoginCredentials(username, password);
-				if (customerID > 0) { 
+				verified = customers.verifyLoginCredentials(username, password);
+				if (verified) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
@@ -62,8 +63,8 @@ public class LoginController {
 				}
 			} else if (selection == 3) {
 				if (containers != null) employees = containers.getEmployeeContainer();
-				int employeeID = employees.verifyLoginCredentials(username,  password);
-				if (employeeID > 0) { 
+				verified = employees.verifyLoginCredentials(username,  password);
+				if (verified) { 
 					System.out.println("\nSuccess! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);
@@ -72,8 +73,8 @@ public class LoginController {
 				}
 			} else if (selection == 4) {
 				if (containers != null) admins = containers.getAdminContainer();
-				int employeeID = admins.verifyLoginCredentials(username, password);
-				if (employeeID > 0) { 
+				verified = admins.verifyLoginCredentials(username, password);
+				if (verified) { 
 					System.out.println("Success! Welcome " + username + "."); 
 					if (!isLoggedIn()) Thread.sleep(2500); 
 					logInAs(username);

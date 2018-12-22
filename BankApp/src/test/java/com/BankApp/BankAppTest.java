@@ -35,7 +35,7 @@ public class BankAppTest
 	ArrayList<Customer> customerContainer;
 	Customer customer1, customer2;
 	
-	//@BeforeClas
+	//@BeforeClass
 	/* public void setUp() { Apparently @BeforeClass -> setUp must be static... @Before prob worse } */
 	// opting to redefine in each @test..
 	
@@ -175,7 +175,20 @@ public class BankAppTest
     	assertFalse(match4);
     	assertFalse(match5);
     	assertFalse(match6);
-
+	}
+	@Test
+	public void TestJointAccounts() {
+		customer1 = new Customer("user1", "password");
+		customer2 = new CustomerBuilder()
+				.withUsername("user2")
+				.withPassword("password")
+				.makeCustomer(customer1);
+		customer1.makeNewAccounts();
+		assertTrue(customer1.getSavingsAccount() != null && customer2.getCheckingAccount() != null);
+		assertTrue(customer1.getSavingsAccount().getPairedAccount() == customer1.getCheckingAccount());
+		assertTrue(customer1.getCheckingAccount().getPairedAccount() == customer1.getSavingsAccount());
+		//customer1.setJoinedAccount(customer2);
+		//assertTrue(customer1.getSavingsAccount().isJoint() && customer1.getCheckingAccount().isJoint());
 	}
 }
 

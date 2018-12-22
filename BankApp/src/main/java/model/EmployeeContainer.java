@@ -278,14 +278,16 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		} 
 	}
 	@Override
-	public int verifyLoginCredentials(String username, String password) {
+	public boolean verifyLoginCredentials(String username, String password) {
 		for (Employee e : employees) {
 			if (e.getUsername().equals(username) && e.getPassword().equals(password))
-				if (e.getClass() == Employee.class) return e.getID();
+				/*if (e.getClass() == Employee.class) return e.getID();
 				else if (e.getClass() == Admin.class) return ((Admin)e).getID();
 			//WATCH e.getClass may still interpret all admins as Employees. 
+				*/
+				return true;
 		}
-		return -1;
+		return false;
 	}
 
 	/* // TODO Implement these

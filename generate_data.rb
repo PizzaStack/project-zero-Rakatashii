@@ -19,6 +19,7 @@ end
 dir = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/"
 #filename = "/Users/christianmeyer/java/project-zero-Rakatashii/data.txt"
 filename = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/default.txt"
+
 #1(means share account) + 2 digit share id + Member Number** = 13 digits
 #**Member number needs to have proceeding zeros to fill the number out to 13 digits.
 
@@ -203,7 +204,7 @@ File.open(filename, 'w') { |f|
                 if num_args > 0
                     print_line += "|"
                 end
-                if (joint == 1 && savings.size > 0) #25% chance
+                if (joint == 1 && savings.size > 0) #P(joint) = 1/4
                     print_line += "|"
                     print_line += "#{savings[rand(savings.size)]}"
                 else 

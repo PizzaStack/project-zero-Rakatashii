@@ -270,11 +270,26 @@ public class CustomerContainer implements PersonContainer<Person>{
 		} 
 	}
 	@Override
-	public int verifyLoginCredentials(String username, String password) {
+	public boolean verifyLoginCredentials(String username, String password) {
 		for (Customer c : customers) {
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
-				return c.getID();
+				return true;
 		}
-		return -1;
+		return false;
 	} 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
