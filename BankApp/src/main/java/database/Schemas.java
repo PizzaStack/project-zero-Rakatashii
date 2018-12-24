@@ -9,16 +9,16 @@ import java.sql.Statement;
 
 public class Schemas {
 	final String customerSchema = "CREATE TABLE customers ("
-			+ "customer_id INTEGER PRIMARY KEY, " //1
-			+ "username VARCHAR(255), " //2
-			+ "password VARCHAR(255), " //3
-			+ "first_name VARCHAR(255), " //4
-			+ "last_name VARCHAR(255), " //5
-			+ "telephone VARCHAR(255), " //6
-			+ "email VARCHAR(255), " //7
-			+ "us_citizen BOOLEAN, " //8
-			+ "employed BOOLEAN, " //9
-			+ "employer VARCHAR(255)" //10
+			+ "customer_id INTEGER PRIMARY KEY, "
+			+ "username VARCHAR(255), "
+			+ "password VARCHAR(255), "
+			+ "first_name VARCHAR(255), "
+			+ "last_name VARCHAR(255), "
+			+ "telephone VARCHAR(255), "
+			+ "email VARCHAR(255), "
+			+ "us_citizen BOOLEAN, "
+			+ "employed BOOLEAN, "
+			+ "employer VARCHAR(255)"
 			+ ");";
 	final String customerSampleSchema = "CREATE TABLE sample_customers ("
 			+ "customer_id INTEGER PRIMARY KEY, "
@@ -58,32 +58,30 @@ public class Schemas {
 			+ "password VARCHAR(55), " 
 			+ "admin BOOLEAN"
 			+ ");";
-	final String[] actualSchemas = { customerSchema, accountSchema, employeeSchema, employeeSampleSchema };
+	final String[] actualSchemas = { customerSchema, accountSchema, employeeSchema };
 	final String[] sampleSchemas = { customerSampleSchema, accountSampleSchema, employeeSampleSchema };
 	final String[] actualSchemaNames = {"customers", "accounts", "employees"};
 	final String[] sampleSchemaNames = {"sample_customers", "sample_accounts", "sample_employees"};
 	public Schemas() { }
 	
 	public void createActualTables() throws ClassNotFoundException {
-		for (int i = 0; i < sampleSchemas.length; i++) {
+		DBUtil dbUtil = new DBUtil();
+		for (int i = 0; i < actualSchemas.length; i++) {
 			try {
 				Connection connection = DBConnection.getConnection();
 				Statement statement = connection.createStatement();
-				
-			    DatabaseMetaData dbm = connection.getMetaData();
-			    ResultSet rs = dbm.getTables(null, null, actualSchemaNames[i], null);
-			    if (rs.next()) {
-			    	System.out.println("Tables " + actualSchemaNames[i] + " already exits.");
-			    } else {
+			
+			    if (dbUtil.checkIfEmpty(actualSchemaNames[i]) == true) {
 			    	System.out.println("Table " + actualSchemaNames[i] + " does not exist"); 
-			    	String sql = sampleSchemas[i];
+			    	String sql = actualSchemas[i];
 					
 					System.out.println("Creating table " + actualSchemaNames[i] + "...");
 					statement.execute(sql);
 					
 					System.out.println("Table " + actualSchemaNames[i] + " was created.");
 					statement.close();
-					//connection.close();
+			    } else {
+			    	System.out.println("Tables " + actualSchemaNames[i] + " already exists.");
 			    }
 			} catch (SQLException e) {
 				System.out.println("Failed to create " + actualSchemaNames[i] + " table from schema");
@@ -92,16 +90,13 @@ public class Schemas {
 		}
 	}
 	public void createSampleTables() throws ClassNotFoundException {
+		DBUtil dbUtil = new DBUtil();
 		for (int i = 0; i < sampleSchemas.length; i++) {
 			try {
 				Connection connection = DBConnection.getConnection();
 				Statement statement = connection.createStatement();
 				
-			    DatabaseMetaData dbm = connection.getMetaData();
-			    ResultSet rs = dbm.getTables(null, null, sampleSchemaNames[i], null);
-			    if (rs.next()) {
-			    	System.out.println("Tables " + sampleSchemaNames[i] + " already exits.");
-			    } else {
+				if (dbUtil.checkIfEmpty(sampleSchemaNames[i]) == true) {
 			    	System.out.println("Table " + sampleSchemaNames[i] + " does not exist"); 
 			    	String sql = sampleSchemas[i];
 					
@@ -110,7 +105,8 @@ public class Schemas {
 					
 					System.out.println("Table " + sampleSchemaNames[i] + " was created.");
 					statement.close();
-					//connection.close();
+			    } else {
+			    	System.out.println("Tables " + sampleSchemaNames[i] + " already exists.");
 			    }
 			} catch (SQLException e) {
 				System.out.println("Failed to create " + sampleSchemaNames[i] + " table from schema");

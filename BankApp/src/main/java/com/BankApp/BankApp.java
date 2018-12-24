@@ -21,6 +21,7 @@ import utility.Helpers;
 import customers.Customer;
 import customers.UnverifiedCustomer;
 import database.DBConnection;
+import database.DBUtil;
 import database.Schemas;
 //import database.H2Test;
 import customers.CustomerBuilder;
@@ -42,8 +43,8 @@ public class BankApp
     	
     	//DBConnection.closeConnection();
     	//System.out.println("Connection Closed.");
-    	String customerSample = "text_files/customer_sample.txt";
-    	File customerSampleFile = new File(customerSample);
+    	String customerSampleFileName = "text_files/customer_sample.txt";
+    	File customerSampleFile = new File(customerSampleFileName);
     	
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
 		CustomerContainer customerContainer = new CustomerContainer();
@@ -61,28 +62,33 @@ public class BankApp
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
     	Admin.passAdminContainer(containers.getAdminContainer());
     	
-    	try {
-			customerContainer.readIn(new File("text_files/customer_sample.txt"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	customerContainer.setTextFileName("text_files/formatted_customer_sample.txt");
-    	try {
-			customerContainer.writeToTextFile(true, false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	CustomerDAO customerDAO = new CustomerDAO();
+    	DBUtil dbUtil = new DBUtil();
     	
     	Customer first_customer = new Customer("customer", "password", "firstname", "lastname", 
     			"telephone", "email", true, true, "employer");
-    	ArrayList<Customer> employees = customerContainer.getArrayList();
-    	for (Customer c : employees) {
-    		c.printRow();
-    		customerDAO.addSampleCustomer(c);
+    	
+    	if (dbUtil.checkIfEmpty("sample_customers") == true) {
+        	try {
+    			customerContainer.readIn(new File("text_files/customer_sample.txt"));
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        	customerContainer.setTextFileName("text_files/formatted_customer_sample.txt");
+        	try {
+    			customerContainer.writeToTextFile(true, false);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+        	
+        	CustomerDAO customerDAO = new CustomerDAO();
+        	
+        	ArrayList<Customer> customers = customerContainer.getArrayList();
+        	for (Customer c : customers) {
+        		c.printRow();
+        		customerDAO.addSampleCustomer(c);
+        	}
     	}
     	
     	UnverifiedCustomer u1 = new UnverifiedCustomer("unverified", "customer");

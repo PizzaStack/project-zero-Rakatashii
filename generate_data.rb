@@ -2,7 +2,7 @@
 require 'Faker'
 
 args = ARGV
-valid_inputs = %w{firstname username password checking saving checking_balance saving_balance id lastname telephone email social salary employed employer citizen}
+valid_inputs = %w{firstname username password checking saving checking_balance saving_balance id admin lastname telephone email social salary employed employer citizen}
 
 def is_numeric?(obj)
    obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
@@ -183,6 +183,18 @@ File.open(filename, 'w') { |f|
                     print_line += "|"
                 end
             end
+            if arg == "admin"
+                citizen = rand(2)
+                if (citizen == 0) 
+                    print_line += "false"
+                elsif (citizen == 1)
+                    print_line += "true";
+                end
+                num_args -= 1
+                if num_args > 0
+                    print_line += "|"
+                end
+            end
             employed = rand(2)
             if arg == "employed"
                 if (employed == 1) 
@@ -224,6 +236,10 @@ File.open(filename, 'w') { |f|
             end
         }
         print_line += "\n"
+        if (args.any? { |arg| arg == "admin" } && print_line.include?("true")) then
+            admin_file = dir + "admin_sample.txt"
+            File.open(admin_file, 'a') { |a| a.write(print_line) }
+        end
         f.write(print_line)
     end
 }

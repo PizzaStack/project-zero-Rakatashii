@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import customers.Customer;
 import database.DBConnection;
@@ -70,4 +71,5 @@ public class CustomerDAO implements CustomerDAOInterface {
 			return false;
 		}
 	}
+
 }
