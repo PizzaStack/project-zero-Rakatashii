@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import DAO.CustomerDAO;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
 import controller.CustomerController.CustomerMenus;
@@ -36,6 +37,7 @@ public class BankApp
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException {
     	Schemas schemas;
     	schemas = new Schemas();
+    	schemas.createActualTables();
     	schemas.createSampleTables();
     	
     	//DBConnection.closeConnection();
@@ -73,21 +75,19 @@ public class BankApp
 			e.printStackTrace();
 		}
     	
-    	UnverifiedCustomer u1 = new UnverifiedCustomer("unverified", "customer");
-    	UnverifiedCustomer u2 = new UnverifiedCustomer("redlion", "saggin5");
-    	Customer c1 = new Customer("customer", "password");
-    	Customer c2 = new Customer("heytherer23", "qwertyu789");
-    	Employee e1 = new Employee("employee", "password");
-    	Employee e2 = new Employee("Tom", "Kats");
-    	Admin a1 = new Admin("admin", "password");
-    	Admin a2 = new Admin("Jay", "Kool");
-    	Admin a3 = new Admin("Glen", "Baxter");
-    	Admin a4 = new Admin("Hell", "Boy");
+    	CustomerDAO customerDAO = new CustomerDAO();
     	
+    	Customer first_customer = new Customer("customer", "password", "firstname", "lastname", 
+    			"telephone", "email", true, true, "employer");
     	ArrayList<Customer> employees = customerContainer.getArrayList();
     	for (Customer c : employees) {
     		c.printRow();
+    		customerDAO.addSampleCustomer(c);
     	}
+    	
+    	UnverifiedCustomer u1 = new UnverifiedCustomer("unverified", "customer");
+    	Employee e1 = new Employee("employee", "password");
+    	Admin a1 = new Admin("admin", "password");
     	
     	
     	
