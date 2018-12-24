@@ -1,6 +1,13 @@
 package com.BankApp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 import controller.MainMenuController;
@@ -12,7 +19,9 @@ import people.Person;
 import utility.Helpers;
 import customers.Customer;
 import customers.UnverifiedCustomer;
-import database.H2Test;
+import database.DBConnection;
+import database.Schemas;
+//import database.H2Test;
 import customers.CustomerBuilder;
 import employees.Admin;
 import employees.Employee;
@@ -23,9 +32,17 @@ import model.UnverifiedCustomerContainer;
 
 public class BankApp 
 {
-    public static void main( String[] args ) throws IOException, InterruptedException {
-
-    	//H2Test.H2();
+	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
+    public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException {
+    	Schemas schemas;
+    	schemas = new Schemas();
+    	schemas.createSampleTables();
+    	
+    	//DBConnection.closeConnection();
+    	//System.out.println("Connection Closed.");
+    	String customerSample = "text_files/customer_sample.txt";
+    	File customerSampleFile = new File(customerSample);
+    	
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
 		CustomerContainer customerContainer = new CustomerContainer();
     	EmployeeContainer<Employee> employeeContainer = new EmployeeContainer<Employee>();
@@ -42,23 +59,82 @@ public class BankApp
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
     	Admin.passAdminContainer(containers.getAdminContainer());
     	
+    	try {
+			customerContainer.readIn(new File("text_files/customer_sample.txt"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	customerContainer.setTextFileName("text_files/formatted_customer_sample.txt");
+    	try {
+			customerContainer.writeToTextFile(true, false);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	UnverifiedCustomer u1 = new UnverifiedCustomer("unverified", "customer");
     	UnverifiedCustomer u2 = new UnverifiedCustomer("redlion", "saggin5");
-    	
     	Customer c1 = new Customer("customer", "password");
     	Customer c2 = new Customer("heytherer23", "qwertyu789");
-    	
     	Employee e1 = new Employee("employee", "password");
     	Employee e2 = new Employee("Tom", "Kats");
-    	
     	Admin a1 = new Admin("admin", "password");
     	Admin a2 = new Admin("Jay", "Kool");
     	Admin a3 = new Admin("Glen", "Baxter");
     	Admin a4 = new Admin("Hell", "Boy");
     	
+    	ArrayList<Customer> employees = customerContainer.getArrayList();
+    	for (Customer c : employees) {
+    		c.printRow();
+    	}
+    	
+    	
+    	
+    	
+    	/*
+		String dbconnectionfile = "preferences/dbconnection.txt";
+		File file = new File(dbconnectionfile);
+		Scanner in = new Scanner(file);
+		String url = in.nextLine();
+		System.out.println(url);
+		String username = in.nextLine();
+		System.out.println(username);
+		String password = in.nextLine();
+		System.out.println(password);
+    	try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Driver not established");
+		}
+    	try (
+		    Connection connection = DriverManager.getConnection(url, username, password);
+		    Statement statement = connection.createStatement();
+		){
+		// STEP 3: Execute a query
+		System.out.println("Creating table in given database...");
+		String sql = "CREATE TABLE test_table" 
+				+ "(id INTEGER PRIMARY KEY, " 
+				+ " first VARCHAR(255), "
+				+ " last VARCHAR(255), " 
+				+ " age INTEGER );";
+		statement.execute(sql); //executeUpdate(sql);
+		System.out.println("Created table in given database...");
+
+		// STEP 4: Clean-up environment
+		statement.close();
+		connection.close();
+		} catch (SQLException ex) {
+		    System.out.println("Unable to establish connection to database");
+		}
+    	*/
+    	
+    	
+    	/*
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
+    	*/
     }
     
     /** TODO

@@ -19,12 +19,13 @@ import customers.Customer;
 import customers.CustomerBuilder;
 import people.Person;
 import people.PersonContainer;
+import utility.Helpers;
 
 public class CustomerContainer implements PersonContainer<Person>{
 
 	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
 	private Class<?> type = new Customer().getClass();
-	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_customers.txt";
+	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/sample_customers.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 	
@@ -118,31 +119,35 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 	}
 	public void readIn(File file) throws IOException {
+		/*
 		if (file.exists() == false) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
 				throw e;
 			}
-		}
+		}*/
 		String line;
-		String[] fields = new String[7];
+		String[] fields = new String[9];
     	try {
-			Scanner cin = new Scanner(file, "UTF-8");
+			Scanner cin = new Scanner(file);
 			int oldArraySize = getSize();
 			while (cin.hasNextLine()) {
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				Customer newUnverified = new CustomerBuilder()
-						.withID(Integer.parseInt(fields[0]))
-						.withFirstName(fields[1])
-						.withLastName(fields[2])
-						.withTelephone(fields[3])
-						.withEmail(fields[4])
-						.withIsCitizen(Boolean.parseBoolean(fields[5]))
-						.withIsEmployed(Boolean.parseBoolean(fields[6]))
-						.withEmployer(fields[7])
+				Helpers helper = new Helpers();
+				Customer customer = new CustomerBuilder()
+						//.withID(Integer.parseInt(fields[0]))
+						.withUsername(fields[0])
+						.withPassword(fields[1])
+						.withFirstName(fields[2])
+						.withLastName(fields[3])
+						.withTelephone(fields[4])
+						.withEmail(fields[5])
+						.withIsCitizen(Boolean.parseBoolean(fields[6]))
+						.withIsEmployed(Boolean.parseBoolean(fields[7]))
+						.withEmployer(fields[8])
 						.makeCustomer();
 			}
 			reindex(oldArraySize);

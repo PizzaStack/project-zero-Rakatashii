@@ -25,12 +25,27 @@ public class Helpers {
 		int[] arr = {sampleCustomer.getCount(), sampleUnverified.getCount(), sampleEmployee.getCount(), sampleAdmin.getCount()};
 		return arr;
 	}
+	public boolean intToBool(int b) {
+		return (b == 0) ? false : true;
+	}
 	public int boolToInt(boolean b){
 		return (b) ? 1 : 0;
+	}
+	public String boolToString(boolean b){
+		return (b) ? "true" : "false";
+	}
+	public String boolIntToString(int b){
+		return (b == 0) ? "false" : "true";
 	}
 	public String getStringIfNull(String s) {
 		if (s == null) return "null";
 		else return s;
+	}
+	public String intStringToBoolString(String b) {
+		return (b == "0") ? "false" : "true";
+	}
+	public boolean stringToBool(String b) {
+		return (b == "0") ? false : true;
 	}
 	
 

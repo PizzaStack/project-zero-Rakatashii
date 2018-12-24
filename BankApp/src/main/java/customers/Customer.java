@@ -104,21 +104,30 @@ public class Customer extends UnverifiedCustomer{
 	@Override
 	public void printRow() {
 		Helpers helper = new Helpers();
-		int citizen = helper.boolToInt(this.isCitizen);
-		int employed = helper.boolToInt(this.isEmployed);
-		System.out.printf("%-4d%-20s%-20s%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+		// boolToInt (0/1) System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
-		int citizen = helper.boolToInt(this.isCitizen);
-		int employed = helper.boolToInt(this.isEmployed);
-		return String.format("%-4d%-20%-20%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		// boolToInt (0/1) return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	@Override
-	public String getUsername() { return this.username; }
+	public String getUsername()    { return this.username; }
 	@Override
-	public String getPassword() { return this.password; }
+	public String getPassword()    { return this.password; }
+	public String getFirstname()   { return this.firstName; }
+	public String getLastname()    { return this.lastName; }
+	public String getTelephone()   { return this.telephone; }
+	public String getEmail() 	   { return this.email; }
+	public boolean getIsCitizen()  { return this.isCitizen; }
+	public boolean getIsEmployed() { return this.isEmployed; }
+	public String getEmployer()    { return this.employer; }
 	
 	public void setSavingsAccount(SavingsAccount savings) {
 		savingsAccount = savings;

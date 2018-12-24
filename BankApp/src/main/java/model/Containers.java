@@ -14,6 +14,9 @@ public class Containers {
 	ArrayList<Employee> employees;
 	ArrayList<Employee> admins;
 	*/
+	public Containers getContainers() {
+		return this;
+	}
 	
 	private CustomerContainer customerContainer;
 	private UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer;

@@ -24,16 +24,17 @@ filename = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/d
 #**Member number needs to have proceeding zeros to fill the number out to 13 digits.
 
 file_given = 0
-if is_file_name?(ARGV[ARGV.size-1].to_s)
-    filename = dir + ARGV[ARGV.size-1].to_s
-    file_given = 1
-end
  
 args.each_with_index do |arg, i|
     if i == 0
         print "FORMAT (n = #{arg}): "
     end
-    if i != 0 && i < args.size-2 
+    if i == args.size-1 && is_file_name?(args[args.size-1])
+        if is_file_name?(args[ARGV.size-1].to_s)
+            filename = dir + ARGV[ARGV.size-1].to_s
+            file_given = 1
+        end
+    elsif i != 0 && i < args.size-2 
         print "#{arg}(#{i})|"
     elsif (i != 0 && i == args.size-2)
         print "#{arg}(#{i})\n"
@@ -171,7 +172,12 @@ File.open(filename, 'w') { |f|
             end
             if arg == "citizen"
                 citizen = rand(2)
-                print_line += "#{citizen}"
+                if (citizen == 0) 
+                    print_line += "false"
+                elsif (citizen == 1)
+                    print_line += "true";
+                end
+                #print_line += "#{citizen}"
                 num_args -= 1
                 if num_args > 0
                     print_line += "|"
@@ -179,17 +185,21 @@ File.open(filename, 'w') { |f|
             end
             employed = rand(2)
             if arg == "employed"
-                print_line += "#{employed}"
+                if (employed == 1) 
+                    print_line += "true"
+                elsif (employed == 0)
+                    print_line += "false"
+                end
                 num_args -= 1
                 if num_args > 0
                     print_line += "|"
                 end
             end
-            if arg == "employer"
-                if employed != 0
+            if (args.any? { |a| a == "employer" } && arg == "employed" ) then
+                if (employed == 1)
                     company_name = Faker::Company.name
                     print_line += company_name
-                else 
+                elsif (employed == 0)
                     print_line += "null";
                 end
                 num_args -= 1

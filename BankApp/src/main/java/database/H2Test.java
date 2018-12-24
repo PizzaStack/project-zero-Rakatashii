@@ -5,7 +5,7 @@ import java.sql.*;
 
 import org.h2.tools.Csv;
 import org.h2.tools.SimpleResultSet;
-
+/*
 public class H2Test {  
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "org.h2.Driver";
@@ -28,12 +28,11 @@ public class H2Test {
 			// STEP 3: Execute a query
 			System.out.println("Creating table in given database...");
 			stmt = conn.createStatement();
-			String sql = "CREATE TABLE klassy" 
-					+ "(id INTEGER not NULL, " 
+			String sql = "CREATE TABLE field" 
+					+ "(id INTEGER PRIMARY KEY, " 
 					+ " first VARCHAR(255), "
 					+ " last VARCHAR(255), " 
-					+ " age INTEGER, " 
-					+ " PRIMARY KEY ( id ));";
+					+ " age INTEGER );"l 
 			stmt.execute(sql); //executeUpdate(sql);
 			System.out.println("Created table in given database...");
 
@@ -64,4 +63,4 @@ public class H2Test {
 		} // end try
 		System.out.println("success");
 	}
-}
+} */
