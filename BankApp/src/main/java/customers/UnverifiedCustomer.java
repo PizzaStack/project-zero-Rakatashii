@@ -62,9 +62,16 @@ public class UnverifiedCustomer extends Person{
 		unverifiedContainer = unverified;
 		unverifiedContainerIsSet = true;
 	}
-	public int getID() {
-		return unverifiedCustomerID;
-	}
+	
+	public int getID() 			   { return unverifiedCustomerID; }
+	public String getFirstname()   { return this.firstName; }
+	public String getLastname()    { return this.lastName; }
+	public String getTelephone()   { return this.telephone; }
+	public String getEmail() 	   { return this.email; }
+	public boolean getIsCitizen()  { return this.isCitizen; }
+	public boolean getIsEmployed() { return this.isEmployed; }
+	public String getEmployer()    { return this.employer; }
+	
 	public void setID(int id) {
 		this.unverifiedCustomerID = id;
 	}
@@ -95,15 +102,15 @@ public class UnverifiedCustomer extends Person{
 	}
 	public void printRow() {
 		Helpers helper = new Helpers();
-		int citizen = helper.boolToInt(this.isCitizen);
-		int employed = helper.boolToInt(this.isEmployed);
-		System.out.printf("%-4d%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		System.out.printf("%-4d%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	public String getRow() {
 		Helpers helper = new Helpers();
-		int citizen = helper.boolToInt(this.isCitizen);
-		int employed = helper.boolToInt(this.isEmployed);
-		return String.format("%-4d%-15s%-15s%-14s%-35s%-10d%-10d%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		return String.format("%-4d%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", this.getID(), this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	@Override
 	public String getUsername() { return null; }

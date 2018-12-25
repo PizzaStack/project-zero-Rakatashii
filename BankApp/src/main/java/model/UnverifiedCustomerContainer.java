@@ -26,7 +26,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 
 	private ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>(); 
 	private Class<?> type = new UnverifiedCustomer().getClass();
-	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_unverified.txt";
+	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/unverified_customer_sample.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 
@@ -117,17 +117,18 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	}
 	
 	public void readIn(File file) throws IOException {
+		/*
 		if (file.exists() == false) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
 				throw e;
 			}
-		}
+		} */
 		String line;
 		String[] fields = new String[7];
     	try {
-			Scanner cin = new Scanner(file, "UTF-8");
+			Scanner cin = new Scanner(file);
 			int oldArraySize = getSize();
 			while (cin.hasNextLine()) {
 				line = cin.nextLine();
@@ -142,7 +143,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 						.withIsEmployed(Boolean.parseBoolean(fields[5]))
 						.withEmployer(fields[6])
 						.makeUnverifiedCustomer();
-				unverified.add(newUnverified);
+				//unverified.add(newUnverified);
 			}
 			reindex(oldArraySize);
 			// TODO - add newUnverified to this.unverified

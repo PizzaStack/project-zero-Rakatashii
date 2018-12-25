@@ -7,6 +7,7 @@ import database.DBConnection;
 
 public class EmployeeDAO {
 	private Connection connection;
+	
 	public void getConnection(Connection connection) {
 		this.connection = connection;
 	}

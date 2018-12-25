@@ -32,6 +32,26 @@ public class Schemas {
 			+ "employed BOOLEAN, "
 			+ "employer VARCHAR(255)"
 			+ ");";
+	final String unverifiedCustomerSchema = "CREATE TABLE unverified_customers ("
+			+ "unverified_customer_id INTEGER PRIMARY KEY, "
+			+ "first_name VARCHAR(255), "
+			+ "last_name VARCHAR(255), "
+			+ "telephone VARCHAR(255), "
+			+ "email VARCHAR(255), "
+			+ "us_citizen BOOLEAN, "
+			+ "employed BOOLEAN, "
+			+ "employer VARCHAR(255)"
+			+ ");";
+	final String unverifiedCustomerSampleSchema = "CREATE TABLE sample_unverified_customers ("
+			+ "unverified_customer_id INTEGER PRIMARY KEY, "
+			+ "first_name VARCHAR(255), "
+			+ "last_name VARCHAR(255), "
+			+ "telephone VARCHAR(255), "
+			+ "email VARCHAR(255), "
+			+ "us_citizen BOOLEAN, "
+			+ "employed BOOLEAN, "
+			+ "employer VARCHAR(255)"
+			+ ");";
 	final String accountSchema = "CREATE TABLE accounts ("
 			+ "customer_id INT PRIMARY KEY, "
 			+ "saccount_number VARCHAR(266), "
@@ -58,10 +78,10 @@ public class Schemas {
 			+ "password VARCHAR(55), " 
 			+ "admin BOOLEAN"
 			+ ");";
-	final String[] actualSchemas = { customerSchema, accountSchema, employeeSchema };
-	final String[] sampleSchemas = { customerSampleSchema, accountSampleSchema, employeeSampleSchema };
-	final String[] actualSchemaNames = {"customers", "accounts", "employees"};
-	final String[] sampleSchemaNames = {"sample_customers", "sample_accounts", "sample_employees"};
+	final String[] actualSchemas = { unverifiedCustomerSchema, customerSchema, accountSchema, employeeSchema };
+	final String[] sampleSchemas = { unverifiedCustomerSampleSchema, customerSampleSchema, accountSampleSchema, employeeSampleSchema };
+	final String[] actualSchemaNames = {"unverified_customers", "customers", "accounts", "employees"};
+	final String[] sampleSchemaNames = {"sample_unverified_customers", "sample_customers", "sample_accounts", "sample_employees"};
 	public Schemas() { }
 	
 	public void createActualTables() throws ClassNotFoundException {
@@ -71,7 +91,7 @@ public class Schemas {
 				Connection connection = DBConnection.getConnection();
 				Statement statement = connection.createStatement();
 			
-			    if (dbUtil.checkIfEmpty(actualSchemaNames[i]) == true) {
+			    if (dbUtil.tableExists(actualSchemaNames[i]) == false) {
 			    	System.out.println("Table " + actualSchemaNames[i] + " does not exist"); 
 			    	String sql = actualSchemas[i];
 					
@@ -96,7 +116,7 @@ public class Schemas {
 				Connection connection = DBConnection.getConnection();
 				Statement statement = connection.createStatement();
 				
-				if (dbUtil.checkIfEmpty(sampleSchemaNames[i]) == true) {
+				if (dbUtil.tableExists(sampleSchemaNames[i]) == false) {
 			    	System.out.println("Table " + sampleSchemaNames[i] + " does not exist"); 
 			    	String sql = sampleSchemas[i];
 					
@@ -114,19 +134,4 @@ public class Schemas {
 			} 
 		}
 	}		
-	/*
-	public static boolean tableExists(Connection connection, String tableName) throws SQLException {
-	    boolean tExists = false;
-	    try (ResultSet rs = connection.getMetaData().getTables(null, null, tableName, null)) {
-	        while (rs.next()) { 
-	            String tName = rs.getString("TABLE_NAME");
-	            if (tName != null && tName.equals(tableName)) {
-	                tExists = true;
-	                break;
-	            }
-	        }
-	    }
-	    return tExists;
-	}
-	*/
 }
