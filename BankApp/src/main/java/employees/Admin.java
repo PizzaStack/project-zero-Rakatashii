@@ -1,14 +1,17 @@
 package employees;
 
+import DAO.AdminDAO;
 import model.CustomerContainer;
 import model.EmployeeContainer;
 import people.Person;
 import utility.Helpers;
 
 public class Admin extends Employee{
+	private AdminDAO adminDAO = new AdminDAO();
 	private String username, password;
 	private String firstName, lastName;
 	private boolean admin = true;
+	// TODO: private static int numAdmins = adminDAO.getNumAdminsInDB;
 	private static int numAdmins = 0;
 	private int adminID = numAdmins; // is this really needed for admins?
 	private int employeeID;
@@ -40,7 +43,7 @@ public class Admin extends Employee{
 		adminID = numAdmins;
 		this.employeeID = super.employeeID;
 		numAdmins++;
-		if (adminContainerIsSet) adminContainer.push(this);
+		if (adminContainerIsSet && isAdmin == true) adminContainer.push(this);
 	}
 	
 	public static void passAdminContainer(EmployeeContainer<? extends Employee> admins) {
@@ -60,14 +63,14 @@ public class Admin extends Employee{
 	@Override
 	public void printRow() {
 		Helpers helper = new Helpers();
-		int isAdmin = helper.boolToInt(this.admin);
-		System.out.printf("%-10d%-20s%-20s%-8d%-10d\n", this.employeeID, this.username, this.password, isAdmin, this.adminID);
+		String isAdminStr = helper.boolToString(this.admin);
+		System.out.printf("%-10d%-20s%-20s%-10s%-10d\n", this.employeeID, this.username, this.password, isAdminStr, this.adminID);
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
-		int isAdmin = helper.boolToInt(this.admin);
-		return String.format("%-10d%-20s%-20s%-8d-10d\n", this.employeeID, this.username, this.password, isAdmin, this.adminID);
+		String isAdminStr = helper.boolToString(this.admin);
+		return String.format("%-10d%-20s%-20s%-10s-10d\n", this.employeeID, this.username, this.password, isAdminStr, this.adminID);
 	}
 	@Override
 	public int getCount() {
@@ -93,6 +96,10 @@ public class Admin extends Employee{
 	}
 	public int getEmployeeID() {
 		return this.employeeID;
+	}
+	// This is needed to work with separate containers for sample data and actual data
+	public void setNumAdmins(int count) {
+		numAdmins = count;
 	}
 	
 	

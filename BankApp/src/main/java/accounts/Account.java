@@ -7,8 +7,13 @@ public interface Account {
 	double getBalance();
 	void deposit(double d);
 	void withdraw(double w);
-	void setID(int id);
-	int getID();
+	
+	void setID(String id);
+	String getID();
+	/*
+	 * void setID(int id);
+	 * int getID();
+	 */
 	boolean isJoint();
 	
 	void setOwner(Customer c);

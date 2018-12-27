@@ -53,18 +53,18 @@ public class Schemas {
 			+ "employer VARCHAR(255)"
 			+ ");";
 	final String accountSchema = "CREATE TABLE accounts ("
-			+ "customer_id INT PRIMARY KEY, "
-			+ "saccount_number VARCHAR(266), "
-			+ "sbalance FLOAT, "
-			+ "caccount_number VARCHAR(266), "
-			+ "cbalance FLOAT"
+			+ "customer_id INT references customers(customer_id), " //INT PRIMARY KEY, "
+			+ "savings_number VARCHAR(255), "
+			+ "savings_ammount FLOAT, "
+			+ "checking_number VARCHAR(255), "
+			+ "checking_ammount FLOAT"
 			+ ");";
 	final String accountSampleSchema = "CREATE TABLE sample_accounts ("
-			+ "customer_id INT PRIMARY KEY, "
-			+ "saccount_number VARCHAR(266), "
-			+ "sbalance FLOAT, "
-			+ "caccount_number VARCHAR(266), "
-			+ "cbalance FLOAT"
+			+ "customer_id INT references customers(customer_id), " //PRIMARY KEY, "
+			+ "savings_number VARCHAR(255), "
+			+ "savings_ammount FLOAT, "
+			+ "checking_number VARCHAR(255), "
+			+ "checking_ammount FLOAT"
 			+ ");";
     final String employeeSchema = "CREATE TABLE employees ("
 			+ "employee_id INT PRIMARY KEY, "
@@ -78,10 +78,24 @@ public class Schemas {
 			+ "password VARCHAR(55), " 
 			+ "admin BOOLEAN"
 			+ ");";
-	final String[] actualSchemas = { unverifiedCustomerSchema, customerSchema, accountSchema, employeeSchema };
-	final String[] sampleSchemas = { unverifiedCustomerSampleSchema, customerSampleSchema, accountSampleSchema, employeeSampleSchema };
-	final String[] actualSchemaNames = {"unverified_customers", "customers", "accounts", "employees"};
-	final String[] sampleSchemaNames = {"sample_unverified_customers", "sample_customers", "sample_accounts", "sample_employees"};
+    final String adminSchema = "CREATE TABLE admins ("
+			+ "employee_id INT PRIMARY KEY, "
+			+ "username VARCHAR(55), " 
+			+ "password VARCHAR(55), " 
+			+ "admin BOOLEAN, "
+			+ "admin_id INT"
+			+ ");";
+	final String adminSampleSchema = "CREATE TABLE sample_admins ("
+			+ "employee_id INT PRIMARY KEY, "
+			+ "username VARCHAR(55), " 
+			+ "password VARCHAR(55), " 
+			+ "admin BOOLEAN, "
+			+ "admin_id INT"
+			+ ");";
+	final String[] actualSchemas = { unverifiedCustomerSchema, customerSchema, accountSchema, employeeSchema, adminSchema };
+	final String[] sampleSchemas = { unverifiedCustomerSampleSchema, customerSampleSchema, accountSampleSchema, employeeSampleSchema, adminSampleSchema };
+	final String[] actualSchemaNames = {"unverified_customers", "customers", "accounts", "employees", "admins"};
+	final String[] sampleSchemaNames = {"sample_unverified_customers", "sample_customers", "sample_accounts", "sample_employees", "sample_admins"};
 	public Schemas() { }
 	
 	public void createActualTables() throws ClassNotFoundException {

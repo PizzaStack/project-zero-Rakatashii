@@ -1,13 +1,16 @@
 package accounts;
 
 import customers.Customer;
+import model.AccountContainer;
 
 public class CheckingAccount implements Account {
 	private final double maxDepositAmmount = 100000.0;
 	private final double minimumInitialBalance = 0.0;
 	private final double minimumBalance = -1000.0;
 	
-	int checkingID;
+	String checkingID;
+	// String prob better since there will be a lot of leading zeros
+	//int checkingID;
 	double balance;
 	Customer primaryHolder, sharedHolder;
 	boolean joint;
@@ -20,11 +23,13 @@ public class CheckingAccount implements Account {
 		joint = false;
 		flagged = false;
 	}
-	public CheckingAccount(double initial_balance, Customer primary){
+	public CheckingAccount(String acc_num, double initial_balance, Customer primary){
 		if (initial_balance > minimumInitialBalance) balance = initial_balance;
 		primaryHolder = primary;
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
 		joint = false;
+		
+		checkingID = acc_num;
 		
 		if (primary.hasSavingsAccount()) {
 			pairedSavingsAccount = primary.getSavingsAccount();
@@ -34,10 +39,12 @@ public class CheckingAccount implements Account {
 			flagged = pairedSavingsAccount.flagged;
 		} else flagged = false;
 	}
-	public CheckingAccount(double initial_balance, Customer primary, Customer shared){
+	public CheckingAccount(String acc_num, double initial_balance, Customer primary, Customer shared){
 		if (initial_balance > minimumInitialBalance) balance = initial_balance;
 		primaryHolder = primary;
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
+		
+		checkingID = acc_num;
 		
 		if (primary.hasSavingsAccount()) {
 			pairedSavingsAccount = primary.getSavingsAccount();
@@ -83,11 +90,12 @@ public class CheckingAccount implements Account {
 		if ((balance - w) > minimumBalance && this.flagged == false) balance -= 2;
 	}
 	@Override
-	public void setID(int id) {
+	public void setID(String id) {
+		this.checkingID = id;
 		// TODO checkingID = CustomerContainers.generateUniqueID()
 	}
 	@Override
-	public int getID() {
+	public String getID() {
 		return checkingID;
 	}
 	@Override
@@ -141,4 +149,5 @@ public class CheckingAccount implements Account {
 	public boolean isFlagged() {
 		return flagged;
 	}
+
 }

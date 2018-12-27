@@ -1,5 +1,6 @@
 package customers;
 
+import DAO.CustomerDAO;
 import accounts.Account;
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
@@ -8,14 +9,17 @@ import people.Person;
 import utility.Helpers;
 
 public class Customer extends UnverifiedCustomer{
-	String username, password;
-	String firstName, lastName;
-	String telephone, email;
-	boolean isCitizen, isEmployed;
-	String employer;
-	boolean verified = true;
+	private CustomerDAO customerDAO = new CustomerDAO();
+	
+	private String username, password;
+	private String firstName, lastName;
+	private String telephone, email;
+	private boolean isCitizen, isEmployed;
+	private String employer;
+	protected boolean verified = true;
 	private boolean accountsAreFlagged = false;
 	
+	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
 	private static int numCustomers = 0;
 	private int custID = numCustomers;
 	
@@ -68,6 +72,17 @@ public class Customer extends UnverifiedCustomer{
 		return custID;
 	}
 	@Override
+	public String getUsername()    { return this.username; }
+	@Override
+	public String getPassword()    { return this.password; }
+	public String getFirstname()   { return this.firstName; }
+	public String getLastname()    { return this.lastName; }
+	public String getTelephone()   { return this.telephone; }
+	public String getEmail() 	   { return this.email; }
+	public boolean getIsCitizen()  { return this.isCitizen; }
+	public boolean getIsEmployed() { return this.isEmployed; }
+	public String getEmployer()    { return this.employer; }
+	@Override
 	public void setID(int id) {
 		custID = id;
 	}
@@ -117,17 +132,6 @@ public class Customer extends UnverifiedCustomer{
 		return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 		// boolToInt (0/1) return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
-	@Override
-	public String getUsername()    { return this.username; }
-	@Override
-	public String getPassword()    { return this.password; }
-	public String getFirstname()   { return this.firstName; }
-	public String getLastname()    { return this.lastName; }
-	public String getTelephone()   { return this.telephone; }
-	public String getEmail() 	   { return this.email; }
-	public boolean getIsCitizen()  { return this.isCitizen; }
-	public boolean getIsEmployed() { return this.isEmployed; }
-	public String getEmployer()    { return this.employer; }
 	
 	public void setSavingsAccount(SavingsAccount savings) {
 		savingsAccount = savings;

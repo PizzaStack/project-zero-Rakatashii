@@ -22,11 +22,10 @@ import employees.Employee;
 import employees.EmployeeBuilder;
 import people.Person;
 import people.PersonContainer;
+import utility.Helpers;
 
 public class EmployeeContainer<T> implements PersonContainer<Person>{
-
 	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
-	//private ArrayList<Employee> admins = new ArrayList<Employee>();
 	private Class<? extends Person> type = new Employee().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_set";
@@ -44,19 +43,10 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public void setArrayList(ArrayList<Employee> employees) {
 		this.employees = employees;
 	}
-	/*
-	public EmployeeContainer<Employee> getAdminArrayList(){
-		EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
-		ArrayList<Employee> admins = new ArrayList<Employee>(); 
-		adminContainer.employees = admins;
-		for (int i = this.employees.size()-1; i >= 0; i--) {
-			if (this.employees.get(i).isAdmin()) {
-				adminContainer.employees.add(0, this.employees.get(i));
-			}
-		}
-		return adminContainer;
-	}*/
-	public ArrayList<Employee> getArrayListFromSample(boolean includeEmployees, boolean includeAdmins) { 
+	public void setSampleFile(String sampleFile) {
+		sampleTextFileName = sampleFile;
+	}
+	public ArrayList<Employee> getArrayListFromSample(boolean adminOnly) { 
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
 			try {
@@ -66,7 +56,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		try {
-			readIn(new File(sampleTextFileName), includeEmployees, includeAdmins);
+			readIn(new File(sampleTextFileName), adminOnly);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -116,7 +106,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		return sampleTextFileName;
 	}
 	
-	public void readIn(File file, boolean includeEmployees, boolean includeAdmins) throws IOException {
+	public void readIn(File file, boolean adminOnly) throws IOException {
 		if (file.exists() == false) {
 			try {
 				file.createNewFile();
@@ -125,32 +115,48 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 		String line;
-		String[] fields = new String[5];
+		String[] fields = new String[3];
     	try {
-			Scanner cin = new Scanner(file, "UTF-8");
+			Scanner cin = new Scanner(file);
 			int oldArraySize = getSize();
 			while (cin.hasNextLine()) {
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
+				// this line seems to be the problem, bc debugger says that fields[3] 
+				// == "true" (a string) at monica line.
+				Helpers helper = new Helpers();
 				boolean adminStatus = Boolean.parseBoolean(fields[2]);
-				if (includeEmployees && (adminStatus == false)) {
-					Employee newEmployee = new EmployeeBuilder()
-							.withEmployeeID(Integer.parseInt(fields[0]))
-							.withUsername(fields[1])
-							.withPassword(fields[2])
+				
+				Employee newEmployee = new EmployeeBuilder()
+						//.withEmployeeID(Integer.parseInt(fields[0]))
+						.withUsername(fields[0])
+						.withPassword(fields[1])
+						.withIsAdmin(adminStatus)
+						//.withIsAdmin(helper.stringToBool(fields[2]))
+						//.withAdminID(Integer.parseInt(fields[4]))
+						.makeEmployee();
+				
+				/* save this for ~readInAdmin()
+				if (adminOnly && (adminStatus == true)) {
+					Employee newAdmin = new EmployeeBuilder()
+							//.withEmployeeID(Integer.parseInt(fields[0]))
+							.withUsername(fields[0])
+							.withPassword(fields[1])
 							.withIsAdmin(adminStatus)
-							.makeEmployee();
-				}
-				if (includeAdmins && (adminStatus == true)) {
-					Employee newEmployee = new EmployeeBuilder()
-							.withEmployeeID(Integer.parseInt(fields[0]))
-							.withUsername(fields[1])
-							.withPassword(fields[2])
-							.withIsAdmin(adminStatus)
-							.withAdminID(Integer.parseInt(fields[4]))
+							//.withIsAdmin(helper.stringToBool(fields[2]))
+							//.withAdminID(Integer.parseInt(fields[4]))
 							.makeAdmin();
-				}
+				} else {
+					Employee newEmployee = new EmployeeBuilder()
+							//.withEmployeeID(Integer.parseInt(fields[0]))
+							.withUsername(fields[0])
+							.withPassword(fields[1])
+							.withIsAdmin(adminStatus)
+							//.withIsAdmin(helper.stringToBool(fields[2]))
+							//.withAdminID(Integer.parseInt(fields[4]))
+							.makeEmployee();
+				} */
 			}
 			reindex(oldArraySize);
 			//TODO this.employees.add(newUnverified)

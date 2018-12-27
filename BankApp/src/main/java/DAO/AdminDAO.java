@@ -1,37 +1,31 @@
 package DAO;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import customers.Customer;
 import database.DBConnection;
 import database.DBUtil;
+import employees.Admin;
+import employees.Employee;
 
-public class CustomerDAO implements CustomerDAOInterface {
+public class AdminDAO implements AdminDAOInterface{
 	private Connection connection;
 	private PreparedStatement ps;
 	private DBUtil util;
 	
 	@Override
-	public boolean addCustomer(Customer customer) {
+	public boolean addAdmin(Employee admin) {
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO customers VALUES(?,?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO admins VALUES(?,?,?,?)";
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1,  customer.getID());
-			ps.setString(2, customer.getUsername());
-			ps.setString(3, customer.getPassword());
-			ps.setString(4, customer.getFirstname());
-			ps.setString(5, customer.getLastname());
-			ps.setString(6, customer.getTelephone());
-			ps.setString(7, customer.getEmail());
-			ps.setBoolean(8, customer.getIsCitizen());
-			ps.setBoolean(9, customer.getIsEmployed());
-			ps.setString(10, customer.getEmployer());
+			ps.setInt(1,  admin.getID());
+			ps.setString(2, admin.getUsername());
+			ps.setString(3, admin.getPassword());
+			ps.setBoolean(4, admin.getIsAdmin());
 		
 			if (ps.executeUpdate() != 0) {
 				ps.close();
@@ -41,26 +35,20 @@ public class CustomerDAO implements CustomerDAOInterface {
 				return false;
 			} 
 		} catch (SQLException e) {
-			System.out.println("SQLException in CustomerDAO#addCustomer");
+			System.out.println("SQLException in AdminDAO#addAdmin");
 			return false;
 		}
 	}
 	@Override
-	public boolean addSampleCustomer(Customer customer) {
+	public boolean addSampleAdmin(Employee admin) {
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO sample_customers VALUES(?,?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO sample_admins VALUES(?,?,?,?)";
 			ps = connection.prepareStatement(sql);
-			ps.setInt(1,  customer.getID());
-			ps.setString(2, customer.getUsername());
-			ps.setString(3, customer.getPassword());
-			ps.setString(4, customer.getFirstname());
-			ps.setString(5, customer.getLastname());
-			ps.setString(6, customer.getTelephone());
-			ps.setString(7, customer.getEmail());
-			ps.setBoolean(8, customer.getIsCitizen());
-			ps.setBoolean(9, customer.getIsEmployed());
-			ps.setString(10, customer.getEmployer());
+			ps.setInt(1,  admin.getID());
+			ps.setString(2, admin.getUsername());
+			ps.setString(3, admin.getPassword());
+			ps.setBoolean(4, admin.getIsAdmin());
 		
 			if (ps.executeUpdate() != 0) {
 				ps.close();
@@ -70,16 +58,16 @@ public class CustomerDAO implements CustomerDAOInterface {
 				return false;
 			} 
 		} catch (SQLException e) {
-			System.out.println("SQLException in CustomerDAO#addSampleCustomer");
+			System.out.println("SQLException in AdminDAO#addSampleAdmin");
 			return false;
 		}
 	}
 	@Override
-	public int getNumCustomers() {
+	public int getNumAdmins() {
 		Connection connection;
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "SELECT COUNT(*) AS count FROM customers;";
+			String sql = "SELECT COUNT(*) AS count FROM admins;";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				    ResultSet.CONCUR_READ_ONLY );
@@ -94,11 +82,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 		return 0;
 	}
 	@Override
-	public int getNumSampleCustomers() {
+	public int getNumSampleAdmins() {
 		Connection connection;
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "SELECT COUNT(*) AS count FROM sample_customers;";
+			String sql = "SELECT COUNT(*) AS count FROM sample_admins;";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				    ResultSet.CONCUR_READ_ONLY );

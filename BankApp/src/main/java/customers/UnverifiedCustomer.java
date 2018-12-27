@@ -1,11 +1,14 @@
 package customers;
 
+import DAO.UnverifiedCustomerDAO;
 import model.CustomerContainer;
 import model.UnverifiedCustomerContainer;
 import people.Person;
 import utility.Helpers;
 
 public class UnverifiedCustomer extends Person{
+	UnverifiedCustomerDAO unverifiedCustomerDAO = new UnverifiedCustomerDAO();
+	
 	protected String firstName = null;
 	protected String lastName = null;
 	protected String telephone = null;
@@ -15,6 +18,7 @@ public class UnverifiedCustomer extends Person{
 	protected String employer = null;
 	protected boolean verified = false;
 	
+	// TODO private static int numUnverifiedCustomers = unverifiedCustomerDAO.getNumUnverifiedCustomersInDB() + 1;
 	protected static int numUnverifiedCustomers = 0;
 	private int unverifiedCustomerID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
@@ -62,7 +66,6 @@ public class UnverifiedCustomer extends Person{
 		unverifiedContainer = unverified;
 		unverifiedContainerIsSet = true;
 	}
-	
 	public int getID() 			   { return unverifiedCustomerID; }
 	public String getFirstname()   { return this.firstName; }
 	public String getLastname()    { return this.lastName; }

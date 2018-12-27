@@ -31,22 +31,16 @@ public class EmployeeBuilder {
 	
 	public Employee makeEmployee() {
 		Employee newEmployee;
-		if (employeeID == -1) newEmployee = new Employee(username, password, admin);
-		else {
-			newEmployee = new Employee(username, password, admin);
-			newEmployee.setID(employeeID);
-		}
+		newEmployee = new Employee(username, password, admin);
+		if (this.employeeID != -1) newEmployee.setID(employeeID);
 		return newEmployee;
 	}
 	public Admin makeAdmin() {
 		this.admin = true;
 		Admin newAdmin;
-		if (employeeID == -1) newAdmin = new Admin(username, password, admin);
-		else {
-			newAdmin = new Admin(username, password, admin);
-			newAdmin.setID(adminID);
-			newAdmin.setEmployeeID(employeeID);
-		}
+		newAdmin = new Admin(username, password, admin);
+		if (this.adminID != -1) newAdmin.setID(adminID);
+		if (this.employeeID != -1) newAdmin.setEmployeeID(employeeID);
 		return newAdmin;
 	}
 }

@@ -15,6 +15,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import customers.Customer;
 import customers.CustomerBuilder;
 import people.Person;
@@ -25,7 +27,8 @@ public class CustomerContainer implements PersonContainer<Person>{
 
 	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
 	private Class<?> type = new Customer().getClass();
-	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/sample_customers.txt";
+	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/customer_sample.txt";
+	private String sampleAccountFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 	
@@ -127,13 +130,21 @@ public class CustomerContainer implements PersonContainer<Person>{
 				throw e;
 			}
 		}*/
-		String line;
+		String line, line2;
+		File accountFile = new File(sampleAccountFileName);
+		
 		String[] fields = new String[9];
+		String[] accFields = new String[4];
     	try {
+    		// Need to figure out safest way to scan two files at once so that customer
+    		// can be synchronized with account
 			Scanner cin = new Scanner(file);
+			//Scanner cin2 = new Scanner(accountFile);
 			int oldArraySize = getSize();
-			while (cin.hasNextLine()) {
+			while (cin.hasNextLine() /*&& cin2.hasNextLine()*/) {
 				line = cin.nextLine();
+				//line2 = cin2.nextLine();
+				
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
 				Helpers helper = new Helpers();
@@ -149,6 +160,21 @@ public class CustomerContainer implements PersonContainer<Person>{
 						.withIsEmployed(Boolean.parseBoolean(fields[7]))
 						.withEmployer(fields[8])
 						.makeCustomer();
+				
+				//accFields = line2.split(delimiters);
+				//CheckingAccount checkingAccount = new CheckingAccount(accFields[0], Double.parseDouble(accFields[1]), customer);
+				//customer.setCheckingAccount(checkingAccount);
+				//SavingsAccount savingsAccount = new SavingsAccount(accFields[2], Double.parseDouble(accFields[3]), customer);
+				//customer.setSavingsAccount(savingsAccount);
+				
+				// TODO // May be best to do this in a separate accountContainer, then 
+				// iterate through the customers Array and create the accounts there.
+				/*
+				CheckingAccount checkingAccount = new CheckingAccount(fields[0], Integer.parseInt(fields[1]);
+				SavingsAccount savingsAccount = new SavingsAccount(fields[2], Integer.parseInt(fields[3]);
+				customer.setCheckingAccount(checkingAccount);
+				customer.setSavingsAccount(savingsAccount);
+				*/
 			}
 			reindex(oldArraySize);
 			// TODO - add newUnverified to this.customers

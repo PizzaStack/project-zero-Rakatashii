@@ -33,7 +33,8 @@ public class CustomerController{
 	public void begin(CustomerMenus customerMenu) throws InterruptedException {
 		if (customerMenu == CustomerMenus.LOGOUT) {
 			LoginController.logout();
-			new MainMenuController().begin(Menus.DEFAULT); // WATCH
+			new MainMenuController().begin(Menus.DEFAULT); // WATCH - may be better to return back to 
+			// previous main menu, rather than move deeper
 			//return;
 		}
 		customerOptions = new CustomerOptions(customerMenu);

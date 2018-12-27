@@ -2,6 +2,11 @@ package DAO;
 
 import java.sql.Connection;
 
+import employees.Employee;
+
 public interface EmployeeDAOInterface {
-	void getConnection(Connection connection);
+	public boolean addEmployee(Employee employee);
+	public boolean addSampleEmployee(Employee employee);
+	public int getNumEmployees();
+	public int getNumSampleEmployees();
 }

@@ -15,12 +15,18 @@ public class DBConnection {
 	private static String password;
 	public static boolean connectionEstablished;
 	
+	final static String H2JDBC_DRIVER = "org.h2.Driver";
+	final static String H2DB_URL = "jdbc:h2:tcp://localhost/~/test";
+	
 	public DBConnection() { }
 	
 	public static void startConnection() throws SQLException {
 		getCredentials();
-		DriverManager.registerDriver(new org.postgresql.Driver());
-		connection = DriverManager.getConnection(url,  username,  password);
+		//DriverManager.registerDriver(new org.postgresql.Driver());
+		//connection = DriverManager.getConnection(url,  username,  password);
+		
+		DriverManager.registerDriver(new org.h2.Driver());
+		connection = DriverManager.getConnection(H2DB_URL,  "christianmeyer", "");
 	}
 	
 	public static Connection getConnection() throws SQLException {

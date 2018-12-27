@@ -8,7 +8,9 @@ public class SavingsAccount implements Account{
 	private final double minInitialBalance = 1000.0;
 	private final double minimumBalance = 0.0;
 	
-	protected int savingsID;
+	protected String savingsID;
+	// Watch, and switch back to int if needed
+	// protected int savingsID; 
 	private double balance;
 	protected Customer primaryHolder, sharedHolder;
 	private boolean joint;
@@ -22,7 +24,7 @@ public class SavingsAccount implements Account{
 		flagged = false;
 		balance = 0.0;
 	}
-	public SavingsAccount(double initial_balance, Customer primary){
+	public SavingsAccount(String accNumber, double initialBalance, Customer primary){
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();
 		joint = false;
 		primaryHolder = primary;
@@ -30,21 +32,25 @@ public class SavingsAccount implements Account{
 			pairedCheckingAccount = primaryHolder.getCheckingAccount();
 		}
 		
-		if (initial_balance >= minInitialBalance) {
-			balance = initial_balance;
+		savingsID = accNumber;
+		
+		if (initialBalance >= minInitialBalance) {
+			balance = initialBalance;
 			flagged = false;
 		} else {
 			balance = 0.0;
 			flagged = true;
 		}
 	}
-	public SavingsAccount(double initial_balance, Customer primary, Customer shared){
+	public SavingsAccount(String accNumber, double initialBalance, Customer primary, Customer shared){
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();
 		joint = true;
 		primaryHolder = primary;
 		if (primaryHolder.hasCheckingAccount()) {
 			pairedCheckingAccount = primaryHolder.getCheckingAccount();
 		} 
+		
+		savingsID = accNumber;
 		
 		sharedHolder = shared;
 		if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
@@ -55,8 +61,8 @@ public class SavingsAccount implements Account{
 		} else if (pairedCheckingAccount.sharedHolder == null) 
 			pairedCheckingAccount.sharedHolder = this.sharedHolder;
 		
-		if (initial_balance >= minInitialBalance) {
-			balance = initial_balance;
+		if (initialBalance >= minInitialBalance) {
+			balance = initialBalance;
 			flagged = false;
 		} else {
 			balance = 0.0;
@@ -84,11 +90,12 @@ public class SavingsAccount implements Account{
 		else flagged = true;
 	}
 	@Override
-	public void setID(int id) {
+	public void setID(String id) {
+		this.savingsID = id;
 		// TODO id = CustomerContainers.generateUniqueSavingsID;
 	}
 	@Override
-	public int getID() {
+	public String getID() {
 		return savingsID;
 	}
 	@Override

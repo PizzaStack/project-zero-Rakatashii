@@ -42,10 +42,10 @@ public class Helpers {
 		else return s;
 	}
 	public String intStringToBoolString(String b) {
-		return (b == "0") ? "false" : "true";
+		return (b == "0" || b == "false".toLowerCase()) ? "false" : "true";
 	}
 	public boolean stringToBool(String b) {
-		return (b == "0") ? false : true;
+		return (b == "0" || b == "false".toLowerCase()) ? false : true;
 	}
 	
 

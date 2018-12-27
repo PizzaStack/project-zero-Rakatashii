@@ -1,14 +1,16 @@
 package employees;
 
+import DAO.EmployeeDAO;
 import model.EmployeeContainer;
 import people.Person;
 import utility.Helpers;
 
 public class Employee extends Person{
-	String username, password;
-	boolean admin = false;
-	public boolean isAdmin() { return admin; }
+	private EmployeeDAO employeeDAO = new EmployeeDAO();
+	private String username, password;
+	private boolean isAdmin = false;
 	
+	// TODO private static int numEmployees = employeeDAO.getNumEmployeesInDB();
 	private static int numEmployees = 0;
 	protected int employeeID = numEmployees; // is this really needed for Employees?
 	
@@ -33,6 +35,7 @@ public class Employee extends Person{
 		this.employeeID = numEmployees;
 		this.username = username;
 		this.password = password;
+		this.isAdmin = isAdmin;
 		++numEmployees;
 		++numPeople;
 		if (employeeContainerIsSet) employeeContainer.push(this);
@@ -46,8 +49,8 @@ public class Employee extends Person{
 		System.out.println("EmployeeID: " + this.employeeID);
 		if (username != null) System.out.println("Username: " + username);
 		if (password != null) System.out.println("Password: " + password);
-		if (admin) 
-			System.out.println("isAdmin: " + Boolean.toString(admin));
+		if (isAdmin) 
+			System.out.println("isAdmin: " + Boolean.toString(isAdmin));
 	}
 	@Override
 	public int getCount() {
@@ -58,31 +61,32 @@ public class Employee extends Person{
 		return employeeID;
 	}
 	@Override
+	public String getUsername() { return this.username; }
+	@Override
+	public String getPassword() { return this.password; }
+	public boolean getIsAdmin() { return this.isAdmin; }
+	public void setNumEmployees(int count) {
+		numEmployees = count;
+	}
+	
+	@Override
 	public void setID(int id) {
 		this.employeeID = id;	
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-8s\n", "ID", "USERNAME", "PASSWORD", "ADMIN");
+		System.out.printf("%-4s%-20s%-20s%-10s%-10s\n", "ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
 	}
 	@Override
 	public void printRow() {
+		// If going to make employee:admin_id null by default, may as well set isAdmin to false by default
 		Helpers helper = new Helpers();
-		int isAdmin = helper.boolToInt(this.admin);
-		System.out.printf("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
+		String isAdminStr = helper.boolToString(this.isAdmin);
+		System.out.printf("%-4d%-20s%-20s%-10s%-10s\n", this.getID(), this.username, this.password, isAdminStr, "null");
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
-		int isAdmin = helper.boolToInt(this.admin);
-		return String.format("%-4d%-20s%-20s%-8d\n", this.getID(), this.username, this.password, isAdmin);
+		String isAdminStr = helper.boolToString(this.isAdmin);
+		return String.format("%-4d%-20s%-20s%-10s%-10s\n", this.getID(), this.username, this.password, isAdminStr, "null");
 	}
-	@Override
-	public String getUsername() {
-		return this.username;
-	}
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-	
 }

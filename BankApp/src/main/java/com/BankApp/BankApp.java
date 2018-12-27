@@ -38,6 +38,8 @@ public class BankApp
 	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException {
     	DBUtil util = new DBUtil();
+    	// If tables do not exist they will be initialized. 
+    	// If sample tables are not filled with sample data, they will be filled.
     	util.initialize();
     	
     	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
