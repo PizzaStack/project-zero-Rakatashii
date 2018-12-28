@@ -5,14 +5,14 @@ import model.AccountContainer;
 
 public class CheckingAccount implements Account {
 	private final double maxDepositAmmount = 100000.0;
-	private final double minimumInitialBalance = 0.0;
-	private final double minimumBalance = -1000.0;
+	private final double minInitialBalance = 0.0;
+	private final double minBalance = -1000.0;
 	
 	String checkingID;
 	// String prob better since there will be a lot of leading zeros
 	//int checkingID;
 	double balance;
-	Customer primaryHolder, sharedHolder;
+	Customer primaryHolder = null, sharedHolder = null;
 	boolean joint;
 	boolean flagged = false;
 	
@@ -23,8 +23,15 @@ public class CheckingAccount implements Account {
 		joint = false;
 		flagged = false;
 	}
+	public CheckingAccount(String acc_num, double initial_balance){
+		flagged = false;
+		joint = false;
+		if (initial_balance > minInitialBalance) balance = initial_balance;
+		else flagged = true;
+		checkingID = acc_num;
+	}
 	public CheckingAccount(String acc_num, double initial_balance, Customer primary){
-		if (initial_balance > minimumInitialBalance) balance = initial_balance;
+		if (initial_balance > minInitialBalance) balance = initial_balance;
 		primaryHolder = primary;
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
 		joint = false;
@@ -40,7 +47,7 @@ public class CheckingAccount implements Account {
 		} else flagged = false;
 	}
 	public CheckingAccount(String acc_num, double initial_balance, Customer primary, Customer shared){
-		if (initial_balance > minimumInitialBalance) balance = initial_balance;
+		if (initial_balance > minInitialBalance) balance = initial_balance;
 		primaryHolder = primary;
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
 		
@@ -65,7 +72,7 @@ public class CheckingAccount implements Account {
 	@Override
 	public void setBalance(double b) {
 		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
-		if (b > minimumBalance && this.flagged == false) balance = b;
+		if (b > minBalance && this.flagged == false) balance = b;
 	}
 	@Override
 	public double getBalance() {
@@ -87,7 +94,7 @@ public class CheckingAccount implements Account {
 	@Override
 	public void withdraw(double w) {
 		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
-		if ((balance - w) > minimumBalance && this.flagged == false) balance -= 2;
+		if ((balance - w) > minBalance && this.flagged == false) balance -= 2;
 	}
 	@Override
 	public void setID(String id) {

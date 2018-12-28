@@ -24,6 +24,13 @@ public class SavingsAccount implements Account{
 		flagged = false;
 		balance = 0.0;
 	}
+	public SavingsAccount(String accNumber, double initialBalance){
+		flagged = false;
+		joint = false;
+		if (initialBalance > minInitialBalance) balance = initialBalance;
+		else flagged = true;
+		savingsID = accNumber;
+	}
 	public SavingsAccount(String accNumber, double initialBalance, Customer primary){
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();
 		joint = false;
@@ -100,7 +107,7 @@ public class SavingsAccount implements Account{
 	}
 	@Override
 	public boolean isJoint() {
-		if (joint == false && primaryHolder.getCheckingAccount().isJoint()) {
+		if (joint == false && primaryHolder.hasCheckingAccount() && primaryHolder.getCheckingAccount().isJoint()) {
 			this.sharedHolder = primaryHolder.getCheckingAccount().sharedHolder;
 			if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
 			if (sharedHolder.hasCheckingAccount() == false) sharedHolder.setCheckingAccount(this.pairedCheckingAccount);

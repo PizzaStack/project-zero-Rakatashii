@@ -3,7 +3,7 @@ package employees;
 public class EmployeeBuilder {
 	private String username = null;
 	private String password = null;
-	private boolean admin = false;
+	private boolean isAdmin = false;
 	
 	int employeeID = -1;
 	int adminID = -1;
@@ -25,20 +25,18 @@ public class EmployeeBuilder {
 		return this;
 	}
 	public EmployeeBuilder withIsAdmin(boolean isAdmin) {
-		this.admin = isAdmin;
+		this.isAdmin = isAdmin;
 		return this;
 	}
 	
 	public Employee makeEmployee() {
-		Employee newEmployee;
-		newEmployee = new Employee(username, password, admin);
+		Employee newEmployee = new Employee(username, password, this.isAdmin);
 		if (this.employeeID != -1) newEmployee.setID(employeeID);
 		return newEmployee;
 	}
 	public Admin makeAdmin() {
-		this.admin = true;
-		Admin newAdmin;
-		newAdmin = new Admin(username, password, admin);
+		this.isAdmin = true;
+		Admin newAdmin = new Admin(username, password, this.isAdmin);
 		if (this.adminID != -1) newAdmin.setID(adminID);
 		if (this.employeeID != -1) newAdmin.setEmployeeID(employeeID);
 		return newAdmin;

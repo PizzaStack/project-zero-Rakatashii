@@ -24,34 +24,40 @@ filename = "C:/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/d
 #**Member number needs to have proceeding zeros to fill the number out to 13 digits.
 
 file_given = 0
+
+n = 100
+number_given = 0
+if is_numeric?(args[0])
+    n = args[0].to_i
+    number_given = 1
+end
  
-args.each_with_index do |arg, i|
-    if i == 0
-        print "FORMAT (n = #{arg}): "
-    end
-    if i == args.size-1 && is_file_name?(args[args.size-1])
-        if is_file_name?(args[ARGV.size-1].to_s)
-            filename = dir + ARGV[ARGV.size-1].to_s
-            file_given = 1
+if n != 1 then
+    args.each_with_index do |arg, i|
+        if i == 0
+            print "FORMAT (n = #{arg}): "
         end
-    elsif i != 0 && i < args.size-2 
-        print "#{arg}(#{i})|"
-    elsif (i != 0 && i == args.size-2)
-        print "#{arg}(#{i})\n"
+        if i == args.size-1 && is_file_name?(args[args.size-1])
+            if is_file_name?(args[ARGV.size-1].to_s)
+                filename = dir + ARGV[ARGV.size-1].to_s
+                file_given = 1
+            end
+        elsif i != 0 && i < args.size-2 
+            print "#{arg}(#{i})|"
+        elsif (i != 0 && i == args.size-2)
+            print "#{arg}(#{i})\n"
+        end
     end
+elsif n == 1 
+    file_given = 0
+    filename = dir + "deletethis.txt"
 end
 savings = [ ]
 checking = [ ]
 File.open(filename, 'w') { |f|
     Faker::Config.random.seed
-    if (ARGV.size > 2)
-        puts "generating data..."
-    end
-    n = 100
-    number_given = 0
-    if is_numeric?(args[0])
-        n = args[0].to_i
-        number_given = 1
+    if (ARGV.size > 2 && n != 1)
+        puts "generating data..." 
     end
     id_idx = 0;
     n.times do
@@ -240,6 +246,10 @@ File.open(filename, 'w') { |f|
             admin_file = dir + "admin_sample.txt"
             File.open(admin_file, 'a') { |a| a.write(print_line) }
         end
-        f.write(print_line)
+        if (n == 1)
+            print print_line;
+        else 
+            f.write(print_line)
+        end
     end
 }

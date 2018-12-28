@@ -7,12 +7,14 @@ import utility.Helpers;
 
 public class Employee extends Person{
 	private EmployeeDAO employeeDAO = new EmployeeDAO();
+	
 	private String username, password;
-	private boolean isAdmin = false;
+	protected boolean isAdmin = false;
 	
 	// TODO private static int numEmployees = employeeDAO.getNumEmployeesInDB();
-	private static int numEmployees = 0;
-	protected int employeeID = numEmployees; // is this really needed for Employees?
+	protected static int numEmployees = 0;
+	protected int employeeID; //= numEmployees; // is this really needed for Employees?
+	protected int adminID = -1;
 	
 	static EmployeeContainer<Employee> employeeContainer;
 	static boolean employeeContainerIsSet = false;
@@ -28,6 +30,7 @@ public class Employee extends Person{
 		employeeID = numEmployees;
 		++numEmployees;
 		++numPeople;
+		--Admin.numAdmins;
 		if (employeeContainerIsSet) employeeContainer.push(this);
 	}
 	public Employee(String username, String password, boolean isAdmin) {
@@ -38,6 +41,7 @@ public class Employee extends Person{
 		this.isAdmin = isAdmin;
 		++numEmployees;
 		++numPeople;
+		--Admin.numAdmins;
 		if (employeeContainerIsSet) employeeContainer.push(this);
 	}
 	public static void passEmployeeContainer(EmployeeContainer<Employee> employees) {
@@ -61,6 +65,24 @@ public class Employee extends Person{
 		return employeeID;
 	}
 	@Override
+	public void setID(int id) {
+		this.employeeID = id;	
+	}
+	public int getEmployeeID() {
+		return this.employeeID;
+	}
+	public void setEmployeeID(int id) {
+		this.employeeID = id;
+	}
+	public int getAdminID() {
+		return this.adminID;
+	}
+	/*
+	public void setAdminID(int id) {
+		this.adminID = id;
+	}
+	*/
+	@Override
 	public String getUsername() { return this.username; }
 	@Override
 	public String getPassword() { return this.password; }
@@ -69,24 +91,20 @@ public class Employee extends Person{
 		numEmployees = count;
 	}
 	
-	@Override
-	public void setID(int id) {
-		this.employeeID = id;	
-	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s%-20s%-10s%-10s\n", "ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
+		System.out.printf("%-10s%-20s%-20s%-10s%-10s\n", "ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
 	}
 	@Override
 	public void printRow() {
 		// If going to make employee:admin_id null by default, may as well set isAdmin to false by default
 		Helpers helper = new Helpers();
 		String isAdminStr = helper.boolToString(this.isAdmin);
-		System.out.printf("%-4d%-20s%-20s%-10s%-10s\n", this.getID(), this.username, this.password, isAdminStr, "null");
+		   System.out.printf("%-10d%-20s%-20s%-10s%-10s\n", this.getEmployeeID(), this.username, this.password, isAdminStr, String.valueOf(this.adminID));
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
 		String isAdminStr = helper.boolToString(this.isAdmin);
-		return String.format("%-4d%-20s%-20s%-10s%-10s\n", this.getID(), this.username, this.password, isAdminStr, "null");
+		return String.format("%-10d%-20s%-20s%-10s%-10s\n", this.getEmployeeID(), this.username, this.password, isAdminStr, String.valueOf(this.adminID));
 	}
 }

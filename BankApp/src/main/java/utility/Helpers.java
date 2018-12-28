@@ -7,16 +7,20 @@ import employees.Employee;
 import people.Person;
 
 public class Helpers {
-	private Customer sampleCustomer = new Customer();
-	private UnverifiedCustomer sampleUnverified = new UnverifiedCustomer();
-	private Employee sampleEmployee = new Employee();
-	private Admin sampleAdmin = new Admin();
+	private Customer sampleCustomer;
+	private UnverifiedCustomer sampleUnverified;
+	private Employee sampleEmployee;
+	private Admin sampleAdmin;
 	Person[] people = { sampleUnverified, sampleCustomer, sampleAdmin, sampleEmployee };
 	
 	public Helpers(){
 		super();
 	}
 	public void printPeopleCounts() {
+		sampleCustomer = new Customer();
+		sampleUnverified = new UnverifiedCustomer();
+		sampleEmployee = new Employee();
+		sampleAdmin = new Admin();
 		for (Person p : people) {
 			System.out.println(p.getPersonClass() + " Count: " + p.getCount());
 		}

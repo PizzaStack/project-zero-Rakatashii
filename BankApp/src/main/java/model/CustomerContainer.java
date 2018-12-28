@@ -28,7 +28,8 @@ public class CustomerContainer implements PersonContainer<Person>{
 	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
 	private Class<?> type = new Customer().getClass();
 	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/customer_sample.txt";
-	private String sampleAccountFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
+	//private String sampleAccountFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
+	private String sampleAccountFileName = "text_files/account_sample.txt";
 	private String textFileName = "no_text_file_destination_set";
 	private String binaryFileName = "no_binary_file_destination_set";
 	
@@ -130,11 +131,11 @@ public class CustomerContainer implements PersonContainer<Person>{
 				throw e;
 			}
 		}*/
-		String line, line2;
+		String line;//, line2;
 		File accountFile = new File(sampleAccountFileName);
 		
 		String[] fields = new String[9];
-		String[] accFields = new String[4];
+		//String[] accFields = new String[4];
     	try {
     		// Need to figure out safest way to scan two files at once so that customer
     		// can be synchronized with account

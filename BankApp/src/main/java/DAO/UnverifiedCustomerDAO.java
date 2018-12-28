@@ -8,10 +8,19 @@ import java.sql.Statement;
 
 import customers.UnverifiedCustomer;
 import database.DBConnection;
+import database.DBUtil;
+import utility.Helpers;
 
 public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 	private Connection connection;
 	private PreparedStatement ps;
+	DBUtil util;
+	Helpers helper;
+	
+	public UnverifiedCustomerDAO() {
+		util = new DBUtil();
+		helper = new Helpers();
+	}
 	
 	@Override
 	public boolean addUnverifiedCustomer(UnverifiedCustomer unverifiedCustomer) {

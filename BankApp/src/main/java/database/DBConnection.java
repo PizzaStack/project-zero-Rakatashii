@@ -22,11 +22,13 @@ public class DBConnection {
 	
 	public static void startConnection() throws SQLException {
 		getCredentials();
-		//DriverManager.registerDriver(new org.postgresql.Driver());
-		//connection = DriverManager.getConnection(url,  username,  password);
+		DriverManager.registerDriver(new org.postgresql.Driver());
+		connection = DriverManager.getConnection(url,  username,  password);
 		
+		/* H2
 		DriverManager.registerDriver(new org.h2.Driver());
 		connection = DriverManager.getConnection(H2DB_URL,  "christianmeyer", "");
+		*/
 	}
 	
 	public static Connection getConnection() throws SQLException {

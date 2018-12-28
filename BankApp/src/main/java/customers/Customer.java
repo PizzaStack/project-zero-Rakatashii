@@ -9,7 +9,7 @@ import people.Person;
 import utility.Helpers;
 
 public class Customer extends UnverifiedCustomer{
-	private CustomerDAO customerDAO = new CustomerDAO();
+	//private CustomerDAO customerDAO = new CustomerDAO();
 	
 	private String username, password;
 	private String firstName, lastName;
@@ -30,11 +30,11 @@ public class Customer extends UnverifiedCustomer{
 	CheckingAccount checkingAccount = null;
 	
 	public Customer() { 
-		super();
+		//super();
 		custID = -1;
 	}
 	public Customer(String username, String password) {
-		super();
+		//super();
 		this.username = username;
 		this.password = password;
 		custID = numCustomers;
@@ -42,10 +42,11 @@ public class Customer extends UnverifiedCustomer{
 		++numTotalCustomers;
 		++numPeople;
 		if (customerContainerIsSet) customerContainer.push(this);
-		makeNewAccounts();
+		accountsAreFlagged = false;
+		//makeNewAccounts();
 	}
 	public Customer(String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
-		super(firstName, lastName, telephone, email, citizen, employed, employer);
+		//super(firstName, lastName, telephone, email, citizen, employed, employer);
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -61,7 +62,8 @@ public class Customer extends UnverifiedCustomer{
 		++numPeople;
 		--numUnverifiedCustomers;
 		if (customerContainerIsSet) customerContainer.push(this);
-		makeNewAccounts();
+		accountsAreFlagged = false;
+		//makeNewAccounts();
 	}
 	public static void passCustomerContainer(CustomerContainer customers) {
 		customerContainer = customers;
@@ -121,43 +123,49 @@ public class Customer extends UnverifiedCustomer{
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
 		String employed = helper.boolToString(this.isEmployed);
-		System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
 		// boolToInt (0/1) System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+	}
+	public void printRowWithAccountInfo() {
+		Helpers helper = new Helpers();
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+		
+		// WithAccountInfo ...can add to this
+		String flagged = helper.boolToString(this.accountsAreFlagged);;
+		System.out.printf("%-10s\n", flagged);
 	}
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
 		String employed = helper.boolToString(this.isEmployed);
-		return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
+		return String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 		// boolToInt (0/1) return String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer);
 	}
 	
 	public void setSavingsAccount(SavingsAccount savings) {
-		savingsAccount = savings;
-		if (checkingAccount != null) {
-			if (checkingAccount.isJoint()) savingsAccount.setJointCustomer(checkingAccount.getJointCustomer());
-		}
+		this.savingsAccount = savings;
+		this.savingsAccount.setOwner(this);
 	}
 	public SavingsAccount getSavingsAccount() {
 		return savingsAccount;
 	}
 	public void setCheckingAccount(CheckingAccount checking) {
-		checkingAccount = checking;
-		if (savingsAccount != null) {
-			if (savingsAccount.isJoint()) savingsAccount.setJointCustomer(savingsAccount.getJointCustomer());
-		}
+		this.checkingAccount = checking;
+		this.checkingAccount.setOwner(this);
 	}
 	public CheckingAccount getCheckingAccount() {
 		return checkingAccount;
 	}
 	public boolean hasSavingsAccount() {
-		if (savingsAccount != null) return true;
-		return false;
+		if (savingsAccount == null) return false;
+		return true;
 	}
 	public boolean hasCheckingAccount() {
-		if (savingsAccount != null) return true;
-		return false;
+		if (savingsAccount == null) return false;
+		return true;
 	}
 	public void makeNewAccounts() {
 		this.savingsAccount = new SavingsAccount();
@@ -165,8 +173,18 @@ public class Customer extends UnverifiedCustomer{
 		this.savingsAccount.setPairedAccount(this.checkingAccount);
 		this.checkingAccount.setPairedAccount(this.savingsAccount);
 	}
-	public void flagAccounts(boolean flag) {
-		this.savingsAccount.flag();
-		this.checkingAccount.flag();
+	public void flag() {
+		accountsAreFlagged = true;
+		if (this.hasSavingsAccount()) this.savingsAccount.flag();
+		if (this.hasCheckingAccount()) this.checkingAccount.flag();
 	}
+	public void unflag() {
+		accountsAreFlagged = false;
+		if (this.hasSavingsAccount()) this.savingsAccount.unflag();
+		if (this.hasCheckingAccount()) this.checkingAccount.unflag();
+	}
+	public boolean isFlagged() {
+		return accountsAreFlagged;
+	}
+	
 }

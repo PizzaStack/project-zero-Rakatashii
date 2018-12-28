@@ -46,6 +46,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public void setSampleFile(String sampleFile) {
 		sampleTextFileName = sampleFile;
 	}
+	/*
 	public ArrayList<Employee> getArrayListFromSample(boolean adminOnly) { 
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
@@ -61,10 +62,10 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			e.printStackTrace();
 		}
 		return this.employees;
-	}
+	} */
 	@Override
 	public void printColumnNames() {
-		System.out.printf("%-10s%-20s%-20s%-8s%-10s\n", "EMPL_ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
+		System.out.printf("%-10s%-20s%-20s%-10s%-10s\n", "EMPL_ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
 	}
 	public void printAll() {
 		printColumnNames();
@@ -106,7 +107,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		return sampleTextFileName;
 	}
 	
-	public void readIn(File file, boolean adminOnly) throws IOException {
+	public void readIn(File file) throws IOException {
 		if (file.exists() == false) {
 			try {
 				file.createNewFile();
@@ -123,29 +124,13 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 				line = cin.nextLine();
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
-				// this line seems to be the problem, bc debugger says that fields[3] 
-				// == "true" (a string) at monica line.
 				Helpers helper = new Helpers();
 				boolean adminStatus = Boolean.parseBoolean(fields[2]);
-				
-				Employee newEmployee = new EmployeeBuilder()
-						//.withEmployeeID(Integer.parseInt(fields[0]))
-						.withUsername(fields[0])
-						.withPassword(fields[1])
-						.withIsAdmin(adminStatus)
-						//.withIsAdmin(helper.stringToBool(fields[2]))
-						//.withAdminID(Integer.parseInt(fields[4]))
-						.makeEmployee();
-				
-				/* save this for ~readInAdmin()
-				if (adminOnly && (adminStatus == true)) {
-					Employee newAdmin = new EmployeeBuilder()
-							//.withEmployeeID(Integer.parseInt(fields[0]))
+				if (adminStatus == true) {
+					Admin newAdmin = new EmployeeBuilder()
 							.withUsername(fields[0])
 							.withPassword(fields[1])
 							.withIsAdmin(adminStatus)
-							//.withIsAdmin(helper.stringToBool(fields[2]))
-							//.withAdminID(Integer.parseInt(fields[4]))
 							.makeAdmin();
 				} else {
 					Employee newEmployee = new EmployeeBuilder()
@@ -153,12 +138,10 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 							.withUsername(fields[0])
 							.withPassword(fields[1])
 							.withIsAdmin(adminStatus)
-							//.withIsAdmin(helper.stringToBool(fields[2]))
-							//.withAdminID(Integer.parseInt(fields[4]))
 							.makeEmployee();
-				} */
+				} 
 			}
-			reindex(oldArraySize);
+			//reindex(oldArraySize);
 			//TODO this.employees.add(newUnverified)
 			cin.close();
 		} catch (IOException e) {
