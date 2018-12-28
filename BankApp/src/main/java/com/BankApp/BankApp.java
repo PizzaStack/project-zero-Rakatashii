@@ -1,8 +1,11 @@
 package com.BankApp;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -41,8 +44,8 @@ import model.UnverifiedCustomerContainer;
 public class BankApp 
 {
 	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
-    public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException {
-    	DBSetup setup = new DBSetup();
+    public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
+    	DBSetup setup = new DBSetup(true);
     	// If tables do not exist they will be initialized. 
     	// If sample tables are not filled with sample data, they will be filled.
     	setup.initializeSampleTables();
@@ -64,13 +67,8 @@ public class BankApp
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
     	Admin.passAdminContainer(containers.getAdminContainer());
     	
-    	Customer first_customer = new Customer("customer", "password", "firstname", "lastname", 
-    			"telephone", "email", true, true, "employer");
-    	UnverifiedCustomer first_unverified = new UnverifiedCustomer("unverified", "customer", 
-    			"000-000-0000", "email@address.com", true, true, "employer");
-    	Employee first_employee = new Employee("employee", "password");
-    	Admin first_admin = new Admin("admin", "password");
-    	
+    	System.out.println();
+    	setup.passContainers(containers);
     	setup.initializeActualTables();
     	
     	AccountDAO accountDAO = new AccountDAO();
@@ -79,38 +77,20 @@ public class BankApp
     	EmployeeDAO employeeDAO = new EmployeeDAO();
     	AdminDAO adminDAO = new AdminDAO();
     	
-    	/*
-    	ArrayList<String> sampleAccountRecords = accountDAO.getSampleRecordsAsStrings();
-    	for (String sampleAccountRecord : sampleAccountRecords) {
-    		System.out.println(sampleAccountRecord);
-    	}
-    	ArrayList<String> sampleCustomerRecords = customerDAO.getSampleRecordsAsStrings();
-    	for (String sampleCustomerRecord : sampleCustomerRecords) {
-    		System.out.println(sampleCustomerRecord);
-    	}
-    	ArrayList<String> sampleEmployeeRecords = employeeDAO.getSampleRecordsAsStrings();
-    	for (String sampleEmployeeRecord : sampleEmployeeRecords) {
-    		System.out.println(sampleEmployeeRecord);
-    	}
-    	*/
-    	ArrayList<String> sampleAdminRecords = adminDAO.getSampleRecordsAsStrings();
-    	for (String sampleAdminRecord : sampleAdminRecords) {
-    		System.out.println(sampleAdminRecord);
-    	}
-    	// TODO finish up this process with unverifiedcustomers
-    	
+    	setup.finishDBSetup();
+    	setup = null;
+    	System.gc();
   
+    	MainMenuController mainController = new MainMenuController();
+    	mainController.passContainers(containers);
+    	mainController.begin(Menus.DEFAULT);
+    	
     	// TODO - option for admin...
     	// unverifiedContainer.updateRows();
     	// customerContainer.updateRows();
     	// employeeContainer.updateRows();
     	// adminContainer.updateRows();
     	
-    	/*
-    	MainMenuController mainController = new MainMenuController();
-    	mainController.passContainers(containers);
-    	mainController.begin(Menus.DEFAULT);
-    	*/
     }
     
     /** TODO Checklist

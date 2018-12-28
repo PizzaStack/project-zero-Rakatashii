@@ -66,17 +66,17 @@ public class DBUtil {
 	
 	public void printActualTableSizes() {
 		setDAOs();
-		System.out.println("Number of           Customer Records: " + customerDAO.getNumCustomers());
-		System.out.println("Number of UnverifiedCustomer Records: " + unverifiedCustomerDAO.getNumUnverifiedCustomers());
-		System.out.println("Number of           Employee Records: " + employeeDAO.getNumEmployees());
-		System.out.println("Number of              Admin Records: " + adminDAO.getNumAdmins());
+		System.out.println("Number of           Customer Records: " + customerDAO.getNumCustomers(false));
+		System.out.println("Number of UnverifiedCustomer Records: " + unverifiedCustomerDAO.getNumUnverifiedCustomers(false));
+		System.out.println("Number of           Employee Records: " + employeeDAO.getNumEmployees(false));
+		System.out.println("Number of              Admin Records: " + adminDAO.getNumAdmins(false));
 	}
 	public void printSampleTableSizes() {
 		setDAOs();
-		System.out.println("Number of           Customer (sample) Records: " + customerDAO.getNumSampleCustomers());
-		System.out.println("Number of UnverifiedCustomer (sample) Records: " + unverifiedCustomerDAO.getNumSampleUnverifiedCustomers());
-		System.out.println("Number of           Employee (sample) Records: " + employeeDAO.getNumSampleEmployees());
-		System.out.println("Number of              Admin (sample) Records: " + adminDAO.getNumSampleAdmins());
+		System.out.println("Number of           Customer (sample) Records: " + customerDAO.getNumCustomers(true));
+		System.out.println("Number of UnverifiedCustomer (sample) Records: " + unverifiedCustomerDAO.getNumUnverifiedCustomers(true));
+		System.out.println("Number of           Employee (sample) Records: " + employeeDAO.getNumEmployees(true));
+		System.out.println("Number of              Admin (sample) Records: " + adminDAO.getNumAdmins(true));
 	}
 	
 }

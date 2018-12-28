@@ -1,12 +1,17 @@
 package employees;
 
+import java.util.ArrayList;
+
+import DAO.CustomerDAO;
 import DAO.EmployeeDAO;
 import model.EmployeeContainer;
 import people.Person;
 import utility.Helpers;
 
 public class Employee extends Person{
-	private EmployeeDAO employeeDAO = new EmployeeDAO();
+	private static EmployeeDAO employeeDAO = new EmployeeDAO();
+	private static ArrayList<Integer> openIDs = null;
+	private static boolean sampleMode;
 	
 	private String username, password;
 	protected boolean isAdmin = false;
@@ -77,11 +82,9 @@ public class Employee extends Person{
 	public int getAdminID() {
 		return this.adminID;
 	}
-	/*
 	public void setAdminID(int id) {
 		this.adminID = id;
 	}
-	*/
 	@Override
 	public String getUsername() { return this.username; }
 	@Override
@@ -106,5 +109,29 @@ public class Employee extends Person{
 		Helpers helper = new Helpers();
 		String isAdminStr = helper.boolToString(this.isAdmin);
 		return String.format("%-10d%-20s%-20s%-10s%-10s\n", this.getEmployeeID(), this.username, this.password, isAdminStr, String.valueOf(this.adminID));
+	}
+	public static void synchronizeIDsWithDB() {
+		openIDs = employeeDAO.getOpenIDs(sampleMode);
+	}
+	public static void sampleModeOn() {
+		if (openIDs != null) openIDs.clear();
+		sampleMode = true;
+		numEmployees = 0;
+	}
+	public static void sampleModeOff() {
+		if (openIDs != null) openIDs.clear();
+		sampleMode = false;
+		numEmployees = 0;
+	}
+	public int nextOpenID() {
+		int openID = numEmployees;
+		if (openIDs == null && openIDs.size() == 0) synchronizeIDsWithDB();
+		if (openIDs != null && openIDs.size() >= 1) {
+			openID = openIDs.get(0);
+			openIDs.remove(0);
+			if (openIDs.size() == 0) openID = employeeDAO.getMaxEmployeeID(sampleMode);
+			return openID;
+		}
+		return openID;
 	}
 }

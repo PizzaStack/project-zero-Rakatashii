@@ -15,7 +15,6 @@ public class Login {
 	}
 	public String getUsername() {
 		System.out.println();
-		//System.out.println(MenuOptions.getLineSeparator());
 		System.out.print("Username: ");
 		username = in.nextLine();
 		return username;

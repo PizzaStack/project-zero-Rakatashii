@@ -10,11 +10,16 @@ import views.Login;
 import views.MenuOptions;
 
 public class LoginController {
-	private boolean verified;
-	private Containers containers;
-	private CustomerContainer customers;
-	private EmployeeContainer<Employee> employees;
-	private EmployeeContainer<Employee> admins;
+	private boolean verified = false;
+
+	private CustomerContainer customerContainer;
+	private EmployeeContainer<Employee> employeeContainer = null;
+	private EmployeeContainer<Employee> adminContainer = null;
+	
+	static Customer loggedInCustomer = null;
+	static Employee loggedInEmployee = null;
+	static Admin loggedInAdmin = null;
+	
 	int customerID = -1;
 	int employeeID = -1;
 	
@@ -46,47 +51,86 @@ public class LoginController {
 		loggedInUsername = username;
 	}
 	
-	public boolean call(int selection) throws InterruptedException{
+	public boolean loginAsCustomer(CustomerContainer customerContainer) throws InterruptedException{
+		this.customerContainer = customerContainer;
+		Customer loggedIn = null;
 		while (!verified && tries > 0) {
+			
 			username = login.getUsername();
 			password = login.getPassword();
-			if (containers == null) System.out.println("CONTAINERS ARE NULL IN LOGIN");
-			if (selection == 2) {
-				if (containers != null) customers = containers.getCustomerContainer();
-				verified = customers.verifyLoginCredentials(username, password);
-				if (verified) { 
-					System.out.println("\nSuccess! Welcome " + username + "."); 
-					if (!isLoggedIn()) Thread.sleep(2500); 
-					logInAs(username);
-					System.out.println();
-					return true; 
-				}
-			} else if (selection == 3) {
-				if (containers != null) employees = containers.getEmployeeContainer();
-				verified = employees.verifyLoginCredentials(username,  password);
-				if (verified) { 
-					System.out.println("\nSuccess! Welcome " + username + "."); 
-					if (!isLoggedIn()) Thread.sleep(2500); 
-					logInAs(username);
-					System.out.println();
-					return true;
-				}
-			} else if (selection == 4) {
-				if (containers != null) admins = containers.getAdminContainer();
-				verified = admins.verifyLoginCredentials(username, password);
-				if (verified) { 
-					System.out.println("Success! Welcome " + username + "."); 
-					if (!isLoggedIn()) Thread.sleep(2500); 
-					logInAs(username);
-					System.out.println();
-					return true; 
-				}
+			
+			if (customerContainer == null) System.out.println("customerContainer is null in Login Controller.");
+			loggedIn = customerContainer.verifyLoginCredentials(username, password);
+			verified = (loggedIn == null) ? false : true;
+			if (!verified) { 
+				System.out.println("\nSuccess! Welcome " + username + "."); 
+				if (!isLoggedIn()) Thread.sleep(2000); 
+				logInAs(username);
+				System.out.println();
+				return true; 
 			}
+		
 			tries--;
 			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
-				if (!isLoggedIn()) Thread.sleep(2500);
+				if (!isLoggedIn()) Thread.sleep(2000);
+				System.out.println();
+				return false;
+			}
+		}
+		return false;
+	}
+	public boolean loginAsEmployee(EmployeeContainer<Employee> employeeContainer) throws InterruptedException{
+		this.employeeContainer = employeeContainer;
+		while (!verified && tries > 0) {
+			
+			username = login.getUsername();
+			password = login.getPassword();
+			
+			if (customerContainer == null) System.out.println("customerContainer is null in Login Controller");
+			verified = employeeContainer.verifyLoginCredentials(username,  password);
+			if (verified) { 
+				System.out.println("\nSuccess! Welcome " + username + "."); 
+				if (!isLoggedIn()) Thread.sleep(2000); 
+				logInAs(username);
+				System.out.println();
+				return true;
+			}
+			
+			tries--;
+			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
+			else {
+				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
+				if (!isLoggedIn()) Thread.sleep(2000);
+				System.out.println();
+				return false;
+			}
+		}
+		return false;
+	}
+	public boolean loginAsAdmin(EmployeeContainer<Employee> adminContainer) throws InterruptedException{
+		this.adminContainer = adminContainer;
+		while (!verified && tries > 0) {
+			
+			username = login.getUsername();
+			password = login.getPassword();
+			
+			if (adminContainer == null) System.out.println("adminContainer is null in Login Controller");
+			verified = adminContainer.verifyLoginCredentials(username,  password);
+			if (verified) { 
+				System.out.println("\nSuccess! Welcome " + username + "."); 
+				if (!isLoggedIn()) Thread.sleep(2000); 
+				logInAs(username);
+				System.out.println();
+				return true;
+			}
+			
+			tries--;
+			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
+			else {
+				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
+				if (!isLoggedIn()) Thread.sleep(2000);
 				System.out.println();
 				return false;
 			}
@@ -96,7 +140,17 @@ public class LoginController {
 	public int getNumTries() {
 		return tries;
 	}
-	public void passContainers(Containers containers) {
-		if (containers != null) this.containers = containers;
+	
+	public static Customer getLoggedInCustomer() {
+		if (loggedInCustomer != null) return loggedInCustomer;
+		else return null;
+	}
+	public static Employee getLoggedInEmployee() {
+		if (loggedInEmployee != null) return loggedInEmployee;
+		else return null;
+	}
+	public static Employee getLoggedInAdmin() {
+		if (loggedInAdmin != null) return loggedInAdmin;
+		else return null;
 	}
 }

@@ -10,10 +10,6 @@ public interface Account {
 	
 	void setID(String id);
 	String getID();
-	/*
-	 * void setID(int id);
-	 * int getID();
-	 */
 	boolean isJoint();
 	
 	void setOwner(Customer c);

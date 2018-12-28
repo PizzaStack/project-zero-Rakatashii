@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import DAO.CustomerDAO;
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import customers.Customer;
@@ -30,11 +31,15 @@ public class CustomerContainer implements PersonContainer<Person>{
 	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/customer_sample.txt";
 	//private String sampleAccountFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
 	private String sampleAccountFileName = "text_files/account_sample.txt";
-	private String textFileName = "no_text_file_destination_set";
-	private String binaryFileName = "no_binary_file_destination_set";
+	private String textFileName = "no_text_file_destination_for_customers";
+	private String binaryFileName = "no_binary_file_destination_for_customers";
+	
+	private CustomerDAO customerDAO = new CustomerDAO();
+	private ArrayList<Customer> DBCustomers = new ArrayList<Customer>();
 	
 	public CustomerContainer() {
 		super();
+		if (Customer.sampleMode == false) DBCustomers = customerDAO.getAllCustomers(false);
 	}
 	public Person Get(int index){
 		return customers.get(index);
@@ -73,12 +78,15 @@ public class CustomerContainer implements PersonContainer<Person>{
 		return customers;
 	}
 	public void printColumnNames() {
-		System.out.printf("%-4s%-20s-20s-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
+		System.out.printf("%-10s%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
+				"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
+				"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED");
 	}
 	public void printAll(boolean columnHeaders) {
 		if (columnHeaders) printColumnNames();
 		for (int i = 0; i < customers.size(); i++) {
 			customers.get(i).printRow();
+			System.out.println();
 		}
 	}
 	public void push(Customer customer) {
@@ -301,13 +309,17 @@ public class CustomerContainer implements PersonContainer<Person>{
 			writeToBinaryFile(false);
 		} 
 	}
-	@Override
-	public boolean verifyLoginCredentials(String username, String password) {
+
+	public Customer verifyLoginCredentials(String username, String password) {
 		for (Customer c : customers) {
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
-				return true;
+				return c;
 		}
-		return false;
+		for (Customer c : DBCustomers) {
+			if (c.getUsername().equals(username) && c.getPassword().equals(password))
+				return c;
+		}
+		return null;
 	} 
 	
 	

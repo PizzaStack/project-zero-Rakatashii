@@ -31,12 +31,10 @@ public class AccountContainer {
 				line = cin.nextLine();
 				fields = line.split(delimitter);
 				while ((validAccountID(fields[0]) == false) || (verifyUniqueCheckingID(fields[0]) == false)) { 
-					System.out.println("infinite"); 
 					fields[0] = generateNewID();
 				}
 				CheckingAccount checkingAccount = new CheckingAccount(fields[0], Double.parseDouble(fields[1]));
 				while ((validAccountID(fields[0]) == false) || (verifyUniqueSavingsID(fields[0]) == false)) {
-					System.out.println("infinite");
 					fields[2] = generateNewID();
 				}
 				SavingsAccount savingsAccount = new SavingsAccount(fields[2], Double.parseDouble(fields[3]));
@@ -76,14 +74,14 @@ public class AccountContainer {
         return newID;
 	}
 	public boolean verifyUniqueCheckingID(String id) {
-		System.out.println("Checking ID is not unique");
+		//System.out.println("Checking ID is not unique");
 		for (CheckingAccount c : checkingAccounts) {
 			if (id == c.getID()) return false;
 		}
 		return true;
 	}
 	public boolean verifyUniqueSavingsID(String id) {
-		System.out.println("Savings ID is not unique");
+		//System.out.println("Savings ID is not unique");
 		for (SavingsAccount s : savingsAccounts) {
 			if (id == s.getID()) return false;
 		}

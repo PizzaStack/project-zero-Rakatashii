@@ -34,7 +34,7 @@ public class CustomerOptions{
 		mainMenuController = new MainMenuController();
 		//customerOptions.passLoginInfo(loginStatus);
 		if (customerOptions != null && customerOptions.size() > 0) customerOptions.clear();
-		if (customerMenuOption == CustomerMenus.ACCOUNTS) {
+		if (customerMenuOption == CustomerMenus.SELECTION) {
 			setAccountsViewArrayValues();
 		} else {
 			mainMenuController.begin(Menus.DEFAULT);

@@ -1,5 +1,7 @@
 package customers;
 
+import java.util.ArrayList;
+
 import DAO.CustomerDAO;
 import accounts.Account;
 import accounts.CheckingAccount;
@@ -9,7 +11,9 @@ import people.Person;
 import utility.Helpers;
 
 public class Customer extends UnverifiedCustomer{
-	//private CustomerDAO customerDAO = new CustomerDAO();
+	private static CustomerDAO customerDAO = new CustomerDAO();
+	private static ArrayList<Integer> openIDs = null;
+	public static boolean sampleMode;
 	
 	private String username, password;
 	private String firstName, lastName;
@@ -20,7 +24,7 @@ public class Customer extends UnverifiedCustomer{
 	private boolean accountsAreFlagged = false;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
-	private static int numCustomers = 0;
+	protected static int numCustomers = 0;
 	private int custID = numCustomers;
 	
 	static CustomerContainer customerContainer;
@@ -37,10 +41,11 @@ public class Customer extends UnverifiedCustomer{
 		//super();
 		this.username = username;
 		this.password = password;
-		custID = numCustomers;
-		++numCustomers;
-		++numTotalCustomers;
-		++numPeople;
+		custID = nextOpenID();
+		if (custID == numCustomers) {
+			if (custID > numCustomers) numCustomers = custID;
+			++numCustomers;
+		} 
 		if (customerContainerIsSet) customerContainer.push(this);
 		accountsAreFlagged = false;
 		//makeNewAccounts();
@@ -57,9 +62,10 @@ public class Customer extends UnverifiedCustomer{
 		this.isEmployed = employed;
 		this.employer = employer;
 		custID = numCustomers;
-		++numCustomers;
-		++numTotalCustomers;
-		++numPeople;
+		if (custID == numCustomers) {
+			if (custID > numCustomers) numCustomers = custID;
+			++numCustomers;
+		} 
 		--numUnverifiedCustomers;
 		if (customerContainerIsSet) customerContainer.push(this);
 		accountsAreFlagged = false;
@@ -123,14 +129,20 @@ public class Customer extends UnverifiedCustomer{
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
 		String employed = helper.boolToString(this.isEmployed);
-		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
+				this.getID(), this.username, this.password, this.firstName, this.lastName, 
+				this.telephone, this.email, citizen, employed, this.employer, 
+				helper.boolToString(this.accountsAreFlagged)));
 		// boolToInt (0/1) System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
 	}
 	public void printRowWithAccountInfo() {
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
 		String employed = helper.boolToString(this.isEmployed);
-		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
+				this.getID(), this.username, this.password, this.firstName, this.lastName, 
+				this.telephone, this.email, citizen, employed, this.employer, 
+				helper.boolToString(this.accountsAreFlagged)));
 		
 		// WithAccountInfo ...can add to this
 		String flagged = helper.boolToString(this.accountsAreFlagged);;
@@ -186,5 +198,28 @@ public class Customer extends UnverifiedCustomer{
 	public boolean isFlagged() {
 		return accountsAreFlagged;
 	}
-	
+	public static void synchronizeIDsWithDB() {
+		openIDs = customerDAO.getOpenIDs(sampleMode);
+	}
+	public static void sampleModeOn() {
+		if (openIDs != null) openIDs.clear();
+		sampleMode = true;
+		numCustomers = 0;
+	}
+	public static void sampleModeOff() {
+		if (openIDs != null) openIDs.clear();
+		sampleMode = false;
+		numCustomers = 0;
+	}
+	public int nextOpenID() {
+		int openID = numCustomers;
+		if (openIDs != null && openIDs.size() <= 1) synchronizeIDsWithDB();
+		if (openIDs != null && openIDs.size() >= 1) {
+			openID = openIDs.get(0);
+			openIDs.remove(0);
+			if (openIDs.size() == 0) openID = customerDAO.getMaxID(sampleMode);
+			return openID;
+		}
+		return openID;
+	}
 }

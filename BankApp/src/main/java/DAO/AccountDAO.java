@@ -25,12 +25,13 @@ public class AccountDAO implements AccountDAOInterface {
 	}
 	
 	@Override
-	public boolean addAccounts(SavingsAccount savings, CheckingAccount checking) {
+	public boolean addAccounts(SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
+		String tableName = (toSampleTable) ? "sample_accounts" : "accounts";
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO accounts VALUES(?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?, ?, ?)";
 			ps = connection.prepareStatement(sql);
-			if (savings.getOwner() == checking.getOwner())
+			if (savings.getOwner() != null && checking.getOwner() != null && savings.getOwner() == checking.getOwner())
 				ps.setInt(1, savings.getOwner().getID());
 			else 
 				ps.setInt(1, -1);
@@ -42,7 +43,8 @@ public class AccountDAO implements AccountDAOInterface {
 				savings.flag();
 				checking.flag();
 			}
-			ps.setBoolean(6,  savings.getOwner().isFlagged());
+			boolean flagged = (savings.getOwner() != null) ? savings.getOwner().isFlagged() : false;
+			ps.setBoolean(6, flagged);
 		
 			if (ps.executeUpdate() != 0) {
 				ps.close();
@@ -56,54 +58,19 @@ public class AccountDAO implements AccountDAOInterface {
 			return false;
 		}
 	}
-
 	@Override
-	public boolean addSampleAccounts(SavingsAccount savings, CheckingAccount checking) {
+	public int getNumAccounts(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_accounts" : "accounts";
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO sample_accounts VALUES(?, ?, ?, ?, ?, ?)";
-			ps = connection.prepareStatement(sql);
-			
-			if (savings.getOwner() == null || checking.getOwner() == null) return false;
-			ps.setInt(1, savings.getOwner().getID());
-			ps.setString(2, savings.getID());
-			ps.setDouble(3, savings.getBalance());
-			ps.setString(4, checking.getID());
-			ps.setDouble(5, checking.getBalance());
-			if (savings.isFlagged() != checking.isFlagged()) {
-				System.out.println("savings.isFlagged() = " + savings.isFlagged() + " - checking.isFlagged() = " + checking.isFlagged());
-				savings.flag();
-				checking.flag();
-				savings.getOwner().flag();
-			}
-			System.out.println("savings.getOwner().isFlagged() = " + savings.getOwner().isFlagged());
-			ps.setBoolean(6,  savings.getOwner().isFlagged());
-		
-			if (ps.executeUpdate() != 0) {
-				ps.close();
-				return true;
-			} else {
-				ps.close();
-				return false;
-			} 
-		} catch (SQLException e) {
-			//System.out.println("SQLException in AccountsDAO#addSampleAccounts");
-			return false;
-		}
-	}
-	@Override
-	public int getNumAccounts() {
-		Connection connection;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT COUNT(*) AS count FROM accounts;";
+			String sql = "SELECT COUNT(*) AS count FROM " + tableName + ";";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				    ResultSet.CONCUR_READ_ONLY );
 			ResultSet rs = statement.executeQuery(sql);
 			rs.next();
 			int count = rs.getInt("count");
-			rs.close();
+			statement.close(); rs.close();
 			return count;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,30 +78,12 @@ public class AccountDAO implements AccountDAOInterface {
 		return 0;
 	}
 	@Override
-	public int getNumSampleAccounts() {
-		Connection connection;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT COUNT(*) AS count FROM sample_accounts;";
-			Statement statement = connection.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE, 
-				    ResultSet.CONCUR_READ_ONLY );
-			ResultSet rs = statement.executeQuery(sql);
-			rs.next();
-			int count = rs.getInt("count");
-			rs.close();
-			return count;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	public ArrayList<String> getActualRecordsAsStrings() {
-		Connection connection;
+	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_accounts" : "accounts";
 		ArrayList<String> records = new ArrayList<String>();
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM accounts ORDER BY customer_id;";
+			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				    ResultSet.CONCUR_READ_ONLY );
@@ -147,35 +96,19 @@ public class AccountDAO implements AccountDAOInterface {
 				records.add(record);
 				record = null;
 			}
+			statement.close(); rs.close();
 			return records;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return records;
 	}
-	public ArrayList<String> getSampleRecordsAsStrings() {
-		Connection connection;
-		ArrayList<String> records = new ArrayList<String>();
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM sample_accounts ORDER BY customer_id;";
-			Statement statement = connection.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE, 
-				    ResultSet.CONCUR_READ_ONLY );
-			ResultSet rs = statement.executeQuery(sql);
-			String record = null;
-			while (rs.next()) {
-				record = String.format("%-10d%-15s$%-19.2f%-15s$%-19.2f%-10d", 
-						rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getString(4), 
-						rs.getDouble(5), helper.boolToInt(rs.getBoolean(6)));
-				records.add(record);
-				record = null;
-			}
-			return records;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return records;
+	@Override
+	public void printAllAccounts(boolean fromSampleTable) {
+    	ArrayList<String> actualAccountRecords = getAllRecords(fromSampleTable);
+    	for (String actualAccountRecord : actualAccountRecords) {
+    		System.out.println(actualAccountRecord);
+    	}
 	}
-	
+
 }

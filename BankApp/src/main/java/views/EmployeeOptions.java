@@ -25,7 +25,7 @@ public class EmployeeOptions{
 	public EmployeeOptions(EmployeeMenus employeeMenuOption) throws InterruptedException {
 		mainMenuController = new MainMenuController();
 		if (employeeOptions != null && employeeOptions.size() > 0) employeeOptions.clear();
-		if (employeeMenuOption == EmployeeMenus.EMPLOYEE) {
+		if (employeeMenuOption == EmployeeMenus.SELECTION) {
 			setEmployeeViewArrayValues();
 		} else {
 			mainMenuController.begin(Menus.DEFAULT);

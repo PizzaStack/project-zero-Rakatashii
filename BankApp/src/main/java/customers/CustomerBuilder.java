@@ -9,6 +9,7 @@ public class CustomerBuilder {
 	private boolean isEmployed = false;
 	private String employer = null;
 	private String username, password; // Customers only
+	private boolean isFlagged = false;
 	private int id = -1; 
 
 	public CustomerBuilder withID(int id) {
@@ -51,20 +52,32 @@ public class CustomerBuilder {
 		this.employer = employer;
 		return this;
 	}
+	public CustomerBuilder withIsFlagged(boolean isFlagged) {
+		this.isFlagged = isFlagged;
+		return this;
+	}
 	public UnverifiedCustomer makeUnverifiedCustomer() {
 		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
-		if (this.id != -1) newUnverifiedCustomer.setID(this.id);
+		if (this.id != -1) newUnverifiedCustomer.setID(this.id); 
 		return newUnverifiedCustomer;
 	}
 	public Customer makeCustomer() {
 		Customer newCustomer = new Customer(username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
-		if (this.id != -1) newCustomer.setID(this.id);
+		if (this.id != -1) {
+			newCustomer.setID(this.id);
+			Customer.numCustomers--;
+		}
+		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;
 	}
 	public Customer makeCustomer(UnverifiedCustomer u) {
 		Customer newCustomer = new Customer(username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
-		if (this.id != -1) newCustomer.setID(this.id);
+		if (this.id != -1) {
+			newCustomer.setID(this.id);
+			Customer.numCustomers--;
+		}
 		newCustomer.verified = true;
+		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;
 	}
 	

@@ -8,14 +8,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Schemas {
+	/* Drop All Tables:
+	drop table if exists customers, sample_customers, accounts, sample_accounts, unverified_customers, 
+	sample_unverified_customers, employees, sample_employees, admins, sample_admins;
+	*/
+	
 	final String customerSchema = "CREATE TABLE customers ("
 			+ "customer_id INTEGER PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, "
-			+ "password VARCHAR(255), "
+			+ "password VARCHAR(255) NOT NULL, "
 			+ "first_name VARCHAR(255), "
 			+ "last_name VARCHAR(255), "
 			+ "telephone VARCHAR(255), "
-			+ "email VARCHAR(255), "
+			+ "email VARCHAR(255), " // NOT NULL
 			+ "us_citizen BOOLEAN, "
 			+ "employed BOOLEAN, "
 			+ "employer VARCHAR(255), "
@@ -24,11 +29,11 @@ public class Schemas {
 	final String customerSampleSchema = "CREATE TABLE sample_customers ("
 			+ "customer_id INTEGER PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, "
-			+ "password VARCHAR(255), "
+			+ "password VARCHAR(255) NOT NULL, "
 			+ "first_name VARCHAR(255), "
 			+ "last_name VARCHAR(255), "
 			+ "telephone VARCHAR(255), "
-			+ "email VARCHAR(255), "
+			+ "email VARCHAR(255), " // NOT NULL
 			+ "us_citizen BOOLEAN, "
 			+ "employed BOOLEAN, "
 			+ "employer VARCHAR(255), "
@@ -51,21 +56,21 @@ public class Schemas {
 			+ "flagged BOOLEAN"
 			+ ");";
 	final String unverifiedCustomerSchema = "CREATE TABLE unverified_customers ("
-			+ "unverified_customer_id INTEGER PRIMARY KEY, "
+			+ "unverified_id INTEGER PRIMARY KEY, "
 			+ "first_name VARCHAR(255), "
 			+ "last_name VARCHAR(255), "
 			+ "telephone VARCHAR(255), "
-			+ "email VARCHAR(255), "
+			+ "email VARCHAR(255) UNIQUE, "
 			+ "us_citizen BOOLEAN, "
 			+ "employed BOOLEAN, "
 			+ "employer VARCHAR(255)"
 			+ ");";
 	final String unverifiedCustomerSampleSchema = "CREATE TABLE sample_unverified_customers ("
-			+ "unverified_customer_id INTEGER PRIMARY KEY, "
+			+ "unverified_id INTEGER PRIMARY KEY, "
 			+ "first_name VARCHAR(255), "
 			+ "last_name VARCHAR(255), "
 			+ "telephone VARCHAR(255), "
-			+ "email VARCHAR(255), "
+			+ "email VARCHAR(255) UNIQUE, "
 			+ "us_citizen BOOLEAN, "
 			+ "employed BOOLEAN, "
 			+ "employer VARCHAR(255)"
@@ -73,30 +78,30 @@ public class Schemas {
     final String employeeSchema = "CREATE TABLE employees ("
 			+ "employee_id INT PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, " 
-			+ "password VARCHAR(255), " 
+			+ "password VARCHAR(255) NOT NULL, " 
 			+ "admin BOOLEAN, "
 			+ "admin_id INTEGER"
 			+ ");";
 	final String employeeSampleSchema = "CREATE TABLE sample_employees ("
 			+ "employee_id INT PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, " 
-			+ "password VARCHAR(255), " 
+			+ "password VARCHAR(255) NOT NULL, " 
 			+ "admin BOOLEAN, "
 			+ "admin_id INTEGER"
 			+ ");";
     final String adminSchema = "CREATE TABLE admins ("
 			+ "employee_id INT PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, " 
-			+ "password VARCHAR(255), " 
+			+ "password VARCHAR(255) NOT NULL, " 
 			+ "admin BOOLEAN, "
-			+ "admin_id INTEGER"
+			+ "admin_id INTEGER UNIQUE"
 			+ ");";
 	final String adminSampleSchema = "CREATE TABLE sample_admins ("
 			+ "employee_id INTEGER PRIMARY KEY, "
 			+ "username VARCHAR(255) UNIQUE, " 
-			+ "password VARCHAR(255), " 
+			+ "password VARCHAR(255) NOT NULL, " 
 			+ "admin BOOLEAN, "
-			+ "admin_id INTEGER"
+			+ "admin_id INTEGER UNIQUE"
 			+ ");";
 	final String[] actualSchemas = { unverifiedCustomerSchema, customerSchema, accountSchema, employeeSchema, adminSchema };
 	final String[] sampleSchemas = { unverifiedCustomerSampleSchema, customerSampleSchema, accountSampleSchema, employeeSampleSchema, adminSampleSchema };

@@ -1,0 +1,51 @@
+SAMPLE SCHEMAS:
+Tables sample_unverified_customers already exists.
+Tables sample_customers already exists.
+Tables sample_accounts already exists.
+Tables sample_employees already exists.
+Tables sample_admins already exists.
+
+sample_customers table is not empty (OR)
+sample_customers count = 492
+sample_accounts table is not empty
+sample_accounts count = 500
+
+sample_unverified_customers table is not empty
+sample_unverified_customers count = 100
+
+sample_employees table is not empty (OR)
+sample_employees count = 199
+sample_admins table is not empty
+sample_admins count = 108
+
+Container Sizes (should be empty unless tables were updated):
+unverifiedContainer.getSize() = 0
+customerContainer.getSize() = 0
+employeeContainer.getSize() = 0
+adminContainer.getSize() = 0
+
+ACTUAL SCHEMAS
+Tables unverified_customers already exists.
+Tables customers already exists.
+Tables accounts already exists.
+Tables employees already exists.
+Tables admins already exists.
+SQLException in AdminDAO#addAdmin
+
+unverifiedContainer.getSize() = 1
+customerContainer.getSize() = 1
+employeeContainer.getSize() = 2
+adminContainer.getSize() = 1
+
+Actual Table Sizes:
+Number of           Customer Records: 1
+Number of UnverifiedCustomer Records: 1
+Number of           Employee Records: 1
+Number of              Admin Records: 1
+
+Sample Table Sizes:
+Number of           Customer (sample) Records: 492
+Number of UnverifiedCustomer (sample) Records: 100
+Number of           Employee (sample) Records: 199
+Number of              Admin (sample) Records: 108
+

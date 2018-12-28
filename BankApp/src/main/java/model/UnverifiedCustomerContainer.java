@@ -27,8 +27,8 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	private ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>(); 
 	private Class<?> type = new UnverifiedCustomer().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/unverified_customer_sample.txt";
-	private String textFileName = "no_text_file_destination_set";
-	private String binaryFileName = "no_binary_file_destination_set";
+	private String textFileName = "no_text_file_destination_for_unverified_customers";
+	private String binaryFileName = "no_binary_file_destination_for_unverified_customers";
 
 	public UnverifiedCustomerContainer() {
 		super();
@@ -276,7 +276,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			e.printRow();
 		}
 	}
-	@Override
+	
 	public boolean verifyLoginCredentials(String username, String password) {
 		for (UnverifiedCustomer u : unverified) {
 			if (u.getUsername() == username && u.getPassword() == password)

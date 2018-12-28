@@ -28,8 +28,8 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	private ArrayList<Employee> employees = new ArrayList<Employee>(); 
 	private Class<? extends Person> type = new Employee().getClass();
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
-	private String textFileName = "no_text_file_destination_set";
-	private String binaryFileName = "no_binary_file_destination_set";
+	private String textFileName = "no_text_file_destination_for_employees";
+	private String binaryFileName = "no_binary_file_destination_for_employees";
 
 	public EmployeeContainer() {
 		super();
@@ -266,7 +266,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			writeToBinaryFile(false);
 		} 
 	}
-	@Override
+	
 	public boolean verifyLoginCredentials(String username, String password) {
 		for (Employee e : employees) {
 			if (e.getUsername().equals(username) && e.getPassword().equals(password))
