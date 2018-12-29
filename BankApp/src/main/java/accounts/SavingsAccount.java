@@ -9,8 +9,6 @@ public class SavingsAccount implements Account{
 	private final double minimumBalance = 0.0;
 	
 	protected String savingsID;
-	// Watch, and switch back to int if needed
-	// protected int savingsID; 
 	private double balance;
 	protected Customer primaryHolder, sharedHolder;
 	private boolean joint;
@@ -39,6 +37,12 @@ public class SavingsAccount implements Account{
 			pairedCheckingAccount = primaryHolder.getCheckingAccount();
 		}
 		
+		if (pairedCheckingAccount != null && pairedCheckingAccount.isJoint()) {
+			joint = true;
+			this.setJointCustomer(pairedCheckingAccount.getJointCustomer());
+			sharedHolder.setSavingsAccount(this);
+		}
+		
 		savingsID = accNumber;
 		
 		if (initialBalance >= minInitialBalance) {
@@ -48,25 +52,36 @@ public class SavingsAccount implements Account{
 			balance = 0.0;
 			flagged = true;
 		}
+		
+		if (primaryHolder.isFlagged() || sharedHolder.isFlagged() || this.isFlagged() || pairedCheckingAccount.isFlagged()) {
+			primaryHolder.flag();
+			this.flag();
+			if (pairedCheckingAccount != null) pairedCheckingAccount.flag();
+			if (joint) sharedHolder.flag();
+		}
 	}
 	public SavingsAccount(String accNumber, double initialBalance, Customer primary, Customer shared){
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();
 		joint = true;
 		primaryHolder = primary;
-		if (primaryHolder.hasCheckingAccount()) {
-			pairedCheckingAccount = primaryHolder.getCheckingAccount();
-		} 
-		
 		savingsID = accNumber;
-		
 		sharedHolder = shared;
-		if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
 		
-		if (sharedHolder.hasCheckingAccount() == false && pairedCheckingAccount != null) {
-			sharedHolder.setCheckingAccount(this.pairedCheckingAccount);
-			pairedCheckingAccount.sharedHolder = this.sharedHolder;
-		} else if (pairedCheckingAccount.sharedHolder == null) 
-			pairedCheckingAccount.sharedHolder = this.sharedHolder;
+		primaryHolder.setHasJointAccounts(true);
+		sharedHolder.setHasJointAccounts(true);
+		primaryHolder.setSharedCustomer(sharedHolder);
+		sharedHolder.setSharedCustomer(primaryHolder);
+		
+		if (this.pairedCheckingAccount != null) {
+			if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(pairedCheckingAccount);
+			pairedCheckingAccount.setOwner(primaryHolder);
+			if (sharedHolder.hasCheckingAccount() == false) sharedHolder.setCheckingAccount(pairedCheckingAccount);
+			pairedCheckingAccount.setJointCustomer(sharedHolder);
+		} else if (primaryHolder.hasCheckingAccount()) {
+			pairedCheckingAccount = primaryHolder.getCheckingAccount();
+			pairedCheckingAccount.setJointCustomer(sharedHolder);
+			sharedHolder.setCheckingAccount(pairedCheckingAccount);
+		} 
 		
 		if (initialBalance >= minInitialBalance) {
 			balance = initialBalance;
@@ -74,6 +89,13 @@ public class SavingsAccount implements Account{
 		} else {
 			balance = 0.0;
 			flagged = true;
+		}
+		
+		if (primaryHolder.isFlagged() || sharedHolder.isFlagged() || this.isFlagged() || pairedCheckingAccount.isFlagged()) {
+			primaryHolder.flag();
+			sharedHolder.flag();
+			this.flag();
+			pairedCheckingAccount.flag();
 		}
 	}
 	@Override
@@ -107,31 +129,35 @@ public class SavingsAccount implements Account{
 	}
 	@Override
 	public boolean isJoint() {
-		if (joint == false && primaryHolder.hasCheckingAccount() && primaryHolder.getCheckingAccount().isJoint()) {
-			this.sharedHolder = primaryHolder.getCheckingAccount().sharedHolder;
-			if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
-			if (sharedHolder.hasCheckingAccount() == false) sharedHolder.setCheckingAccount(this.pairedCheckingAccount);
-			joint = true;
-		}
 		return joint;
 	}
 	@Override
 	public void setJointCustomer(Customer c) {
+		if (joint == false) joint = true;
 		sharedHolder = c;
 		if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
-		if (sharedHolder.hasCheckingAccount() == false && primaryHolder.hasCheckingAccount()) sharedHolder.setCheckingAccount(this.pairedCheckingAccount);
-		if (this.pairedCheckingAccount != null) pairedCheckingAccount.setJointCustomer(c);
-		joint = true;
+		sharedHolder.setHasJointAccounts(true);
+		if (this.pairedCheckingAccount != null) {
+			pairedCheckingAccount.setJointCustomer(sharedHolder);
+		}
+		if (primaryHolder != null) {
+			primaryHolder.setHasJointAccounts(true);
+			primaryHolder.setSharedCustomer(sharedHolder);
+			sharedHolder.setSharedCustomer(primaryHolder);
+		}
 	}
 	@Override
 	public Customer getJointCustomer() {
-		if (isJoint()) return sharedHolder;
-		else return null;
+		if (isJoint()) 
+			if (sharedHolder != null) return sharedHolder;
+			else joint = false;
+		return null;
 	}
 	@Override
 	public boolean verifyID() {
-		//String pattern = "\/^[\\d]{7}$\/";
-		return false;
+		String pattern = "^[\\d]{7}$";
+		if (savingsID.matches(pattern)) return true;
+		else return false;
 	}
 	@Override
 	public void setOwner(Customer c) {

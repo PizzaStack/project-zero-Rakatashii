@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import DAO.AccountDAOInterface;
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import database.DBConnection;
@@ -42,6 +43,7 @@ public class AccountDAO implements AccountDAOInterface {
 			if (savings.isFlagged() != checking.isFlagged()) {
 				savings.flag();
 				checking.flag();
+				
 			}
 			boolean flagged = (savings.getOwner() != null) ? savings.getOwner().isFlagged() : false;
 			ps.setBoolean(6, flagged);

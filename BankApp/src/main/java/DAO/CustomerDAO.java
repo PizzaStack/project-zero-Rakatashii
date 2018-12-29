@@ -64,6 +64,53 @@ public class CustomerDAO implements CustomerDAOInterface {
 			return false;
 		}
 	}
+	public boolean addCustomerWithAccount(Customer customer, boolean toSampleTable) {
+		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		//if (isUnique(customer, toSampleTable) == false) return false;
+		//else 
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1,  customer.getID());
+			ps.setString(2, customer.getUsername());
+			ps.setString(3, customer.getPassword());
+			ps.setString(4, customer.getFirstname());
+			ps.setString(5, customer.getLastname());
+			ps.setString(6, customer.getTelephone());
+			ps.setString(7, customer.getEmail());
+			ps.setBoolean(8, customer.getIsCitizen());
+			ps.setBoolean(9, customer.getIsEmployed());
+			ps.setString(10, customer.getEmployer());
+			if (customer.hasSavingsAccount() == false) {
+				customer.makeNewAccounts();
+			} 
+			ps.setString(11, customer.getSavingsAccount().getID());
+			ps.setDouble(12, customer.getSavingsAccount().getBalance());
+			ps.setString(13, customer.getCheckingAccount().getID());
+			ps.setDouble(14, customer.getCheckingAccount().getBalance());
+			if (customer.getSavingsAccount().isFlagged() || customer.getCheckingAccount().isFlagged()) {
+				customer.flag();
+			}
+			ps.setBoolean(15, customer.isFlagged());
+			ps.setBoolean(16, customer.hasJointAccounts());
+			if (customer.hasJointAccounts())
+				ps.setInt(17, customer.getSharedCustomer().getCustomerID());
+			else ps.setInt(17,  -1);
+			
+			if (ps.executeUpdate() != 0) {
+				ps.close();
+				return true;
+			} else {
+				ps.close();
+				return false;
+			} 
+		} catch (SQLException e) {
+			//e.printStackTrace(); System.out.println();
+			//System.out.println("SQLException in CustomerDAO#addCustomer"); System.out.println();
+			return false;
+		}
+	}
 	@Override
 	public int getNumCustomers(boolean fromSampleTable) {
 		Connection connection;

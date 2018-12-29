@@ -22,10 +22,13 @@ public class Customer extends UnverifiedCustomer{
 	private String employer;
 	protected boolean verified = true;
 	private boolean accountsAreFlagged = false;
+	private boolean accountsAreShared = false;
+	private Customer sharedCustomer = null;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
 	protected static int numCustomers = 0;
 	private int custID = numCustomers;
+	private int adminID = -1;
 	
 	static CustomerContainer customerContainer;
 	static boolean customerContainerIsSet = false;
@@ -80,6 +83,30 @@ public class Customer extends UnverifiedCustomer{
 		return custID;
 	}
 	@Override
+	public void setID(int id) {
+		custID = id;
+	}
+	public int getCustomerID() {
+		return custID;
+	}
+	public void setCustomerID(int id) {
+		custID = id;
+	}
+	public int getAdminID() {
+		return adminID;
+	}
+	public void setAdminID(int id) {
+		adminID = id;
+	}
+	@Override
+	public int getCount() {
+		return numCustomers;
+	}
+	@Override
+	public void setCount(int count) {
+		numCustomers = count;
+	}
+	@Override
 	public String getUsername()    { return this.username; }
 	@Override
 	public String getPassword()    { return this.password; }
@@ -90,18 +117,7 @@ public class Customer extends UnverifiedCustomer{
 	public boolean getIsCitizen()  { return this.isCitizen; }
 	public boolean getIsEmployed() { return this.isEmployed; }
 	public String getEmployer()    { return this.employer; }
-	@Override
-	public void setID(int id) {
-		custID = id;
-	}
-	@Override
-	public int getCount() {
-		return numCustomers;
-	}
-	@Override
-	public void setCount(int count) {
-		numCustomers = count;
-	}
+
 	@Override
 	public void getInfo() {
 		System.out.println("ID: " + this.custID);
@@ -221,5 +237,18 @@ public class Customer extends UnverifiedCustomer{
 			return openID;
 		}
 		return openID;
+	}
+	public boolean hasJointAccounts(){
+		return accountsAreShared;
+	}
+	public void setHasJointAccounts(boolean shared) {
+		accountsAreShared = shared;
+	}
+	public Customer getSharedCustomer() {
+		if (hasJointAccounts() && sharedCustomer != null) return sharedCustomer;
+		else return null;
+	}
+	public void setSharedCustomer(Customer c) {
+		this.sharedCustomer = c;
 	}
 }
