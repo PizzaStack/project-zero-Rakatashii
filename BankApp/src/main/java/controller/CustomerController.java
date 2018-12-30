@@ -197,17 +197,15 @@ public void selectSavingsOption(int selection) throws InterruptedException {
 			begin(CustomerMenus.SELECTION);
 		}
 		else {
-			System.out.println(selection + " is not a valid input.\n");
+			System.out.println(selection + " Is Not A Valid Input.\n");
 			begin(CustomerMenus.SELECTION);
 		}
 	}
 	public void selectCustomerOption(int selection) throws InterruptedException {
-		//boolean isVerified = false;
-		//login = new LoginController();
 		if (selection == 1) begin(CustomerMenus.CHECKING);
 		else if (selection == 2) begin(CustomerMenus.SAVINGS);
 		else if (selection == stop) {
-			System.out.println("Bye " + customer.getFirstname() + "!");
+			System.out.println("Bye " + customer.getFirstname() + "!\n");
 			LoginController.logout();
 			begin(CustomerMenus.LOGOUT);
 		} else {

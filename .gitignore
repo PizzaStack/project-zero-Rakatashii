@@ -5,7 +5,6 @@
 # Self-Documenting
 annoying_to_retype.java
 *.project_requisites
-file.txt
 BankApp/preferences/dbconnection.txt
 
 ### Eclipse ###

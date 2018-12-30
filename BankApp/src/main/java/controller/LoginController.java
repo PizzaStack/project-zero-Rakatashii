@@ -90,7 +90,7 @@ public class LoginController {
 			username = login.getUsername();
 			password = login.getPassword();
 			
-			if (customerContainer == null) System.out.println("customerContainer is null in Login Controller");
+			if (employeeContainer == null) System.out.println("employeeContainer is null in Login Controller");
 			verified = employeeContainer.verifyLoginCredentials(username,  password);
 			if (verified) { 
 				System.out.println("\nSuccess! Welcome " + username + "."); 

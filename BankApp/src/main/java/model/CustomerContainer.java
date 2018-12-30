@@ -35,12 +35,16 @@ public class CustomerContainer implements PersonContainer<Person>{
 	private String binaryFileName = "no_binary_file_destination_for_customers";
 	
 	private CustomerDAO customerDAO = new CustomerDAO();
-	private ArrayList<Customer> DBCustomers = new ArrayList<Customer>();
+	private ArrayList<Customer> DBCustomers;
 	
 	public CustomerContainer() {
 		super();
-		if (Customer.sampleMode == false) DBCustomers = customerDAO.getAllCustomers(false);
 	}
+	
+	public static void refreshDBCustomers() {
+		//DBCustomers = new CustomerDAO().getAllCustomers(Customer.sampleMode);
+	}
+	
 	public Person Get(int index){
 		return customers.get(index);
 	}
@@ -82,13 +86,6 @@ public class CustomerContainer implements PersonContainer<Person>{
 				"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
 				"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED");
 	}
-	public void printAll(boolean columnHeaders) {
-		if (columnHeaders) printColumnNames();
-		for (int i = 0; i < customers.size(); i++) {
-			customers.get(i).printRow();
-			System.out.println();
-		}
-	}
 	public void push(Customer customer) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
@@ -125,9 +122,10 @@ public class CustomerContainer implements PersonContainer<Person>{
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
-	public void printAll() {
+	public void printAll(boolean withAccounts) {
 		for (Customer c : customers) {
-			c.printRow();
+			if (withAccounts) c.printRow(true);
+			else c.printRow();
 		}
 	}
 	public void readIn(File file) throws IOException {
@@ -315,12 +313,29 @@ public class CustomerContainer implements PersonContainer<Person>{
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
 				return c;
 		}
+		DBCustomers = new CustomerDAO().getAllCustomers(Customer.sampleMode);
 		for (Customer c : DBCustomers) {
 			if (c.getUsername().equals(username) && c.getPassword().equals(password))
 				return c;
 		}
 		return null;
 	} 
+	
+	public boolean checkUniqueCustomerInfo(Customer customer) {
+		for (Customer c : customers) {
+			if (customer.getUsername().equals(c.getUsername()))
+				return false;
+		}
+		return true;
+	}
+	public boolean checkUniqueAccountInfo(Customer customer) {
+		for (Customer c : customers) {
+			if (customer.getSavingsAccount().getID() == c.getSavingsAccount().getID())
+				if (customer.getSharedCustomerID() != c.getCustomerID())
+					return false;
+		}
+		return true;
+	}
 	
 	
 	

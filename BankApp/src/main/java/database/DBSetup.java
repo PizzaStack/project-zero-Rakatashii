@@ -263,7 +263,7 @@ public class DBSetup {
 		Customer.sampleModeOff();
 		Employee.sampleModeOff();
 		
-		Customer firstCustomer = new Customer("customer", "password", "firstname", "lastname", 
+		Customer firstCustomer = new Customer(-1, "customer", "password", "firstname", "lastname", 
     			"telephone", "email", true, true, "employer");
 		customerDAO.addCustomer(firstCustomer, false);
 		customerDAO.addCustomerWithAccount(firstCustomer, false);

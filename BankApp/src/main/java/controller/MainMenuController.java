@@ -7,6 +7,7 @@ import java.util.Scanner;
 import com.BankApp.BankApp;
 
 import DAO.CustomerDAO;
+import DAO.EmployeeDAO;
 import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
@@ -29,13 +30,13 @@ public class MainMenuController {
 	
 	CustomerDAO customerDAO = new CustomerDAO();
 	ArrayList<Customer> DBCustomers;
+	EmployeeDAO employeeDAO = new EmployeeDAO();
+	ArrayList<Employee> DBEmployees;
 	
 	public MainMenuController(){ }
 	
 	public void selectHomeOption(int selection) throws InterruptedException {
 		boolean isVerified = false;
-		
-		login = new LoginController();
 		
 		if (selection == 1) {
 			
@@ -45,6 +46,7 @@ public class MainMenuController {
 			
 		} else if (selection == 2) { 
 			
+			login = new LoginController();
 			this.DBCustomers = customerDAO.getAllCustomers(false);
 			CustomerContainer customerContainer = containers.getCustomerContainer();
 			if (customerContainer != null) customerController = new CustomerController(this, customerContainer);
@@ -52,23 +54,24 @@ public class MainMenuController {
 			else while (isVerified == false && login.getNumTries() > 0)
 				isVerified = login.loginAsCustomer(customerContainer);
 			if (isVerified == true) {
-				customerController.passCustomerContainer(containers.getCustomerContainer());
+				//customerController.passCustomerContainer(containers.getCustomerContainer());
 				customerController.begin(CustomerMenus.SELECTION);
 			} else System.out.println("Error. Customer could not be verified.");
 			return;
 			
 		} else if (selection == 3) {
 	
+			login = new LoginController();
+			this.DBEmployees = employeeDAO.getAllEmployees(false);
 			EmployeeContainer<Employee> employeeContainer = containers.getEmployeeContainer();
-			employeeController = new EmployeeController(this, employeeContainer);
-			if (LoginController.isLoggedIn()) { System.out.println("Customer already logged in."); isVerified = true; }
+			if (containers != null) employeeController = new EmployeeController(this, containers);
+			if (LoginController.isLoggedIn()) { System.out.println("Employee already logged in."); isVerified = true; }
 			else while (isVerified == false && login.getNumTries() > 0) 
-				isVerified = login.loginAsEmployee(containers.getEmployeeContainer());
+				isVerified = login.loginAsEmployee(employeeContainer);
 			if (isVerified == true) {
-				employeeController = new EmployeeController();
+				//employeeController = new EmployeeController();
 				employeeController.begin(EmployeeMenus.SELECTION);
 			} else System.out.println("Error. Employee could not be verified.");
-			//System.out.println();
 			return;
 			
 		} else if (selection == 4) {

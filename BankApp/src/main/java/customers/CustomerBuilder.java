@@ -62,20 +62,20 @@ public class CustomerBuilder {
 		return newUnverifiedCustomer;
 	}
 	public Customer makeCustomer() {
-		Customer newCustomer = new Customer(username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
-		if (this.id != -1) {
+		Customer newCustomer = new Customer(id, username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		/*if (this.id != -1) {
 			newCustomer.setID(this.id);
 			Customer.numCustomers--;
-		}
+		}*/
 		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;
 	}
 	public Customer makeCustomer(UnverifiedCustomer u) {
-		Customer newCustomer = new Customer(username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
-		if (this.id != -1) {
+		Customer newCustomer = new Customer(id, username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
+		/* if (this.id != -1) {
 			newCustomer.setID(this.id);
 			Customer.numCustomers--;
-		}
+		} */
 		newCustomer.verified = true;
 		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;

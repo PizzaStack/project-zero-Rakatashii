@@ -66,13 +66,14 @@ public class SavingsAccount implements Account{
 			balance = 0.0;
 			flagged = true;
 		}
-		
-		if (primaryHolder.isFlagged() || sharedHolder.isFlagged() || this.isFlagged() || pairedCheckingAccount.isFlagged()) {
+		/*
+		if ((primaryHolder != null && primaryHolder.isFlagged()) || (sharedHolder != null && sharedHolder.isFlagged()) || this.isFlagged() || pairedCheckingAccount.isFlagged()) {
 			primaryHolder.flag();
 			this.flag();
 			if (pairedCheckingAccount != null) pairedCheckingAccount.flag();
 			if (joint) sharedHolder.flag();
 		}
+		*/
 	}
 	public SavingsAccount(String accNumber, double initialBalance, Customer primary, Customer shared){
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();

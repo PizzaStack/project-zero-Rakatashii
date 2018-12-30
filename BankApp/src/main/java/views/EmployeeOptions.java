@@ -8,6 +8,7 @@ import java.util.Scanner;
 import controller.LoginController;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
+import employees.Employee;
 import controller.EmployeeController.EmployeeMenus;
 
 
@@ -19,29 +20,34 @@ public class EmployeeOptions{
 	private String lineSeparator, menuEndLine;
 	
 	MainMenuController mainMenuController;
-	//LoginController loginStatus;
+	LoginController loginStatus;
+	
+	Employee employee;
 	
 	public EmployeeOptions() { }
 	public EmployeeOptions(EmployeeMenus employeeMenuOption) throws InterruptedException {
-		mainMenuController = new MainMenuController();
 		if (employeeOptions != null && employeeOptions.size() > 0) employeeOptions.clear();
 		if (employeeMenuOption == EmployeeMenus.SELECTION) {
 			setEmployeeViewArrayValues();
+		} else if (employeeMenuOption == EmployeeMenus.CUSTOMERS){
+			setCustomersViewArrayValues();
 		} else {
 			mainMenuController.begin(Menus.DEFAULT);
 		}
 	}
-
-	private void setEmployeeViewArrayValues() {
-		addFormattedOption(1, "Employee Option 1");
-		addFormattedOption(2, "Employee Option 2");
-		addFormattedOption(3, "to Logout");
+	
+	private void setCustomersViewArrayValues() {
+		if (employeeOptions.size() > 0) employeeOptions.clear();
+		addFormattedOption(1, "View All Customers");
+		addFormattedOption(2, "View Customer By ID");
+		addFormattedOption(3, "Enable/Disable Account");
+		addFormattedOption(4, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Employee Database Access";
+		String title = "Customer Database";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
@@ -50,7 +56,28 @@ public class EmployeeOptions{
 		
 		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
 		this.endCondition = employeeOptions.size();
-		//addFormattedOption(employeeOptions.size(), "Go back to Main Menu");
+		if (endCondition == employeeOptions.size()) endCondition--;
+		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
+	} 
+	private void setEmployeeViewArrayValues() {
+		if (employeeOptions.size() > 0) employeeOptions.clear();
+		addFormattedOption(1, "Customer Database");
+		addFormattedOption(2, "Employee Option 2");
+		addFormattedOption(3, "to Logout");
+		
+		this.maxLineLength = maxOptionLength()-1;
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
+		
+		String title = "Employee View";
+		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
+		
+		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
+		String menuLeftHalf = menuSideLine + " ";
+		String menuRightHalf = " " + menuSideLine + "-";
+		
+		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = employeeOptions.size();
 		if (endCondition == employeeOptions.size()) endCondition--;
 		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
 	} 
@@ -59,7 +86,7 @@ public class EmployeeOptions{
 		for (int i = 0; i < employeeOptions.size(); i++){
 			if (i != 0) System.out.print(lineSeparator);
 			if (i == 1 && LoginController.isLoggedIn()) {
-				System.out.println("* (Logged in as  " + LoginController.getLoggedInUsername() + ")");
+				System.out.println("* (Logged In As: " + LoginController.getLoggedInUsername() + ")");
 				System.out.print(lineSeparator);
 			}
 			System.out.print(employeeOptions.get(i));
@@ -70,7 +97,7 @@ public class EmployeeOptions{
 			if (inBounds(selection))
 				return selection;
 			else {
-				System.out.println("* " + selection + " is not a valid option.");
+				System.out.println("* " + selection + " Is Not a Valid Option.");
 				selection = 0;
 			}
 		} 
@@ -84,10 +111,10 @@ public class EmployeeOptions{
 		while (!(inBounds(selection))) {
 			selection = 0;
 			System.out.print(lineSeparator);
-			System.out.print("* Select option number: "); 
+			System.out.print("* Select Option Number: "); 
 			
 			selection = cin.nextInt();
-			System.out.print("- Selection = " + selection + lineSeparator.substring(15));
+			//System.out.print("- Selection = " + selection + lineSeparator.substring(15));
 	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}

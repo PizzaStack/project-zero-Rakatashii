@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import customers.Customer;
+import customers.CustomerBuilder;
 import database.DBConnection;
 import database.DBUtil;
 import employees.Employee;
+import employees.EmployeeBuilder;
 import utility.Helpers;
 
 public class EmployeeDAO implements EmployeeDAOInterface{
@@ -102,6 +105,33 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		for (String actualEmployeeRecord : actualEmployeeRecords) {
 			System.out.println(actualEmployeeRecord);
 		}
+	}
+	public ArrayList<Employee> getAllEmployees(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_employees" : "employees";
+		ArrayList<Employee> employees = new ArrayList<Employee>();
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " ORDER BY employee_id;";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				Employee c = new EmployeeBuilder()
+						.withEmployeeID(rs.getInt(1))
+						.withUsername(rs.getString(2))
+						.withPassword(rs.getString(3)) 
+						.withIsAdmin(rs.getBoolean(4))
+						.withAdminID(rs.getInt(5))
+						.makeEmployee();
+				employees.add(c);
+			}
+			statement.close(); rs.close();
+			return employees;
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return employees;
 	}
 	public ArrayList<Integer> getOpenIDs(boolean fromSampleTable){
 		ArrayList<Integer> openIDs = new ArrayList<Integer>();

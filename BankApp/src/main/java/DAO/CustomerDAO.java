@@ -141,67 +141,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return 0;
 	}
-	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
-		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
-		ArrayList<String> records = new ArrayList<String>();
-		try {
-			Connection connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
-			Statement statement = connection.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE, 
-				    ResultSet.CONCUR_READ_ONLY );
-			ResultSet rs = statement.executeQuery(sql);
-			String record = null;
-			while (rs.next()) {
-				record = String.format("%-10d%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-10s", 
-						rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 
-						rs.getString(5), rs.getString(6), rs.getString(7), 
-						helper.boolToString(rs.getBoolean(8)), helper.boolToString(rs.getBoolean(9)), 
-						rs.getString(10), helper.boolToString(rs.getBoolean(11)));
-				records.add(record);
-				record = null;
-			}
-			statement.close(); rs.close();
-			return records;
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-		return records;
-	}
-	public ArrayList<Customer> getAllCustomers(boolean fromSampleTable) {
-		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
-		ArrayList<Customer> customers = new ArrayList<Customer>();
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
-			Statement statement = connection.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE, 
-				    ResultSet.CONCUR_READ_ONLY );
-			ResultSet rs = statement.executeQuery(sql);
-			String record = null;
-			while (rs.next()) {
-				Customer c = new CustomerBuilder()
-						.withID(rs.getInt(1))
-						.withUsername(rs.getString(2))
-						.withPassword(rs.getString(3)) 
-						.withFirstName(rs.getString(4))
-						.withLastName(rs.getString(5))
-						.withTelephone(rs.getString(6))
-						.withEmail(rs.getString(7))
-						.withIsCitizen(rs.getBoolean(8))
-						.withIsEmployed(rs.getBoolean(9))
-						.withEmployer(rs.getString(10)) 
-						.withIsFlagged(rs.getBoolean(11))
-						.makeCustomer();
-				customers.add(c);
-			}
-			statement.close(); rs.close();
-			return customers;
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-		return customers;
-	}
+	
 	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		try {
@@ -272,20 +212,46 @@ public class CustomerDAO implements CustomerDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 	}
-	public Customer getCustomerByID(int id, boolean fromSampleTable) {
-		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
-		Customer customer = null;
+	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
+		ArrayList<String> records = new ArrayList<String>();
 		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName + " WHERE customer_id = " + id + ";";
+			Connection connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				    ResultSet.CONCUR_READ_ONLY );
 			ResultSet rs = statement.executeQuery(sql);
 			String record = null;
-			
 			while (rs.next()) {
-				customer = new CustomerBuilder()
+				record = String.format("%-10d%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-10s", 
+						rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 
+						rs.getString(5), rs.getString(6), rs.getString(7), 
+						helper.boolToString(rs.getBoolean(8)), helper.boolToString(rs.getBoolean(9)), 
+						rs.getString(10), helper.boolToString(rs.getBoolean(11)));
+				records.add(record);
+				record = null;
+			}
+			statement.close(); rs.close();
+			return records;
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return records;
+	}
+	public ArrayList<Customer> getAllCustomers(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				Customer customer = new CustomerBuilder()
 						.withID(rs.getInt(1))
 						.withUsername(rs.getString(2))
 						.withPassword(rs.getString(3)) 
@@ -296,23 +262,65 @@ public class CustomerDAO implements CustomerDAOInterface {
 						.withIsCitizen(rs.getBoolean(8))
 						.withIsEmployed(rs.getBoolean(9))
 						.withEmployer(rs.getString(10)) 
-						.withIsFlagged(rs.getBoolean(11))
 						.makeCustomer();
 				if (customer != null) {
-					SavingsAccount savings = new SavingsAccount(rs.getString(12), rs.getDouble(13), customer);
+					SavingsAccount savings = new SavingsAccount(rs.getString(11), rs.getDouble(12), customer);
+					customer.setSavingsAccount(savings);
 					CheckingAccount checking = new CheckingAccount(rs.getString(13), rs.getDouble(14), customer);
+					customer.setCheckingAccount(checking);
 					if (rs.getBoolean(15)) customer.flag();
 					if (rs.getBoolean(16)) customer.setSharedCustomerID(rs.getInt(17));
+					customers.add(customer);
 				}
 			}
 			statement.close(); rs.close();
+			return customers;
 		} catch (SQLException e) {
 			e.printStackTrace(); System.out.println();
 		}
-		if (customer != null) {
-			if (customer.getSharedCustomerID() >= 0) customer.setSharedCustomer(getCustomerByID(customer.getSharedCustomerID(), fromSampleTable));
-			return customer;
-		} else return null;
+		return customers;
+	}
+	public Customer findCustomerByID(int id, boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		System.out.println("got here...1");
+		try {
+			System.out.println("got here...2");
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " WHERE customer_id = " + id + ";";
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				Customer customer = new CustomerBuilder()
+						.withID(rs.getInt(1))
+						.withUsername(rs.getString(2))
+						.withPassword(rs.getString(3)) 
+						.withFirstName(rs.getString(4))
+						.withLastName(rs.getString(5))
+						.withTelephone(rs.getString(6))
+						.withEmail(rs.getString(7))
+						.withIsCitizen(rs.getBoolean(8))
+						.withIsEmployed(rs.getBoolean(9))
+						.withEmployer(rs.getString(10)) 
+						.makeCustomer();
+				System.out.println("Got Here");
+				if (customer != null) {
+					SavingsAccount savings = new SavingsAccount(rs.getString(11), rs.getDouble(12), customer);
+					CheckingAccount checking = new CheckingAccount(rs.getString(13), rs.getDouble(14), customer);
+					if (rs.getBoolean(15)) customer.flag();
+					if (rs.getBoolean(16)) customer.setSharedCustomerID(rs.getInt(17));
+					statement.close(); rs.close();
+					return customer;
+				} else System.out.println("Customer is null here");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return null;
+	}
+	public boolean customerExists(int id, boolean fromSampleTable) {
+		Customer customer = findCustomerByID(id, fromSampleTable);
+		if (customer == null) return false; else return true;
 	}
 
 	public void printAllCustomers(boolean fromSampleTable) {

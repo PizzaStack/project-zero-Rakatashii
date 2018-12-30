@@ -28,7 +28,7 @@ public class Customer extends UnverifiedCustomer{
 	private int sharedCustomerID;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
-	protected static int numCustomers = 0;
+	protected static int numCustomers = customerDAO.getNumCustomers(true, sampleMode);
 	private int custID = numCustomers;
 	private int adminID = -1;
 	
@@ -55,8 +55,12 @@ public class Customer extends UnverifiedCustomer{
 		accountsAreFlagged = false;
 		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
-	public Customer(String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
+	public Customer(int id, String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
 		//super(firstName, lastName, telephone, email, citizen, employed, employer);
+		if (custID == -1) {
+			custID = numCustomers;
+			++numCustomers;
+		} else this.custID = id;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -66,14 +70,15 @@ public class Customer extends UnverifiedCustomer{
 		this.isCitizen = citizen;
 		this.isEmployed = employed;
 		this.employer = employer;
-		custID = numCustomers;
-		if (custID == numCustomers) {
-			if (custID > numCustomers) numCustomers = custID;
-			++numCustomers;
-		} 
+		if (customerContainer.checkUniqueCustomerInfo(this)) {
+			if (customerContainerIsSet) customerContainer.push(this);
+		}
+			/*if (custID != -1) {
+				custID = numCustomers - 1;
+				++numCustomers;
+			} else custID = customerDAO.getNumCustomers(true, sampleMode) - 1;
+		} else custID = -1;*/
 		--numUnverifiedCustomers;
-		if (customerContainerIsSet) customerContainer.push(this);
-		accountsAreFlagged = false;
 		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
 	public static void passCustomerContainer(CustomerContainer customers) {
@@ -159,7 +164,24 @@ public class Customer extends UnverifiedCustomer{
 				this.getID(), this.username, this.password, this.firstName, this.lastName, 
 				this.telephone, this.email, citizen, employed, this.employer, 
 				helper.boolToString(this.accountsAreFlagged)));
-		// boolToInt (0/1) System.out.printf(String.format("%-4d%-20s%-20s%-15s%-15s%-14s%-40s%-10d%-10d%-35s\n", this.getID(), this.username, this.password, this.firstName, this.lastName, this.telephone, this.email, citizen, employed, this.employer));
+	}
+	public void printRow(boolean withAccounts) {
+		Helpers helper = new Helpers();
+		String citizen = helper.boolToString(this.isCitizen);
+		String employed = helper.boolToString(this.isEmployed);
+		if (withAccounts) {
+			SavingsAccount savings = this.getSavingsAccount();
+			CheckingAccount checking = this.getCheckingAccount();
+			System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-20s%-15.2f%-20s%-15.2f%-15s%-15s%-15d\n", 
+					this.getID(), this.username, this.password, this.firstName, this.lastName, 
+					this.telephone, this.email, citizen, employed, this.employer, 
+					savings.getID(), savings.getBalance(), checking.getID(), checking.getBalance(),
+					helper.boolToString(this.isFlagged()), helper.boolToString(this.hasJointAccounts()), 
+					this.getSharedCustomerID()));
+		} else {
+			this.printRow();
+
+		}
 	}
 	public void printRowWithAccountInfo() {
 		Helpers helper = new Helpers();
@@ -230,12 +252,13 @@ public class Customer extends UnverifiedCustomer{
 	public static void sampleModeOn() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = true;
-		numCustomers = 0;
+		numCustomers = customerDAO.getNumCustomers(true,  sampleMode);
 	}
 	public static void sampleModeOff() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = false;
 		numCustomers = 0;
+		numCustomers = customerDAO.getNumCustomers(true,  sampleMode);
 	}
 	public int nextOpenID() {
 		int openID = numCustomers;
