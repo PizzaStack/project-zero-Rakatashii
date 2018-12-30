@@ -10,6 +10,7 @@ import java.util.Scanner;
 import controller.LoginController;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
+import customers.Customer;
 import controller.CustomerController.CustomerMenus;
 
 
@@ -24,19 +25,25 @@ public class CustomerOptions{
 	MainMenuController mainMenuController;
 	LoginController loginStatus;
 	
+	Customer customer;
+	
 	//ArrayList<String> accountOptions;
 	//ArrayList<String> checkingsAccountOptions;
 	//ArrayList<String> savingsAccountOptions;
 	//Map<customerMenuOptions, ArrayList<String>> optionsMap = new HashMap<customerMenuOptions, ArrayList<String>>();
 	
-	public CustomerOptions() { }
+	public CustomerOptions() { 
+		customer = LoginController.getLoggedInCustomer(); 
+	}
+	
 	public CustomerOptions(CustomerMenus customerMenuOption) throws InterruptedException {
-		mainMenuController = new MainMenuController();
-		//customerOptions.passLoginInfo(loginStatus);
 		if (customerOptions != null && customerOptions.size() > 0) customerOptions.clear();
 		if (customerMenuOption == CustomerMenus.SELECTION) {
 			setAccountsViewArrayValues();
-		} else {
+		} else if (customerMenuOption == CustomerMenus.CHECKING) {
+			setCheckingAccountViewArrayValues();
+		}
+		else {
 			mainMenuController.begin(Menus.DEFAULT);
 		}
 	}
@@ -51,7 +58,7 @@ public class CustomerOptions{
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Account Type:";
+		String title = "Accounts:";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
@@ -61,6 +68,29 @@ public class CustomerOptions{
 		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
 		this.endCondition = customerOptions.size();
 		//addFormattedOption(customerOptions.size(), "Go back to Main Menu");
+		if (endCondition == customerOptions.size()) endCondition--;
+		this.customerOptions.add(customerOptions.size(), menuEndLine);
+	} 
+	
+	private void setCheckingAccountViewArrayValues() {
+		addFormattedOption(1, "Check Balance");
+		addFormattedOption(2, "Deposit");
+		addFormattedOption(3, "Withdraw");
+		addFormattedOption(4, "Go Back");
+		
+		this.maxLineLength = maxOptionLength()-1;
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
+		
+		String title = "Checking ";
+		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
+		
+		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
+		String menuLeftHalf = menuSideLine + " ";
+		String menuRightHalf = " " + menuSideLine + "-";
+		
+		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = customerOptions.size();
 		if (endCondition == customerOptions.size()) endCondition--;
 		this.customerOptions.add(customerOptions.size(), menuEndLine);
 	} 
@@ -93,7 +123,8 @@ public class CustomerOptions{
 		int selection = 0;
 		while (!(inBounds(selection))) {
 			selection = 0;
-			System.out.print(lineSeparator);
+			//System.out.print(lineSeparator);
+			System.out.println();
 			System.out.print("* Select option number: "); 
 			
 			selection = cin.nextInt();

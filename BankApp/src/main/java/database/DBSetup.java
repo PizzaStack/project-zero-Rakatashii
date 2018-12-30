@@ -47,6 +47,7 @@ public class DBSetup {
 		Customer.sampleModeOn();
 		Employee.sampleModeOn();
 		
+		
 		this.printToLog = printToLog;
 		if (printToLog) {
 			File log = new File("log_files/db_setup.txt");
@@ -103,7 +104,7 @@ public class DBSetup {
     	
     	DBUtil dbUtil = new DBUtil();
     	
-    	int numSampleCustomersInDB = customerDAO.getNumCustomers(true);
+    	int numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
     	int numSampleAccountsInDB = accountDAO.getNumAccounts(true);
     	
     	if (dbUtil.tableExists("sample_customers") == false || (numSampleCustomersInDB <= 1) || dbUtil.tableExists("sample_accounts") == false || (numSampleAccountsInDB <= 1)) {
@@ -142,17 +143,19 @@ public class DBSetup {
         			c.getSavingsAccount().setPairedAccount(c.getCheckingAccount());
         			c.getCheckingAccount().setPairedAccount(c.getSavingsAccount());
         			
-        			accountDAO.addAccounts(savings, checking, true);
+        			customerDAO.addCustomerWithAccount(c, true);
+        			customerDAO.addCustomer(c, true);
+        			accountDAO.addAccounts(c.getSavingsAccount(),  c.getCheckingAccount(),  true);
         		} else {
         			System.out.println("Customer and Account Containers are not the same size!");
         		} ++i;
         		
-        		customerDAO.addCustomer(c, true);
+        		//customerDAO.addCustomer(c, true);
         		c.printRowWithAccountInfo();
         		 		
         		//TODO make join table for customers and accounts
         	} 
-        	numSampleCustomersInDB = customerDAO.getNumCustomers(true);
+        	numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
         	numSampleAccountsInDB = accountDAO.getNumAccounts(true);
         	System.out.println();
         	System.out.println("updated sample_customers table...");
@@ -160,7 +163,7 @@ public class DBSetup {
     		System.out.println("updated sample_accounts table...");
     		System.out.println("sample_accounts count = " + numSampleAccountsInDB);
     	} else {
-    		numSampleCustomersInDB = customerDAO.getNumCustomers(true);
+    		numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
         	numSampleAccountsInDB = accountDAO.getNumAccounts(true);
     		System.out.println();
     		System.out.println("sample_customers table is not empty (OR)");
@@ -263,6 +266,11 @@ public class DBSetup {
 		Customer firstCustomer = new Customer("customer", "password", "firstname", "lastname", 
     			"telephone", "email", true, true, "employer");
 		customerDAO.addCustomer(firstCustomer, false);
+		customerDAO.addCustomerWithAccount(firstCustomer, false);
+		firstCustomer.unflag();
+		firstCustomer.getSavingsAccount().deposit(1000.00);
+		firstCustomer.getCheckingAccount().deposit(20000.82);
+		customerDAO.updateCustomerAndAccounts(firstCustomer,  firstCustomer.getSavingsAccount(),  firstCustomer.getCheckingAccount(),  false);
 		
     	UnverifiedCustomer firstUnverified = new UnverifiedCustomer("unverified", "customer", 
     			"000-000-0000", "email@address.com", true, true, "employer");

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import customers.Customer;
 import customers.CustomerBuilder;
 import database.DBConnection;
@@ -17,11 +19,12 @@ import utility.Helpers;
 public class CustomerDAO implements CustomerDAOInterface {
 	private Connection connection;
 	private PreparedStatement ps;
-	private DBUtil util;
+	//private DBUtil util;
 	private Helpers helper;
+	private AccountDAO accountDAO = new AccountDAO();
 	
 	public CustomerDAO() {
-		util = new DBUtil();
+		//util = new DBUtil();
 		helper = new Helpers();
 	}
 	
@@ -98,6 +101,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 				ps.setInt(17, customer.getSharedCustomer().getCustomerID());
 			else ps.setInt(17,  -1);
 			
+			/*
+			addCustomer(customer, toSampleTable);
+			accountDAO.addAccounts(customer.getSavingsAccount(),  customer.getCheckingAccount(),  toSampleTable);
+			*/
+			
 			if (ps.executeUpdate() != 0) {
 				ps.close();
 				return true;
@@ -112,9 +120,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 	}
 	@Override
-	public int getNumCustomers(boolean fromSampleTable) {
+	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable) {
 		Connection connection;
-		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
+		String tableName = (withAccounts) 
+				? ((fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts") 
+				: ((fromSampleTable) ? "sample_customers" : "customers");
 		try {
 			connection = DBConnection.getConnection();
 			String sql = "SELECT COUNT(*) AS count FROM " + tableName + ";";
@@ -162,7 +172,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
 		ArrayList<Customer> customers = new ArrayList<Customer>();
 		try {
-			Connection connection = DBConnection.getConnection();
+			connection = DBConnection.getConnection();
 			String sql = "SELECT * FROM " + tableName + " ORDER BY customer_id;";
 			Statement statement = connection.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE, 
@@ -192,6 +202,118 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return customers;
 	}
+	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
+		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		try {
+	    	connection = DBConnection.getConnection();
+	    	
+		    String sql = "UPDATE " + tableName + " SET "
+		    		+ "customer_id = ?, username = ?, password = ?, "
+		    		+ "first_name = ?, last_name = ?, telephone = ?, email = ?, "
+		    		+ "us_citizen = ?, employed = ?, employer = ?, "
+		    		+ "savings_number = ?, savings_amount = ?, checking_number = ?, checking_amount = ?, "
+		    		+ "flagged = ?, joint = ?, joint_customer_id = ? "
+			    	+ "WHERE customer_id = ?;";
+		    PreparedStatement ps = connection.prepareStatement(sql);
+		    ps.setInt(1, customer.getCustomerID());
+		    ps.setString(2, customer.getUsername());
+		    ps.setString(3, customer.getPassword());
+		    ps.setString(4, customer.getFirstname());
+		    ps.setString(5,  customer.getLastname());
+		    ps.setString(6, customer.getTelephone());
+		    ps.setString(7,  customer.getEmail());
+		    ps.setBoolean(8, customer.getIsCitizen());
+		    ps.setBoolean(9,  customer.getIsEmployed());
+		    ps.setString(10,  customer.getEmployer());
+		    ps.setString(11, savings.getID());
+		    ps.setDouble(12,  savings.getBalance());
+		    ps.setString(13,  checking.getID());
+		    ps.setDouble(14,  checking.getBalance());
+		    ps.setBoolean(15,  customer.isFlagged());
+		    ps.setBoolean(16,  customer.hasJointAccounts());
+		    ps.setInt(17, customer.getSharedCustomerID());
+		    ps.setInt(18,  customer.getCustomerID());
+		    
+		    ps.executeUpdate();
+		    ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		updateCustomer(customer, toSampleTable);
+	}
+	private void updateCustomer(Customer customer, boolean toSampleTable) {
+		String tableName = (toSampleTable) ? "sample_customers" : "customers";
+	    
+		try {
+	    	connection = DBConnection.getConnection();
+	    	
+		    String sql = "UPDATE " + tableName + " SET "
+		    		+ "customer_id = ?, username = ?, password = ?, "
+		    		+ "first_name = ?, last_name = ?, telephone = ?, email = ?, "
+		    		+ "us_citizen = ?, employed = ?, employer = ?, flagged = ? "
+			    	+ "WHERE customer_id = ?;";
+		    PreparedStatement ps = connection.prepareStatement(sql);
+		    ps.setInt(1, customer.getCustomerID());
+		    ps.setString(2, customer.getUsername());
+		    ps.setString(3, customer.getPassword());
+		    ps.setString(4, customer.getFirstname());
+		    ps.setString(5,  customer.getLastname());
+		    ps.setString(6, customer.getTelephone());
+		    ps.setString(7,  customer.getEmail());
+		    ps.setBoolean(8, customer.getIsCitizen());
+		    ps.setBoolean(9,  customer.getIsEmployed());
+		    ps.setString(10,  customer.getEmployer());
+		    ps.setBoolean(11, customer.isFlagged());
+		    ps.setInt(12,  customer.getCustomerID());
+		    
+		    ps.executeUpdate();
+		    ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+	}
+	public Customer getCustomerByID(int id, boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		Customer customer = null;
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " WHERE customer_id = " + id + ";";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+			String record = null;
+			
+			while (rs.next()) {
+				customer = new CustomerBuilder()
+						.withID(rs.getInt(1))
+						.withUsername(rs.getString(2))
+						.withPassword(rs.getString(3)) 
+						.withFirstName(rs.getString(4))
+						.withLastName(rs.getString(5))
+						.withTelephone(rs.getString(6))
+						.withEmail(rs.getString(7))
+						.withIsCitizen(rs.getBoolean(8))
+						.withIsEmployed(rs.getBoolean(9))
+						.withEmployer(rs.getString(10)) 
+						.withIsFlagged(rs.getBoolean(11))
+						.makeCustomer();
+				if (customer != null) {
+					SavingsAccount savings = new SavingsAccount(rs.getString(12), rs.getDouble(13), customer);
+					CheckingAccount checking = new CheckingAccount(rs.getString(13), rs.getDouble(14), customer);
+					if (rs.getBoolean(15)) customer.flag();
+					if (rs.getBoolean(16)) customer.setSharedCustomerID(rs.getInt(17));
+				}
+			}
+			statement.close(); rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		if (customer != null) {
+			if (customer.getSharedCustomerID() >= 0) customer.setSharedCustomer(getCustomerByID(customer.getSharedCustomerID(), fromSampleTable));
+			return customer;
+		} else return null;
+	}
 
 	public void printAllCustomers(boolean fromSampleTable) {
 		ArrayList<String> sampleCustomerRecords = getAllRecords(fromSampleTable);
@@ -210,7 +332,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 			ResultSet rs = statement.executeQuery(sql);
 			
 			int id, i = -1;
-			while (rs.next() && i < getNumCustomers(fromSampleTable)) {
+			while (rs.next() && i < getNumCustomers(true, fromSampleTable)) {
 				id = rs.getInt(1);
 				if (++i != id) openIDs.add(i);
 				i = id;

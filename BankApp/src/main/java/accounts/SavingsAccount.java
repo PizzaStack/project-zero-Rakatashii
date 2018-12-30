@@ -1,6 +1,8 @@
 package accounts;
 
+import DAO.AccountDAO;
 import customers.Customer;
+import model.AccountContainer;
 
 public class SavingsAccount implements Account{
 	private final double maxDepositAmmount = 1000000.0;
@@ -13,11 +15,21 @@ public class SavingsAccount implements Account{
 	protected Customer primaryHolder, sharedHolder;
 	private boolean joint;
 	protected boolean flagged = false;
-	
 	CheckingAccount pairedCheckingAccount;
 	
+	private static AccountDAO accountDAO = new AccountDAO();
+	
 	public SavingsAccount(){
-		// TODO savingsID = customerContainer.generateUniqueSavingsID();
+		savingsID = AccountContainer.generateNewID();
+		// TODO check if ID already exists
+		joint = false;
+		flagged = false;
+		balance = 0.0;
+	}
+	public SavingsAccount(Customer customer){
+		this.primaryHolder = customer;
+		savingsID = AccountContainer.generateNewID();
+		// TODO check if ID already exists
 		joint = false;
 		flagged = false;
 		balance = 0.0;
@@ -25,7 +37,7 @@ public class SavingsAccount implements Account{
 	public SavingsAccount(String accNumber, double initialBalance){
 		flagged = false;
 		joint = false;
-		if (initialBalance > minInitialBalance) balance = initialBalance;
+		if (initialBalance >= minInitialBalance) balance = initialBalance;
 		else flagged = true;
 		savingsID = accNumber;
 	}
@@ -33,9 +45,11 @@ public class SavingsAccount implements Account{
 		// TODO savingsID = customerContainer.generateUniqueSavingsID();
 		joint = false;
 		primaryHolder = primary;
+		
+		if (primaryHolder.hasSavingsAccount() == false) primaryHolder.setSavingsAccount(this);
 		if (primaryHolder.hasCheckingAccount()) {
 			pairedCheckingAccount = primaryHolder.getCheckingAccount();
-		}
+		} 
 		
 		if (pairedCheckingAccount != null && pairedCheckingAccount.isJoint()) {
 			joint = true;
@@ -72,6 +86,7 @@ public class SavingsAccount implements Account{
 		primaryHolder.setSharedCustomer(sharedHolder);
 		sharedHolder.setSharedCustomer(primaryHolder);
 		
+		if (primaryHolder.hasSavingsAccount() == false) primaryHolder.setSavingsAccount(this);
 		if (this.pairedCheckingAccount != null) {
 			if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(pairedCheckingAccount);
 			pairedCheckingAccount.setOwner(primaryHolder);
@@ -98,6 +113,11 @@ public class SavingsAccount implements Account{
 			pairedCheckingAccount.flag();
 		}
 	}
+	/*
+	public static void passAccountContainer(AccountContainer accounts) {
+		accountContainer = accounts;
+	}
+	*/
 	@Override
 	public void setBalance(double b) {
 		if (b >= minimumBalance) balance = b;
@@ -110,7 +130,7 @@ public class SavingsAccount implements Account{
 	}
 	@Override
 	public void deposit(double d) {
-		if (d < maxDepositAmmount && flagged == false) balance -= d;
+		if (d < maxDepositAmmount && flagged == false) balance += d;
 		else flagged = true;
 	}
 	@Override

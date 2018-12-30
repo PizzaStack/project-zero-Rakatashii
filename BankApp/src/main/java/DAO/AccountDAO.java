@@ -17,11 +17,9 @@ import utility.Helpers;
 public class AccountDAO implements AccountDAOInterface {
 	private Connection connection;
 	private PreparedStatement ps;
-	private DBUtil util;
 	private Helpers helper;
 	
 	public AccountDAO() {
-		util = new DBUtil();
 		helper = new Helpers();
 	}
 	
@@ -30,7 +28,7 @@ public class AccountDAO implements AccountDAOInterface {
 		String tableName = (toSampleTable) ? "sample_accounts" : "accounts";
 		try {
 			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO " + tableName + " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 			ps = connection.prepareStatement(sql);
 			if (savings.getOwner() != null && checking.getOwner() != null && savings.getOwner() == checking.getOwner())
 				ps.setInt(1, savings.getOwner().getID());
@@ -47,6 +45,9 @@ public class AccountDAO implements AccountDAOInterface {
 			}
 			boolean flagged = (savings.getOwner() != null) ? savings.getOwner().isFlagged() : false;
 			ps.setBoolean(6, flagged);
+			ps.setBoolean(7,  savings.isJoint());
+			if (savings.isJoint()) ps.setInt(9,  savings.getJointCustomer().getCustomerID());
+			else ps.setInt(8, -1);
 		
 			if (ps.executeUpdate() != 0) {
 				ps.close();
@@ -111,6 +112,28 @@ public class AccountDAO implements AccountDAOInterface {
     	for (String actualAccountRecord : actualAccountRecords) {
     		System.out.println(actualAccountRecord);
     	}
+	}
+	public boolean doesNotContainID(String id, String field, boolean inSampleTable) {
+		String tableName = (inSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		try {
+			// This actually may be more efficient, but keep in mind that select all where id = ... is still available
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " WHERE " + field + "=" + id + ";";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+			
+			if (!rs.next()) {
+				statement.close(); rs.close();
+				return false;
+			} 
+			statement.close(); rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return false;
 	}
 
 }

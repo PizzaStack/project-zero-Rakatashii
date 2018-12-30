@@ -18,6 +18,8 @@ import DAO.AdminDAO;
 import DAO.CustomerDAO;
 import DAO.EmployeeDAO;
 import DAO.UnverifiedCustomerDAO;
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
 import controller.CustomerController.CustomerMenus;
@@ -36,6 +38,7 @@ import database.Schemas;
 import customers.CustomerBuilder;
 import employees.Admin;
 import employees.Employee;
+import model.AccountContainer;
 import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
@@ -46,24 +49,27 @@ public class BankApp
 	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
     	DBSetup setup = new DBSetup(true);
-    	// If tables do not exist they will be initialized. 
-    	// If sample tables are not filled with sample data, they will be filled.
     	setup.initializeSampleTables();
     	
-    	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+    	AccountContainer accountContainer = new AccountContainer();
 		CustomerContainer customerContainer = new CustomerContainer();
+		UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
     	EmployeeContainer<Employee> employeeContainer = new EmployeeContainer<Employee>();
     	EmployeeContainer<Employee> adminContainer = new EmployeeContainer<Employee>();
     	
     	Containers containers = new Containers();
     	setup.passContainers(containers);
+    	
+    	// TODO accounts
     	containers.setUnverifiedContainer(unverifiedContainer);
     	containers.setCustomerContainer(customerContainer);
     	containers.setEmployeeContainer(employeeContainer);
     	containers.setAdminContainer(adminContainer);
     	
-    	UnverifiedCustomer.passUnverifiedContainer(containers.getUnverifiedContainer());
+    	//SavingsAccount.passAccountContainer(accountContainer);
+    	//CheckingAccount.passAccountContainer(accountContainer);
     	Customer.passCustomerContainer(containers.getCustomerContainer());
+    	UnverifiedCustomer.passUnverifiedContainer(containers.getUnverifiedContainer());
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
     	Admin.passAdminContainer(containers.getAdminContainer());
     	
@@ -84,6 +90,7 @@ public class BankApp
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
+    	System.out.println("Program Terminated.");
     	
     	// TODO - option for admin...
     	// unverifiedContainer.updateRows();
@@ -115,17 +122,15 @@ public class BankApp
      * DB Testing
      * Look into Serialization
      * Expand database features
-     */
     
-    /** TODO Presentation
+   		TODO Presentation
      * MVC may not be best here. May be better to organize in a way that would exploit Java's
        strengths - i.e., grouping related classes in the same package. 
        - Evident especially in problems arrising from having the controllers and views
            communicate with one another between packages.
-     * 
-     */
+    */
     
-	/*  TODO Doesn't Work Anymore, but consider if needed:
+    /** TODO Doesn't Work Anymore, but consider if needed:
 	Bash bash = new Bash();
 	String output;
 	try {

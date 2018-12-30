@@ -18,6 +18,7 @@ public class Containers {
 		return this;
 	}
 	
+	private AccountContainer accountContainer;
 	private CustomerContainer customerContainer;
 	private UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer;
 	private EmployeeContainer<Employee> employeeContainer;
@@ -28,6 +29,9 @@ public class Containers {
 	boolean employeeIsSet = false;
 	boolean adminIsSet = false;
 	
+	public void setAccountContainer(AccountContainer accountContainer) {
+		this.accountContainer = accountContainer;
+	}
 	public void setCustomerContainer(CustomerContainer customersContainer) {
 		this.customerContainer = customersContainer;
 	}
@@ -57,6 +61,9 @@ public class Containers {
 		this.adminContainer.setArrayList(admins);
 	}
 	
+	public AccountContainer getAccountContainer() {
+		return this.accountContainer;
+	}
 	public CustomerContainer getCustomerContainer(){
 		return this.customerContainer;
 	}
@@ -71,10 +78,12 @@ public class Containers {
 	}
 	
 	public void printContainerSizes() {
-		if (this.unverifiedContainer != null) System.out.println("unverifiedContainer.getSize() = " + this.unverifiedContainer.getSize());
-		else System.out.println("unverifiedContainer.getSize() == null");
+		if (this.accountContainer != null) System.out.println("accountContainer.getSize() = " + this.accountContainer.getSize());
+		else System.out.println("accountContainer.getSize() == null");
 		if (this.customerContainer != null) System.out.println("customerContainer.getSize() = " + this.customerContainer.getSize());
 		else System.out.println("customerContainer.getSize() == null");
+		if (this.unverifiedContainer != null) System.out.println("unverifiedContainer.getSize() = " + this.unverifiedContainer.getSize());
+		else System.out.println("unverifiedContainer.getSize() == null");
 		if (this.employeeContainer != null) System.out.println("employeeContainer.getSize() = " + this.employeeContainer.getSize());
 		else System.out.println("employeeContainer.getSize() == null");
 		if (this.adminContainer != null) System.out.println("adminContainer.getSize() = " + this.adminContainer.getSize());

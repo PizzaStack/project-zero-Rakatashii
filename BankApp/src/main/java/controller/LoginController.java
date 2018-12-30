@@ -53,16 +53,18 @@ public class LoginController {
 	
 	public boolean loginAsCustomer(CustomerContainer customerContainer) throws InterruptedException{
 		this.customerContainer = customerContainer;
-		Customer loggedIn = null;
+		//Customer loggedInCustomer = null;
 		while (!verified && tries > 0) {
 			
 			username = login.getUsername();
 			password = login.getPassword();
 			
 			if (customerContainer == null) System.out.println("customerContainer is null in Login Controller.");
-			loggedIn = customerContainer.verifyLoginCredentials(username, password);
-			verified = (loggedIn == null) ? false : true;
-			if (!verified) { 
+			
+			loggedInCustomer = customerContainer.verifyLoginCredentials(username, password);
+			
+			verified = (loggedInCustomer != null) ? true : false;
+			if (verified) { 
 				System.out.println("\nSuccess! Welcome " + username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 
 				logInAs(username);

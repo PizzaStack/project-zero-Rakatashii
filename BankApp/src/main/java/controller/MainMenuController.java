@@ -47,16 +47,15 @@ public class MainMenuController {
 			
 			this.DBCustomers = customerDAO.getAllCustomers(false);
 			CustomerContainer customerContainer = containers.getCustomerContainer();
-			customerController = new CustomerController(this, customerContainer);
+			if (customerContainer != null) customerController = new CustomerController(this, customerContainer);
 			if (LoginController.isLoggedIn()) { System.out.println("Customer already logged in."); isVerified = true; }
-			else while (isVerified == false && login.getNumTries() > 0) { 
+			else while (isVerified == false && login.getNumTries() > 0)
 				isVerified = login.loginAsCustomer(customerContainer);
-			}
 			if (isVerified == true) {
 				customerController.passCustomerContainer(containers.getCustomerContainer());
 				customerController.begin(CustomerMenus.SELECTION);
 			} else System.out.println("Error. Customer could not be verified.");
-			System.out.println("END - selection = 2");
+			System.out.println();
 			return;
 			
 		} else if (selection == 3) {
@@ -70,7 +69,7 @@ public class MainMenuController {
 				employeeController = new EmployeeController();
 				employeeController.begin(EmployeeMenus.SELECTION);
 			} else System.out.println("Error. Employee could not be verified.");
-			System.out.println("END - selection = 3");
+			System.out.println();
 			return;
 			
 		} else if (selection == 4) {
@@ -81,8 +80,9 @@ public class MainMenuController {
 			}
 			return;
 		}
-		else if (selection == stop) { System.out.println("Shutting down..."); return; }
+		else if (selection == stop) { System.out.println("Shutting down..."); }
 		else System.out.println(selection + " is not a valid input.\n");
+		return;
 	}
 	
 	public void begin(Menus menuType) throws InterruptedException {
@@ -92,12 +92,17 @@ public class MainMenuController {
 			stop = options.getEndCondition();
 			int selection = -1;
 			while (selection != stop) {
-				if (selection == stop) { selectHomeOption(stop); return; }
+				if (selection == stop) { /*selectHomeOption(stop);*/ return; }
 				else selection = -1;
 				try {
-					selection = options.displayHomeMenu();
-					if (options.inBounds(selection)) selectHomeOption(selection);
-					else continue;
+					while (options.inBounds(selection) == false) {
+						selection = options.displayHomeMenu();
+						if (selection == stop) return;
+						else if (options.inBounds(selection) == true) {
+							selectHomeOption(selection);
+							return;
+						}
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

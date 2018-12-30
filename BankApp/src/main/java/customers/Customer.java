@@ -21,9 +21,11 @@ public class Customer extends UnverifiedCustomer{
 	private boolean isCitizen, isEmployed;
 	private String employer;
 	protected boolean verified = true;
+	
 	private boolean accountsAreFlagged = false;
 	private boolean accountsAreShared = false;
 	private Customer sharedCustomer = null;
+	private int sharedCustomerID;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
 	protected static int numCustomers = 0;
@@ -51,7 +53,7 @@ public class Customer extends UnverifiedCustomer{
 		} 
 		if (customerContainerIsSet) customerContainer.push(this);
 		accountsAreFlagged = false;
-		//makeNewAccounts();
+		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
 	public Customer(String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
 		//super(firstName, lastName, telephone, email, citizen, employed, employer);
@@ -72,7 +74,7 @@ public class Customer extends UnverifiedCustomer{
 		--numUnverifiedCustomers;
 		if (customerContainerIsSet) customerContainer.push(this);
 		accountsAreFlagged = false;
-		//makeNewAccounts();
+		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
 	public static void passCustomerContainer(CustomerContainer customers) {
 		customerContainer = customers;
@@ -117,6 +119,14 @@ public class Customer extends UnverifiedCustomer{
 	public boolean getIsCitizen()  { return this.isCitizen; }
 	public boolean getIsEmployed() { return this.isEmployed; }
 	public String getEmployer()    { return this.employer; }
+	public int getSharedCustomerID() {
+		if (accountsAreShared && sharedCustomer != null) {
+			return sharedCustomer.getCustomerID();
+		} else return -1;
+	}
+	public void setSharedCustomerID(int sharedCustomerID) {
+		this.sharedCustomerID = sharedCustomerID;
+	}
 
 	@Override
 	public void getInfo() {
@@ -196,8 +206,8 @@ public class Customer extends UnverifiedCustomer{
 		return true;
 	}
 	public void makeNewAccounts() {
-		this.savingsAccount = new SavingsAccount();
-		this.checkingAccount = new CheckingAccount();
+		this.savingsAccount = new SavingsAccount(this);
+		this.checkingAccount = new CheckingAccount(this);
 		this.savingsAccount.setPairedAccount(this.checkingAccount);
 		this.checkingAccount.setPairedAccount(this.savingsAccount);
 	}
@@ -251,4 +261,5 @@ public class Customer extends UnverifiedCustomer{
 	public void setSharedCustomer(Customer c) {
 		this.sharedCustomer = c;
 	}
+	
 }

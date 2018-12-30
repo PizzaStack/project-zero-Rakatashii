@@ -1,5 +1,6 @@
 package accounts;
 
+import DAO.AccountDAO;
 import customers.Customer;
 import model.AccountContainer;
 
@@ -7,18 +8,26 @@ public class CheckingAccount implements Account {
 	private final double maxDepositAmmount = 100000.0;
 	private final double minInitialBalance = 0.0;
 	private final double minBalance = -1000.0;
+	//public static boolean sampleMode;
 	
 	String checkingID;
-	// String prob better since there will be a lot of leading zeros
-	//int checkingID;
 	double balance;
 	Customer primaryHolder = null, sharedHolder = null;
 	boolean joint;
-	boolean flagged = false;
+	boolean flagged;
 	
+	private static AccountDAO accountDAO = new AccountDAO();
 	SavingsAccount pairedSavingsAccount;
 	
 	public CheckingAccount(){
+		checkingID = AccountContainer.generateNewID();
+		balance = 0.0;
+		joint = false;
+		flagged = false;
+	}
+	public CheckingAccount(Customer customer){
+		this.primaryHolder = customer;
+		checkingID = AccountContainer.generateNewID();
 		balance = 0.0;
 		joint = false;
 		flagged = false;
@@ -26,7 +35,7 @@ public class CheckingAccount implements Account {
 	public CheckingAccount(String acc_num, double initial_balance){
 		flagged = false;
 		joint = false;
-		if (initial_balance > minInitialBalance) balance = initial_balance;
+		if (initial_balance >= minInitialBalance) balance = initial_balance;
 		else flagged = true;
 		checkingID = acc_num;
 	}
@@ -35,7 +44,6 @@ public class CheckingAccount implements Account {
 		checkingID = acc_num;
 		
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
-		
 		if (primary.hasSavingsAccount()) {
 			pairedSavingsAccount = primary.getSavingsAccount();
 			if (pairedSavingsAccount.isFlagged()) if (primary.isFlagged() == false) primary.flag();
@@ -80,6 +88,11 @@ public class CheckingAccount implements Account {
 			flag();
 		}
 	}
+	/*
+	public static void passAccountContainer(AccountContainer accounts) {
+		accountContainer = accounts;
+	}
+	*/
 	@Override
 	public void setBalance(double b) {
 		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
@@ -95,12 +108,12 @@ public class CheckingAccount implements Account {
 	}
 	@Override
 	public void deposit(double d) {
-		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
+		if (pairedSavingsAccount != null && pairedSavingsAccount.isFlagged()) flag();
 		if (d > maxDepositAmmount){
 			flagged = true;
 			return;
-		} else if (this.flagged == false)
-		balance += d;
+		} 
+		if (this.flagged == false) balance += d;
 	}
 	@Override
 	public void withdraw(double w) {
