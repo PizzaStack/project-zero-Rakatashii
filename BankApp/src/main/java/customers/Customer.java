@@ -160,7 +160,7 @@ public class Customer extends UnverifiedCustomer{
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
 		String employed = helper.boolToString(this.isEmployed);
-		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
+		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-15s\n", 
 				this.getID(), this.username, this.password, this.firstName, this.lastName, 
 				this.telephone, this.email, citizen, employed, this.employer, 
 				helper.boolToString(this.accountsAreFlagged)));
@@ -172,7 +172,7 @@ public class Customer extends UnverifiedCustomer{
 		if (withAccounts) {
 			SavingsAccount savings = this.getSavingsAccount();
 			CheckingAccount checking = this.getCheckingAccount();
-			System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-20s%-15.2f%-20s%-15.2f%-15s%-15s%-15d\n", 
+			System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-20s$%-19.2f%-20s$%-19.2f%-20s%-20s%-20d\n", 
 					this.getID(), this.username, this.password, this.firstName, this.lastName, 
 					this.telephone, this.email, citizen, employed, this.employer, 
 					savings.getID(), savings.getBalance(), checking.getID(), checking.getBalance(),

@@ -37,7 +37,7 @@ public void selectCustomerOption(int selection) throws InterruptedException {
 		if (selection == 1) {
 			System.out.println();
 			customerDAO = new CustomerDAO();
-			containers.getCustomerContainer().printColumnNames();
+			containers.getCustomerContainer().printColumnNames(true);
 			//customerDAO.printAllCustomers(false);
 			//ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
 			System.out.println("From DAO: ");
@@ -69,7 +69,7 @@ public void selectCustomerOption(int selection) throws InterruptedException {
 			
 			customer = customerDAO.findCustomerByID(customerID, false);
 			if (customer != null) {
-				containers.getCustomerContainer().printColumnNames();
+				containers.getCustomerContainer().printColumnNames(true);
 				customer.printRow();
 			} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
 			

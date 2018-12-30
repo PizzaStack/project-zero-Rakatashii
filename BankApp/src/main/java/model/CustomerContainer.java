@@ -81,11 +81,18 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return customers;
 	}
-	public void printColumnNames() {
-		System.out.printf("%-10s%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
-				"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
-				"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED");
-	}
+	public void printColumnNames(boolean withAccounts) {
+		if (withAccounts) {
+			System.out.printf("%-10s%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", 
+					"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
+					"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED", "SAVINGS_NUMBER", 
+					"SAVINGS_AMOUNT", "CHECKING_NUMBER", "CHECKING_AMOUNT", "FLAGGED", "JOINT", "JOINT_CUST_ID");
+	    } else {
+	    	System.out.printf("%-10s%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
+					"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
+					"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED");
+		}
+}
 	public void push(Customer customer) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");

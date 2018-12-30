@@ -8,7 +8,7 @@ import people.Person;
 public interface PersonContainer<Person> {
 	public abstract ArrayList<? extends Person> getArrayList();
 	public abstract Class<?> getType();
-	public abstract void printColumnNames();
+	//public abstract void printColumnNames();
 	//public abstract void printAll();
 	public abstract void removeAt(int index);
 	public abstract void clear();
