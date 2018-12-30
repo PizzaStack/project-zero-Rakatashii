@@ -42,6 +42,8 @@ public class CustomerOptions{
 			setAccountsViewArrayValues();
 		} else if (customerMenuOption == CustomerMenus.CHECKING) {
 			setCheckingAccountViewArrayValues();
+		} else if (customerMenuOption == CustomerMenus.SAVINGS) {
+			setSavingsAccountViewArrayValues();
 		}
 		else {
 			mainMenuController.begin(Menus.DEFAULT);
@@ -49,7 +51,7 @@ public class CustomerOptions{
 	}
 
 	private void setAccountsViewArrayValues(/*customerMenuOptions optionType*/) {
-		//ArrayList<String> option = optionsMap.get(optionType);
+		if (customerOptions.size() > 0) customerOptions.clear();
 		addFormattedOption(1, "to View Checkings Account");
 		addFormattedOption(2, "to View Savings Account");
 		addFormattedOption(3, "to Logout");
@@ -71,7 +73,29 @@ public class CustomerOptions{
 		if (endCondition == customerOptions.size()) endCondition--;
 		this.customerOptions.add(customerOptions.size(), menuEndLine);
 	} 
-	
+
+	private void setSavingsAccountViewArrayValues() {
+		addFormattedOption(1, "Check Balance");
+		addFormattedOption(2, "Deposit");
+		addFormattedOption(3, "Withdraw");
+		addFormattedOption(4, "Go Back");
+		
+		this.maxLineLength = maxOptionLength()-1;
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
+		
+		String title = "Savings Account";
+		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
+		
+		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
+		String menuLeftHalf = menuSideLine + " ";
+		String menuRightHalf = " " + menuSideLine + "-";
+		
+		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = customerOptions.size();
+		if (endCondition == customerOptions.size()) endCondition--;
+		this.customerOptions.add(customerOptions.size(), menuEndLine);
+	} 
 	private void setCheckingAccountViewArrayValues() {
 		addFormattedOption(1, "Check Balance");
 		addFormattedOption(2, "Deposit");
@@ -82,14 +106,14 @@ public class CustomerOptions{
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Checking ";
+		String title = "Checking Account";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
 		String menuLeftHalf = menuSideLine + " ";
 		String menuRightHalf = " " + menuSideLine + "-";
 		
-		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + "-" + menuRightHalf) + "-\n");
 		this.endCondition = customerOptions.size();
 		if (endCondition == customerOptions.size()) endCondition--;
 		this.customerOptions.add(customerOptions.size(), menuEndLine);
@@ -128,7 +152,7 @@ public class CustomerOptions{
 			System.out.print("* Select option number: "); 
 			
 			selection = cin.nextInt();
-			System.out.print("- Selection = " + selection + lineSeparator.substring(15));
+			//System.out.print("- Selection = " + selection + lineSeparator.substring(15));
 	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}

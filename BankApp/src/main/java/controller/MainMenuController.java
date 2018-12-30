@@ -55,7 +55,6 @@ public class MainMenuController {
 				customerController.passCustomerContainer(containers.getCustomerContainer());
 				customerController.begin(CustomerMenus.SELECTION);
 			} else System.out.println("Error. Customer could not be verified.");
-			System.out.println();
 			return;
 			
 		} else if (selection == 3) {
@@ -69,7 +68,7 @@ public class MainMenuController {
 				employeeController = new EmployeeController();
 				employeeController.begin(EmployeeMenus.SELECTION);
 			} else System.out.println("Error. Employee could not be verified.");
-			System.out.println();
+			//System.out.println();
 			return;
 			
 		} else if (selection == 4) {

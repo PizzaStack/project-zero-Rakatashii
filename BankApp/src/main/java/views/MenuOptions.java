@@ -90,7 +90,7 @@ public class MenuOptions {
 			System.out.print("* Select option number: "); 
 			selection = cin.nextInt();
 			//System.out.println();
-			System.out.print("  --------- Selection = " + selection + lineSeparator.substring(15, lineSeparator.length()-1));
+			//System.out.print("  --------- Selection = " + selection + lineSeparator.substring(15, lineSeparator.length()-1));
 	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}

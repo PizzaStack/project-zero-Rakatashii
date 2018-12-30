@@ -32,8 +32,7 @@ public class CustomerController{
 		this.customerContainer = customerContainer;
 	}
 	public void selectCheckingOption(int selection) throws InterruptedException {
-		//boolean isVerified = false;
-		//login = new LoginController();
+		
 		if (selection == 1) {
 			if (checking != null) System.out.println("Checking Balance: $" + checking.getBalance());
 			else System.out.println("Sorry! No account found for " + customer.getUsername());
@@ -62,14 +61,68 @@ public class CustomerController{
 			
 			System.out.println();
 			if (customer.isFlagged() == true) {
-				System.out.println("Unable To Deposit, $" + depositAmount + " Into Checking Account");
-				System.out.println("Your Account Has Been Disabled. Please Contact An Administrator.");
+				System.out.println("Unable To Deposit, $" + depositAmount + " Into Your Checking Account");
+				System.out.println("Your Account Has Been Temporarily Disabled. Please Contact An Administrator.");
 			}
 			else {
 				checking.deposit(depositAmount);
 				// TODO update records
 				System.out.println("Success! $" + depositAmount + " Has Been Added To Your Checking Account.");
 			}
+			String done = "";
+			while (!done.toLowerCase().contains("c")) {
+				System.out.print("Enter \"c\" To Continue. ");
+				done = cin.next();
+			}
+			System.out.println();
+			return;
+		} else if (selection == 3) {
+			if (checking == null) System.out.println("Sorry! No Account Found For " + customer.getUsername());
+			else {
+				if (customer.isFlagged() == true) {
+					System.out.println("Your Account Is Currently Disabled. Please Contact An Administrator.");
+					return;
+				}
+				else System.out.print("Enter The Amount You Would Like To Withdraw: $");
+			}
+			
+			double withdrawelAmount = 0.0;
+			Scanner cin = new Scanner(System.in);
+			withdrawelAmount = Double.parseDouble(cin.nextLine());
+			
+			System.out.println();
+			if (customer.isFlagged() == true) {
+				System.out.println("Unable To Withdraw, $" + withdrawelAmount + " From Your Checking Account");
+				System.out.println("Your Account Has Been Temporarily Disabled. Please Contact An Administrator.");
+			}
+			else {
+				checking.withdraw(withdrawelAmount);
+				// TODO update records
+				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Checking Account.");
+			}
+			String done = "";
+			while (!done.toLowerCase().contains("c")) {
+				System.out.print("Enter \"c\" To Continue. ");
+				done = cin.next();
+			}
+			System.out.println();
+			return;
+			
+		} else if (selection == stop) {
+			begin(CustomerMenus.SELECTION);
+		}
+		else {
+			System.out.println(selection + " is not a valid input.\n");
+			begin(CustomerMenus.SELECTION);
+		}
+	}
+public void selectSavingsOption(int selection) throws InterruptedException {
+		
+		if (selection == 1) {
+			if (checking != null) System.out.println(String.format("Savings Balance: $%.2f", savings.getBalance()));
+			else System.out.println("Sorry! No account found for " + customer.getUsername());
+			
+			Scanner cin = new Scanner(System.in);
 			String cont = "";
 			while (!cont.toLowerCase().contains("c")) {
 				System.out.print("Enter \"c\" To Continue. ");
@@ -77,9 +130,71 @@ public class CustomerController{
 			}
 			System.out.println();
 			return;
+		} else if (selection == 2) {
+			if (checking == null) System.out.println("Sorry! No Account Found For " + customer.getUsername());
+			else {
+				if (customer.isFlagged() == true) {
+					System.out.println("Your Account Is Currently Disabled. Please Contact An Administrator.");
+					return;
+				}
+				else System.out.print("Enter The Amount You Would Like To Deposit: $");
+			}
+		
+			double depositAmount = 0.0;
+			Scanner cin = new Scanner(System.in);
+			depositAmount = Double.parseDouble(cin.nextLine());
+			
+			System.out.println();
+			if (customer.isFlagged() == true) {
+				System.out.println(String.format("Unable To Deposit, $%.2f Into Your Savings Account", depositAmount));
+				System.out.println("Your Account Has Been Temporarily Disabled. Please Contact An Administrator.");
+			}
+			else {
+				savings.deposit(depositAmount);
+				// TODO update records
+				System.out.println(String.format("Success! $%.2f Has Been Added To Your Savings Account.", depositAmount));
+			}
+			String done = "";
+			while (!done.toLowerCase().contains("c")) {
+				System.out.print("Enter \"c\" To Continue. ");
+				done = cin.next();
+			}
+			System.out.println();
+			return;
+		} else if (selection == 3) {
+			if (checking == null) System.out.println("Sorry! No Account Found For " + customer.getUsername());
+			else {
+				if (customer.isFlagged() == true) {
+					System.out.println("Your Account Is Currently Disabled. Please Contact An Administrator.");
+					return;
+				}
+				else System.out.print("Enter The Amount You Would Like To Withdraw: $");
+			}
+			
+			double withdrawelAmount = 0.0;
+			Scanner cin = new Scanner(System.in);
+			withdrawelAmount = Double.parseDouble(cin.nextLine());
+			
+			System.out.println();
+			if (customer.isFlagged() == true) {
+				System.out.println("Unable To Withdraw, $" + withdrawelAmount + " From Your Savings Account");
+				System.out.println("Your Account Has Been Temporarily Disabled. Please Contact An Administrator.");
+			}
+			else {
+				savings.withdraw(withdrawelAmount);
+				// TODO update records
+				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Savings Account.");
+			}
+			String done = "";
+			while (!done.toLowerCase().contains("c")) {
+				System.out.print("Enter \"c\" To Continue. ");
+				done = cin.next();
+			}
+			System.out.println();
+			return;
+			
 		} else if (selection == stop) {
-			LoginController.logout();
-			begin(CustomerMenus.LOGOUT);
+			begin(CustomerMenus.SELECTION);
 		}
 		else {
 			System.out.println(selection + " is not a valid input.\n");
@@ -89,29 +204,23 @@ public class CustomerController{
 	public void selectCustomerOption(int selection) throws InterruptedException {
 		//boolean isVerified = false;
 		//login = new LoginController();
-		if (selection == 1) {
-			System.out.println("View Checking Account\n");
-			begin(CustomerMenus.CHECKING);
-			
-			
-		} else if (selection == 2) {
-			System.out.println("View Savings Account\n");
-			
-			
-			
-		} else if (selection == stop) {
+		if (selection == 1) begin(CustomerMenus.CHECKING);
+		else if (selection == 2) begin(CustomerMenus.SAVINGS);
+		else if (selection == stop) {
+			System.out.println("Bye " + customer.getFirstname() + "!");
 			LoginController.logout();
 			begin(CustomerMenus.LOGOUT);
-		}
-		else {
-			System.out.println(selection + " is not a valid input.\n");
+		} else {
+			System.out.println(selection + " Is Not A Valid Option.\n");
 			begin(CustomerMenus.SELECTION);
 		}
 	}
 	public void begin(CustomerMenus customerMenu) throws InterruptedException {
-		customer = LoginController.getLoggedInCustomer();
-		if (customer != null) savings = customer.getSavingsAccount();
-		if (customer != null) checking = customer.getCheckingAccount();
+		if (customer == null) {
+			customer = LoginController.getLoggedInCustomer();
+			if (customer != null) savings = customer.getSavingsAccount();
+			if (customer != null) checking = customer.getCheckingAccount();
+		}
 		
 		if (customerMenu == CustomerMenus.LOGOUT) {
 			LoginController.logout();
@@ -127,12 +236,15 @@ public class CustomerController{
 				stop = customerOptions.getEndCondition();
 				int selection = -1;
 				while (selection != stop) {
-					if (selection == stop) selectCustomerOption(stop);
+					if (selection == stop) selectCheckingOption(stop);
 					else selection = -1;
 					try {
 						while (customerOptions.inBounds(selection) == false) {
 							selection = customerOptions.displayAccountsMenu();
-							if (selection == stop) return;
+							if (selection == stop) {
+								selectCheckingOption(stop);
+								return;
+							}
 							else if (customerOptions.inBounds(selection) == true) {
 								selectCheckingOption(selection);
 							}
@@ -140,30 +252,54 @@ public class CustomerController{
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					/*
+				}
+			}
+		} else if (customerMenu == CustomerMenus.SAVINGS) {
+			if (customer == null || customer.hasSavingsAccount() == false) {
+				System.out.println("Error. No Account Found Customer."); 
+				return;
+			}
+			else {
+				customerOptions = new CustomerOptions(CustomerMenus.SAVINGS);
+				stop = customerOptions.getEndCondition();
+				int selection = -1;
+				while (selection != stop) {
+					if (selection == stop) selectSavingsOption(stop);
+					else selection = -1;
 					try {
-						selection = customerOptions.displayAccountsMenu();
-						if (this.customerOptions.inBounds(selection)) selectCustomerOption(selection);
-						else continue;
+						while (customerOptions.inBounds(selection) == false) {
+							selection = customerOptions.displayAccountsMenu();
+							if (selection == stop) {
+								selectSavingsOption(stop);
+								return;
+							}
+							else if (customerOptions.inBounds(selection) == true) {
+								selectSavingsOption(selection);
+							}
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					*/
 				}
 			}
 		}
 		else if (customerMenu == CustomerMenus.SELECTION) {
-			customerOptions = new CustomerOptions(customerMenu);
-			//customerOptions.passLoginInfo(login);
+			customerOptions = new CustomerOptions(CustomerMenus.SELECTION);
 			stop = customerOptions.getEndCondition();
 			int selection = -1;
 			while (selection != stop) {
-				if (selection == stop) selectCustomerOption(stop);
+				if (selection == stop) {
+					selectCustomerOption(stop);
+					return;
+				}
 				else selection = -1;
 				try {
 					while (customerOptions.inBounds(selection) == false) {
 						selection = customerOptions.displayAccountsMenu();
-						if (selection == stop) return;
+						if (selection == stop) {
+							selectCustomerOption(stop); 
+							return;
+						}
 						else if (customerOptions.inBounds(selection) == true) {
 							selectCustomerOption(selection);
 							return;

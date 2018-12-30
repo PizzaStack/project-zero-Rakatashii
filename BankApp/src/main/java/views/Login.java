@@ -14,7 +14,7 @@ public class Login {
 		in = new Scanner(System.in);
 	}
 	public String getUsername() {
-		System.out.println();
+		//System.out.println();
 		System.out.print("Username: ");
 		username = in.nextLine();
 		return username;
