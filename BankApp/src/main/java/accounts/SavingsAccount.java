@@ -20,7 +20,7 @@ public class SavingsAccount implements Account{
 	private static AccountDAO accountDAO = new AccountDAO();
 	
 	public SavingsAccount(){
-		savingsID = AccountContainer.generateNewID();
+		savingsID = AccountContainer.generateNewID(10);
 		// TODO check if ID already exists
 		joint = false;
 		flagged = false;
@@ -28,7 +28,7 @@ public class SavingsAccount implements Account{
 	}
 	public SavingsAccount(Customer customer){
 		this.primaryHolder = customer;
-		savingsID = AccountContainer.generateNewID();
+		savingsID = AccountContainer.generateNewID(10);
 		// TODO check if ID already exists
 		joint = false;
 		flagged = false;

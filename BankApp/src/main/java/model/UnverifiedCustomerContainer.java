@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -283,6 +284,39 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 					return true;
 		}
 		return false;
+	}
+	
+	public boolean checkUniqueUnverifiedCustomerInfo(UnverifiedCustomer unverifiedCustomer) {
+		for (UnverifiedCustomer customer : unverified) {
+			if (unverifiedCustomer.getEmail().equals(customer.getEmail()))
+				return false;
+		}
+		return true;
+	}
+	
+	public static String generateNewUsername() {
+		String alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder idBuild = new StringBuilder();
+        Random rand = new Random();
+        int usernameLength = rand.nextInt((16 - 10) + 1) + 10;
+        while (idBuild.length() < usernameLength) { // length of the random string.
+            int index = (int) (rand.nextFloat() * alphaChars.length());
+            idBuild.append(alphaChars.charAt(index));
+        }
+        String newID = idBuild.toString();
+        return newID;
+	}
+	public static String generateNewPassword() {
+		String alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder idBuild = new StringBuilder();
+        Random rand = new Random();
+        int usernameLength = rand.nextInt((16 - 8) + 1) + 8;
+        while (idBuild.length() < usernameLength) { // length of the random string.
+            int index = (int) (rand.nextFloat() * alphanumericChars.length());
+            idBuild.append(alphanumericChars.charAt(index));
+        }
+        String newID = idBuild.toString();
+        return newID;
 	}
 	
 	/* // TODO Implement these

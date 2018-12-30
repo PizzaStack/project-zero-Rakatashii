@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import customers.Customer;
+import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
 import database.DBConnection;
 import database.DBUtil;
@@ -102,6 +105,39 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 		return records;
+	}
+	public ArrayList<UnverifiedCustomer> getAllUnverifiedCustomers(boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
+		ArrayList<UnverifiedCustomer> unverifiedCustomers = new ArrayList<UnverifiedCustomer>();
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " ORDER BY unverified_id;";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				UnverifiedCustomer unverified = new CustomerBuilder()
+						.withID(rs.getInt(1))
+						.withFirstName(rs.getString(2))
+						.withLastName(rs.getString(3))
+						.withTelephone(rs.getString(4))
+						.withEmail(rs.getString(5))
+						.withIsCitizen(rs.getBoolean(6))
+						.withIsEmployed(rs.getBoolean(7))
+						.withEmployer(rs.getString(8)) 
+						.makeUnverifiedCustomer();
+				if (unverified != null) {
+					unverifiedCustomers.add(unverified);
+				}
+			}
+			statement.close(); rs.close();
+			return unverifiedCustomers;
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return unverifiedCustomers;
 	}
 	@Override
 	public void printAllUnverifiedCustomers(boolean fromSampleTable) {

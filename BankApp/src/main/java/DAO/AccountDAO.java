@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import DAO.AccountDAOInterface;
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
+import customers.Customer;
 import database.DBConnection;
 import database.DBUtil;
 import utility.Helpers;
@@ -59,6 +60,53 @@ public class AccountDAO implements AccountDAOInterface {
 		} catch (SQLException e) {
 			//System.out.println("SQLException in AccountsDAO#addAccounts");
 			return false;
+		}
+	}
+	void updateAccounts(Customer customer, boolean toSampleTable) {
+		SavingsAccount savings = null;
+		CheckingAccount checking = null;
+		if (customer.hasSavingsAccount()) {
+			savings = customer.getSavingsAccount();
+		}
+		if (customer.hasCheckingAccount()) {
+			checking = customer.getCheckingAccount();
+		}
+		String tableName = (toSampleTable) ? "sample_accounts" : "accounts";
+	    
+		try {
+	    	connection = DBConnection.getConnection();
+	    	
+		    String sql = "UPDATE " + tableName + " SET "
+		    		+ "customer_id = ?, savings_number = ?, savings_amount = ?, "
+		    		+ "checking_number = ?, checking_amount = ?, flagged = ?, "
+		    		+ "joint = ?, joint_customer_id = ? "
+			    	+ "WHERE customer_id = ?;";
+		    PreparedStatement ps = connection.prepareStatement(sql);
+		    ps.setInt(1, customer.getCustomerID());
+		    if (savings != null) {
+		    	ps.setString(2, savings.getID());
+			    ps.setDouble(3, savings.getBalance());
+		    } else {
+		    	ps.setString(2, "null");
+			    ps.setDouble(3, 0.0);
+		    }
+		    if (checking != null) {
+		    	ps.setString(4, checking.getID());
+				ps.setDouble(5, checking.getBalance());
+		    } else {
+		    	ps.setString(4, "null");
+				ps.setDouble(5, 0.0);
+		    }
+		    ps.setBoolean(6, customer.isFlagged());
+		    ps.setBoolean(7,  customer.hasJointAccounts());
+		    ps.setInt(8, customer.getSharedCustomerID());
+		    
+		    ps.setInt(9, customer.getCustomerID());
+		    
+		    ps.executeUpdate();
+		    ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
 		}
 	}
 	@Override

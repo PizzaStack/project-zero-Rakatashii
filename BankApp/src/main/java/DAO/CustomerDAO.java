@@ -108,9 +108,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 			
 			if (ps.executeUpdate() != 0) {
 				ps.close();
+				addCustomer(customer,  toSampleTable);
 				return true;
 			} else {
 				ps.close();
+				addCustomer(customer,  toSampleTable);
 				return false;
 			} 
 		} catch (SQLException e) {
@@ -141,7 +143,58 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return 0;
 	}
-	
+	public void updateCustomerAndAccounts(Customer customer, boolean toSampleTable) {
+		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+		SavingsAccount savings = customer.getSavingsAccount();
+		CheckingAccount checking = customer.getCheckingAccount();
+		try {
+	    	connection = DBConnection.getConnection();
+	    	
+		    String sql = "UPDATE " + tableName + " SET "
+		    		+ "customer_id = ?, username = ?, password = ?, "
+		    		+ "first_name = ?, last_name = ?, telephone = ?, email = ?, "
+		    		+ "us_citizen = ?, employed = ?, employer = ?, "
+		    		+ "savings_number = ?, savings_amount = ?, checking_number = ?, checking_amount = ?, "
+		    		+ "flagged = ?, joint = ?, joint_customer_id = ? "
+			    	+ "WHERE customer_id = ?;";
+		    PreparedStatement ps = connection.prepareStatement(sql);
+		    ps.setInt(1, customer.getCustomerID());
+		    ps.setString(2, customer.getUsername());
+		    ps.setString(3, customer.getPassword());
+		    ps.setString(4, customer.getFirstname());
+		    ps.setString(5,  customer.getLastname());
+		    ps.setString(6, customer.getTelephone());
+		    ps.setString(7,  customer.getEmail());
+		    ps.setBoolean(8, customer.getIsCitizen());
+		    ps.setBoolean(9,  customer.getIsEmployed());
+		    ps.setString(10,  customer.getEmployer());
+		    if (savings != null) {
+		    	ps.setString(11, savings.getID());
+			    ps.setDouble(12,  savings.getBalance());
+		    } else {
+		    	ps.setString(11, "null");
+			    ps.setDouble(12,  0.0);
+		    }
+		    if (checking != null) {
+		    	ps.setString(13,  checking.getID());
+			    ps.setDouble(14,  checking.getBalance());
+		    } else {
+		    	ps.setString(13,  "null");
+			    ps.setDouble(14,  0.0);
+		    }
+		    ps.setBoolean(15,  customer.isFlagged());
+		    ps.setBoolean(16,  customer.hasJointAccounts());
+		    ps.setInt(17, customer.getSharedCustomerID());
+		    ps.setInt(18,  customer.getCustomerID());
+		    
+		    ps.executeUpdate();
+		    ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		updateCustomer(customer, toSampleTable);
+		accountDAO.updateAccounts(customer, toSampleTable);
+	}	
 	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		try {
@@ -180,6 +233,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 		updateCustomer(customer, toSampleTable);
+		accountDAO.updateAccounts(customer, toSampleTable);
 	}
 	private void updateCustomer(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers" : "customers";
@@ -282,9 +336,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 	}
 	public Customer findCustomerByID(int id, boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
-		System.out.println("got here...1");
 		try {
-			System.out.println("got here...2");
 			connection = DBConnection.getConnection();
 			String sql = "SELECT * FROM " + tableName + " WHERE customer_id = " + id + ";";
 			Statement statement = connection.createStatement();

@@ -272,7 +272,7 @@ public class DBSetup {
 		firstCustomer.getCheckingAccount().deposit(20000.82);
 		customerDAO.updateCustomerAndAccounts(firstCustomer,  firstCustomer.getSavingsAccount(),  firstCustomer.getCheckingAccount(),  false);
 		
-    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer("unverified", "customer", 
+    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(-1, "unverified", "customer", 
     			"000-000-0000", "email@address.com", true, true, "employer");
     	unverifiedCustomerDAO.addUnverifiedCustomer(firstUnverified, false);
     	

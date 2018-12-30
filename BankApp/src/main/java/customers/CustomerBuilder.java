@@ -1,5 +1,7 @@
 package customers;
 
+import model.UnverifiedCustomerContainer;
+
 public class CustomerBuilder {
 	private String firstName = null;
 	private String lastName = null;
@@ -8,7 +10,8 @@ public class CustomerBuilder {
 	private boolean isCitizen = false;
 	private boolean isEmployed = false;
 	private String employer = null;
-	private String username, password; // Customers only
+	private String username = UnverifiedCustomerContainer.generateNewUsername();
+	private String password = UnverifiedCustomerContainer.generateNewPassword();
 	private boolean isFlagged = false;
 	private int id = -1; 
 
@@ -17,11 +20,11 @@ public class CustomerBuilder {
 		return this;
 	}
 	public CustomerBuilder withUsername(String username) {
-		this.username = username;
+		if (username != null) this.username = username;
 		return this;
 	}
 	public CustomerBuilder withPassword(String password) {
-		this.password = password;
+		if (password != null) this.password = password;
 		return this;
 	}
 	public CustomerBuilder withFirstName(String firstName) {
@@ -57,8 +60,8 @@ public class CustomerBuilder {
 		return this;
 	}
 	public UnverifiedCustomer makeUnverifiedCustomer() {
-		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
-		if (this.id != -1) newUnverifiedCustomer.setID(this.id); 
+		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(id, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		//if (this.id != -1) newUnverifiedCustomer.setID(this.id); 
 		return newUnverifiedCustomer;
 	}
 	public Customer makeCustomer() {

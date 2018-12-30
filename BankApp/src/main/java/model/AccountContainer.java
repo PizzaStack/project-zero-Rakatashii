@@ -40,11 +40,11 @@ public class AccountContainer {
 				line = cin.nextLine();
 				fields = line.split(delimitter);
 				while ((validAccountID(fields[0]) == false) || (verifyUniqueCheckingID(fields[0]) == false)) { 
-					fields[0] = generateNewID();
+					fields[0] = generateNewID(10);
 				}
 				CheckingAccount checkingAccount = new CheckingAccount(fields[0], Double.parseDouble(fields[1]));
 				while ((validAccountID(fields[0]) == false) || (verifyUniqueSavingsID(fields[0]) == false)) {
-					fields[2] = generateNewID();
+					fields[2] = generateNewID(10);
 				}
 				SavingsAccount savingsAccount = new SavingsAccount(fields[2], Double.parseDouble(fields[3]));
 				
@@ -87,11 +87,11 @@ public class AccountContainer {
 	}
 	
 	// Figure out whether it's better to do accountDAO lookup here or not.
-	public static String generateNewID() {
+	public static String generateNewID(int idLength) {
 		String numChars = "1234567890";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        while (idBuild.length() < 10) { // length of the random string.
+        while (idBuild.length() < idLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * numChars.length());
             idBuild.append(numChars.charAt(index));
         }

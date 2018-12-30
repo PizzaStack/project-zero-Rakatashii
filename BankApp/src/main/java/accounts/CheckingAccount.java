@@ -20,14 +20,14 @@ public class CheckingAccount implements Account {
 	SavingsAccount pairedSavingsAccount;
 	
 	public CheckingAccount(){
-		checkingID = AccountContainer.generateNewID();
+		checkingID = AccountContainer.generateNewID(10);
 		balance = 0.0;
 		joint = false;
 		flagged = false;
 	}
 	public CheckingAccount(Customer customer){
 		this.primaryHolder = customer;
-		checkingID = AccountContainer.generateNewID();
+		checkingID = AccountContainer.generateNewID(10);
 		balance = 0.0;
 		joint = false;
 		flagged = false;

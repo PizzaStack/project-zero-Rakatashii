@@ -20,7 +20,7 @@ public class UnverifiedCustomer extends Person{
 	
 	// TODO private static int numUnverifiedCustomers = unverifiedCustomerDAO.getNumUnverifiedCustomersInDB() + 1;
 	protected static int numUnverifiedCustomers = 0;
-	private int unverifiedCustomerID = numUnverifiedCustomers;
+	private int unverifiedID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
 	
 	static UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer;
@@ -28,20 +28,23 @@ public class UnverifiedCustomer extends Person{
 	
 	public UnverifiedCustomer() { 
 		super(); 
-		unverifiedCustomerID = -1;
+		unverifiedID = -1;
 	}
 	public UnverifiedCustomer(String fName, String lName) { 
 		super();
 		firstName = fName;
 		lastName = lName;
-		this.unverifiedCustomerID = numUnverifiedCustomers;
+		this.unverifiedID = numUnverifiedCustomers;
 		++numUnverifiedCustomers;
 		++numPeople;
 		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class) unverifiedContainer.push(this); // when customers call super, don't push them into unverified
 	}
-	public UnverifiedCustomer(String firstName, String lastName, String telephone, String email, boolean isCitizen, boolean isEmployed, String employer) {
+	public UnverifiedCustomer(int id, String firstName, String lastName, String telephone, String email, boolean isCitizen, boolean isEmployed, String employer) {
 		super();
-		this.unverifiedCustomerID = numUnverifiedCustomers;
+		if (unverifiedID == -1) {
+			unverifiedID = numUnverifiedCustomers;
+			++numUnverifiedCustomers;
+		} else this.unverifiedID = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.telephone = telephone;
@@ -49,9 +52,8 @@ public class UnverifiedCustomer extends Person{
 		this.isCitizen = isCitizen;
 		this.isEmployed = isEmployed;
 		this.employer = employer;
-		++numUnverifiedCustomers;
-		++numPeople;
-		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class) unverifiedContainer.push(this); // when customers call super, don't push them into unverified
+		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class && (unverifiedContainer.checkUniqueUnverifiedCustomerInfo(this))) 
+			unverifiedContainer.push(this); 
 	}
 	public Customer convertToCustomer(String username, String password) {
 		if (unverifiedContainerIsSet) unverifiedContainer.Remove(this);
@@ -66,7 +68,7 @@ public class UnverifiedCustomer extends Person{
 		unverifiedContainer = unverified;
 		unverifiedContainerIsSet = true;
 	}
-	public int getID() 			   { return unverifiedCustomerID; }
+	public int getID() 			   { return unverifiedID; }
 	public String getFirstname()   { return this.firstName; }
 	public String getLastname()    { return this.lastName; }
 	public String getTelephone()   { return this.telephone; }
@@ -76,7 +78,7 @@ public class UnverifiedCustomer extends Person{
 	public String getEmployer()    { return this.employer; }
 	
 	public void setID(int id) {
-		this.unverifiedCustomerID = id;
+		this.unverifiedID = id;
 	}
 	public int getCount() {
 		return numUnverifiedCustomers;
@@ -85,7 +87,7 @@ public class UnverifiedCustomer extends Person{
 		numUnverifiedCustomers = count;
 	}
 	public void getInfo() {
-		System.out.println("ID: " + this.unverifiedCustomerID);
+		System.out.println("ID: " + this.unverifiedID);
 		if (firstName != null) System.out.println("First name: " + firstName);
 		if (lastName != null) System.out.println("First name: " + lastName);
 		if (telephone != null) System.out.println("Telephone: " + firstName);

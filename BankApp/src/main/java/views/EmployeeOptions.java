@@ -31,16 +31,40 @@ public class EmployeeOptions{
 			setEmployeeViewArrayValues();
 		} else if (employeeMenuOption == EmployeeMenus.CUSTOMERS){
 			setCustomersViewArrayValues();
+		} else if (employeeMenuOption == EmployeeMenus.UNVERIFIED){
+			setUnverifiedViewArrayValues();
 		} else {
 			mainMenuController.begin(Menus.DEFAULT);
 		}
 	}
-	
+	private void setUnverifiedViewArrayValues() {
+		if (employeeOptions.size() > 0) employeeOptions.clear();
+		addFormattedOption(1, "View All Applicants");
+		addFormattedOption(2, "View Applicant By ID");
+		addFormattedOption(3, "Commit Changes");
+		addFormattedOption(4, "Go Back");
+		
+		this.maxLineLength = maxOptionLength()-1;
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
+		
+		String title = "Customer Database";
+		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
+		
+		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
+		String menuLeftHalf = menuSideLine + " ";
+		String menuRightHalf = " " + menuSideLine + "-";
+		
+		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = employeeOptions.size();
+		if (endCondition == employeeOptions.size()) endCondition--;
+		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
+	} 	
 	private void setCustomersViewArrayValues() {
 		if (employeeOptions.size() > 0) employeeOptions.clear();
 		addFormattedOption(1, "View All Customers");
 		addFormattedOption(2, "View Customer By ID");
-		addFormattedOption(3, "Enable/Disable Account");
+		addFormattedOption(3, "Commit Changes");
 		addFormattedOption(4, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
@@ -62,7 +86,7 @@ public class EmployeeOptions{
 	private void setEmployeeViewArrayValues() {
 		if (employeeOptions.size() > 0) employeeOptions.clear();
 		addFormattedOption(1, "Customer Database");
-		addFormattedOption(2, "Employee Option 2");
+		addFormattedOption(2, "Applicant Database");
 		addFormattedOption(3, "to Logout");
 		
 		this.maxLineLength = maxOptionLength()-1;
