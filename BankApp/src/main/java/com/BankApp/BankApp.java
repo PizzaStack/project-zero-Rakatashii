@@ -79,14 +79,18 @@ public class BankApp
     	
     	AccountDAO accountDAO = new AccountDAO();
     	CustomerDAO customerDAO = new CustomerDAO();
-    	UnverifiedCustomerDAO unverifiedCustomerDAO = new UnverifiedCustomerDAO();
+    	UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
     	EmployeeDAO employeeDAO = new EmployeeDAO();
     	AdminDAO adminDAO = new AdminDAO();
     	
     	setup.finishDBSetup();
     	setup = null;
     	System.gc();
-  
+    	
+    	char c = 0x25A0;
+    	String sym = String.valueOf(c);
+        System.out.println(sym);
+    	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);

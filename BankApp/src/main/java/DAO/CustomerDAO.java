@@ -28,8 +28,8 @@ public class CustomerDAO implements CustomerDAOInterface {
 		helper = new Helpers();
 	}
 	
-	@Override
-	public boolean addCustomer(Customer customer, boolean toSampleTable) {
+
+	private boolean addCustomer(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers" : "customers";
 		//if (isUnique(customer, toSampleTable) == false) return false;
 		//else 
@@ -120,28 +120,6 @@ public class CustomerDAO implements CustomerDAOInterface {
 			//System.out.println("SQLException in CustomerDAO#addCustomer"); System.out.println();
 			return false;
 		}
-	}
-	@Override
-	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable) {
-		Connection connection;
-		String tableName = (withAccounts) 
-				? ((fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts") 
-				: ((fromSampleTable) ? "sample_customers" : "customers");
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT COUNT(*) AS count FROM " + tableName + ";";
-			Statement statement = connection.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE, 
-				    ResultSet.CONCUR_READ_ONLY );
-			ResultSet rs = statement.executeQuery(sql);
-			rs.next();
-			int count = rs.getInt("count");
-			statement.close(); rs.close();
-			return count;
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-		return 0;
 	}
 	public void updateCustomerAndAccounts(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
@@ -265,6 +243,28 @@ public class CustomerDAO implements CustomerDAOInterface {
 		} catch (SQLException e) {
 			e.printStackTrace(); System.out.println();
 		}
+	}
+	@Override
+	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable) {
+		Connection connection;
+		String tableName = (withAccounts) 
+				? ((fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts") 
+				: ((fromSampleTable) ? "sample_customers" : "customers");
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT COUNT(*) AS count FROM " + tableName + ";";
+			Statement statement = connection.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY );
+			ResultSet rs = statement.executeQuery(sql);
+			rs.next();
+			int count = rs.getInt("count");
+			statement.close(); rs.close();
+			return count;
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return 0;
 	}
 	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers" : "customers";

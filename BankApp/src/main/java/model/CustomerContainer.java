@@ -20,6 +20,7 @@ import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import customers.Customer;
 import customers.CustomerBuilder;
+import customers.UnverifiedCustomer;
 import people.Person;
 import people.PersonContainer;
 import utility.Helpers;
@@ -46,7 +47,19 @@ public class CustomerContainer implements PersonContainer<Person>{
 	}
 	
 	public Person Get(int index){
-		return customers.get(index);
+		Customer customer = null;
+		if (index < customers.size()) customer = customers.get(index);
+		if (customer != null)
+			System.out.println("applicantID = " + customer.getID() + " | index = " + index);
+		if (customer != null && customer.getID() == index) return customer;
+		else {
+			System.out.println("Applicant Not Found At Index = " + index + "\nIterating Through CustomersIDs...");
+			for (Customer c : customers) {
+				if (c.getID() == index) return c;
+			}
+		}
+		return null;
+		// OLD DEF: return customers.get(index);
 	}
 	public ArrayList<Customer> getArrayList(){
 		return customers;

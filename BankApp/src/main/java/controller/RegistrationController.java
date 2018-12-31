@@ -1,5 +1,6 @@
 package controller;
 
+import DAO.UnverifiedCustomerDAO;
 import customers.UnverifiedCustomer;
 import model.Containers;
 import views.MenuOptions;
@@ -13,11 +14,13 @@ public class RegistrationController {
 		Registration newCustomerInfo = new Registration();
 		UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();
 		if (newUnverifiedCustomer != null) {
-			containers.getUnverifiedContainer().push(newUnverifiedCustomer);
-			System.out.println(lineSeparator);
+		
+			UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
+			unverifiedDAO.addUnverifiedCustomer(newUnverifiedCustomer,  false);
+			System.out.println();
 			System.out.println("Success! Your Application Is Pending Administrative Approval.");
 			Thread.sleep(2500);
-			System.out.println(lineSeparator);
+			System.out.println();
 		} else System.out.println("Failed to Register New Customer.\n");
 	}
 	public void passContainers(Containers containers) {

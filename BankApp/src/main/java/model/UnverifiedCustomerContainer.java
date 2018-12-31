@@ -34,11 +34,23 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	public UnverifiedCustomerContainer() {
 		super();
 	}
-	public Person Get(int index){
-		return unverified.get(index);
+	public UnverifiedCustomer get(int index){
+		UnverifiedCustomer applicant = null;
+		if (index < unverified.size()) applicant = unverified.get(index);
+		if (applicant != null)
+			System.out.println("applicantID = " + applicant.getID() + " | index = " + index);
+		if (applicant != null && applicant.getID() == index) return applicant;
+		else {
+			System.out.println("Applicant Not Found At Index = " + index + "\nIterating Through UnverifiedIDs...");
+			for (UnverifiedCustomer c : unverified) {
+				if (c.getID() == index) return c;
+			}
+		}
+		return null;
 	}
-	public void Remove(UnverifiedCustomer unverifiedCustomer) {
+	public void remove(UnverifiedCustomer unverifiedCustomer) {
 		unverified.remove(unverifiedCustomer);
+		reindex(unverifiedCustomer.getID());
 	}
 	public ArrayList<UnverifiedCustomer> getArrayList(){
 		return unverified;
@@ -83,7 +95,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			return;
 		}*/
  		unverified.add(unverifiedCustomer);
- 		unverifiedCustomer.setID(unverified.size()-1);
+ 		//unverifiedCustomer.setID(unverified.size()-1);
 		if (unverifiedCustomer.getID() < unverified.size()-1) reindex(0);
 	}
 	public void removeAt(int index) {
@@ -298,7 +310,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		String alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((16 - 10) + 1) + 10;
+        int usernameLength = rand.nextInt((14 - 8) + 1) + 8;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphaChars.length());
             idBuild.append(alphaChars.charAt(index));
@@ -310,7 +322,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		String alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((16 - 8) + 1) + 8;
+        int usernameLength = rand.nextInt((12 - 8) + 1) + 8;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphanumericChars.length());
             idBuild.append(alphanumericChars.charAt(index));

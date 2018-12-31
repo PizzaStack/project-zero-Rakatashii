@@ -28,7 +28,7 @@ public class Customer extends UnverifiedCustomer{
 	private int sharedCustomerID;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
-	protected static int numCustomers = customerDAO.getNumCustomers(true, sampleMode);
+	protected static int numCustomers = customerDAO.getNumCustomers(true, sampleMode)+1;
 	private int custID = numCustomers;
 	private int adminID = -1;
 	
@@ -57,10 +57,11 @@ public class Customer extends UnverifiedCustomer{
 	}
 	public Customer(int id, String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
 		//super(firstName, lastName, telephone, email, citizen, employed, employer);
-		if (custID == -1) {
+		if (id == -1) {
 			custID = numCustomers;
 			++numCustomers;
 		} else this.custID = id;
+		//System.out.println("customer " + username + " has id = " + this.custID);
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;

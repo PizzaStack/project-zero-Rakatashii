@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import controller.AdminController.AdminMenus;
 import controller.LoginController;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
+import employees.Admin;
 import employees.Employee;
-import controller.EmployeeController.EmployeeMenus;
 
 
-public class EmployeeOptions{
+public class AdminOptions{
 	private int endCondition;
-	ArrayList<String> employeeOptions = new ArrayList<String>();
+	ArrayList<String> adminOptions = new ArrayList<String>();
 	
 	private int maxLineLength;
 	private String lineSeparator, menuEndLine;
@@ -22,23 +23,23 @@ public class EmployeeOptions{
 	MainMenuController mainMenuController;
 	LoginController loginStatus;
 	
-	Employee employee;
+	Admin admin;
 	
-	public EmployeeOptions() { }
-	public EmployeeOptions(EmployeeMenus employeeMenuOption) throws InterruptedException {
-		if (employeeOptions != null && employeeOptions.size() > 0) employeeOptions.clear();
-		if (employeeMenuOption == EmployeeMenus.SELECTION) {
-			setEmployeeViewArrayValues();
-		} else if (employeeMenuOption == EmployeeMenus.CUSTOMERS){
+	public AdminOptions() { }
+	public AdminOptions(AdminMenus adminMenuOption) throws InterruptedException {
+		if (adminOptions != null && adminOptions.size() > 0) adminOptions.clear();
+		if (adminMenuOption == AdminMenus.SELECTION) {
+			setAdminViewArrayValues();
+		} else if (adminMenuOption == AdminMenus.CUSTOMERS){
 			setCustomersViewArrayValues();
-		} else if (employeeMenuOption == EmployeeMenus.UNVERIFIED){
+		} else if (adminMenuOption == AdminMenus.UNVERIFIED){
 			setUnverifiedViewArrayValues();
 		} else {
 			mainMenuController.begin(Menus.DEFAULT);
 		}
 	}
 	private void setUnverifiedViewArrayValues() {
-		if (employeeOptions.size() > 0) employeeOptions.clear();
+		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "View Applicant By ID");
 		addFormattedOption(3, "Commit Changes");
@@ -55,13 +56,13 @@ public class EmployeeOptions{
 		String menuLeftHalf = menuSideLine + " ";
 		String menuRightHalf = " " + menuSideLine + "-";
 		
-		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
-		this.endCondition = employeeOptions.size();
-		if (endCondition == employeeOptions.size()) endCondition--;
-		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
+		this.adminOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = adminOptions.size();
+		if (endCondition == adminOptions.size()) endCondition--;
+		this.adminOptions.add(adminOptions.size(), menuEndLine);
 	} 	
 	private void setCustomersViewArrayValues() {
-		if (employeeOptions.size() > 0) employeeOptions.clear();
+		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Customers");
 		addFormattedOption(2, "View Customer By ID");
 		addFormattedOption(3, "Commit Changes");
@@ -78,13 +79,13 @@ public class EmployeeOptions{
 		String menuLeftHalf = menuSideLine + " ";
 		String menuRightHalf = " " + menuSideLine + "-";
 		
-		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
-		this.endCondition = employeeOptions.size();
-		if (endCondition == employeeOptions.size()) endCondition--;
-		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
+		this.adminOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = adminOptions.size();
+		if (endCondition == adminOptions.size()) endCondition--;
+		this.adminOptions.add(adminOptions.size(), menuEndLine);
 	} 
-	private void setEmployeeViewArrayValues() {
-		if (employeeOptions.size() > 0) employeeOptions.clear();
+	private void setAdminViewArrayValues() {
+		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "Customer Database");
 		addFormattedOption(2, "Applicant Database");
 		addFormattedOption(3, "to Logout");
@@ -93,27 +94,27 @@ public class EmployeeOptions{
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Employee View";
+		String title = "Admin View";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
 		String menuLeftHalf = menuSideLine + " ";
 		String menuRightHalf = " " + menuSideLine + "-";
 		
-		this.employeeOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
-		this.endCondition = employeeOptions.size();
-		if (endCondition == employeeOptions.size()) endCondition--;
-		this.employeeOptions.add(employeeOptions.size(), menuEndLine);
+		this.adminOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.endCondition = adminOptions.size();
+		if (endCondition == adminOptions.size()) endCondition--;
+		this.adminOptions.add(adminOptions.size(), menuEndLine);
 	} 
 	public int displayAccountsMenu() throws IOException {
 		
-		for (int i = 0; i < employeeOptions.size(); i++){
+		for (int i = 0; i < adminOptions.size(); i++){
 			if (i != 0) System.out.print(lineSeparator);
 			if (i == 1 && LoginController.isLoggedIn()) {
 				System.out.println("* (Logged In As: " + LoginController.getLoggedInUsername() + ")");
 				System.out.print(lineSeparator);
 			}
-			System.out.print(employeeOptions.get(i));
+			System.out.print(adminOptions.get(i));
 		}
 		int selection = 0;
 		while (!inBounds(selection)) {
@@ -147,19 +148,19 @@ public class EmployeeOptions{
 	}	
 	public int maxOptionLength() {
 		int max = 0;
-		for (String option : employeeOptions) {
+		for (String option : adminOptions) {
 			max = (option.length() >= max) ? option.length() : max;
 		}
 		return max;
 	}
 	public void addFormattedOption(int i, String optionName) {
-		employeeOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
+		adminOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
 	}
 	public int getEndCondition() {
 		return endCondition;
 	}
 	public int getSize() {
-		return employeeOptions.size();
+		return adminOptions.size();
 	}
 	public boolean inBounds(int selection) {
 		return (selection > 0 && selection <= endCondition) ? true : false;

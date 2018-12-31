@@ -18,7 +18,7 @@ public class LoginController {
 	
 	static Customer loggedInCustomer = null;
 	static Employee loggedInEmployee = null;
-	static Admin loggedInAdmin = null;
+	static Employee loggedInAdmin = null;
 	
 	int customerID = -1;
 	int employeeID = -1;
@@ -91,7 +91,10 @@ public class LoginController {
 			password = login.getPassword();
 			
 			if (employeeContainer == null) System.out.println("employeeContainer is null in Login Controller");
-			verified = employeeContainer.verifyLoginCredentials(username,  password);
+			
+			loggedInEmployee = employeeContainer.verifyLoginCredentials(username, password);
+			verified = (loggedInEmployee != null) ? true : false;
+			
 			if (verified) { 
 				System.out.println("\nSuccess! Welcome " + username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 
@@ -119,7 +122,10 @@ public class LoginController {
 			password = login.getPassword();
 			
 			if (adminContainer == null) System.out.println("adminContainer is null in Login Controller");
-			verified = adminContainer.verifyLoginCredentials(username,  password);
+
+			loggedInAdmin = adminContainer.verifyLoginCredentials(username, password);
+			verified = (loggedInAdmin != null) ? true : false;
+			
 			if (verified) { 
 				System.out.println("\nSuccess! Welcome " + username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 

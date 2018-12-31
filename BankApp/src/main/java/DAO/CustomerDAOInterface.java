@@ -10,7 +10,7 @@ import customers.Customer;
 import database.DBConnection;
 
 public interface CustomerDAOInterface {
-	public boolean addCustomer(Customer customer, boolean toSampleTable);
+	//public boolean addCustomer(Customer customer, boolean toSampleTable);
 	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable);
 	public ArrayList<String> getAllRecords(boolean fromSampleTable);
 	public void printAllCustomers(boolean fromSampleTable);

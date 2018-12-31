@@ -9,7 +9,7 @@ public class CustomerBuilder {
 	private String email = null;
 	private boolean isCitizen = false;
 	private boolean isEmployed = false;
-	private String employer = null;
+	private String employer = "N/A";
 	private String username = UnverifiedCustomerContainer.generateNewUsername();
 	private String password = UnverifiedCustomerContainer.generateNewPassword();
 	private boolean isFlagged = false;
@@ -52,7 +52,7 @@ public class CustomerBuilder {
 		return this;
 	}
 	public CustomerBuilder withEmployer(String employer) {
-		this.employer = employer;
+		if (employer != null) this.employer = employer;
 		return this;
 	}
 	public CustomerBuilder withIsFlagged(boolean isFlagged) {
@@ -75,13 +75,10 @@ public class CustomerBuilder {
 	}
 	public Customer makeCustomer(UnverifiedCustomer u) {
 		Customer newCustomer = new Customer(id, username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
-		/* if (this.id != -1) {
-			newCustomer.setID(this.id);
-			Customer.numCustomers--;
-		} */
 		newCustomer.verified = true;
 		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;
+		
 	}
 	
 }

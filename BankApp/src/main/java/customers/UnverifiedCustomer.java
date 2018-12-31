@@ -7,7 +7,7 @@ import people.Person;
 import utility.Helpers;
 
 public class UnverifiedCustomer extends Person{
-	UnverifiedCustomerDAO unverifiedCustomerDAO = new UnverifiedCustomerDAO();
+	static UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
 	
 	protected String firstName = null;
 	protected String lastName = null;
@@ -15,11 +15,12 @@ public class UnverifiedCustomer extends Person{
 	protected String email = null;
 	protected boolean isCitizen = false;
 	protected boolean isEmployed = false;
-	protected String employer = null;
+	protected String employer = "N/A";
 	protected boolean verified = false;
 	
 	// TODO private static int numUnverifiedCustomers = unverifiedCustomerDAO.getNumUnverifiedCustomersInDB() + 1;
-	protected static int numUnverifiedCustomers = 0;
+	//CHANGE BACK TO THIS IF V DOESNT WORK! protected static int numUnverifiedCustomers = unverifiedDAO.getNumUnverifiedCustomers(false)+1;
+	 protected static int numUnverifiedCustomers = unverifiedDAO.getMaxID(false);
 	private int unverifiedID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
 	
@@ -41,10 +42,12 @@ public class UnverifiedCustomer extends Person{
 	}
 	public UnverifiedCustomer(int id, String firstName, String lastName, String telephone, String email, boolean isCitizen, boolean isEmployed, String employer) {
 		super();
-		if (unverifiedID == -1) {
+		//System.out.println("unverifiedID = " + unverifiedID + " | numUnverifiedCustomers = " + numUnverifiedCustomers);
+		if (id == -1) {
 			unverifiedID = numUnverifiedCustomers;
 			++numUnverifiedCustomers;
 		} else this.unverifiedID = id;
+		//System.out.println("unverified " + firstName + " has unverifiedID = " + unverifiedID);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.telephone = telephone;
@@ -56,11 +59,11 @@ public class UnverifiedCustomer extends Person{
 			unverifiedContainer.push(this); 
 	}
 	public Customer convertToCustomer(String username, String password) {
-		if (unverifiedContainerIsSet) unverifiedContainer.Remove(this);
 		Customer newCustomer = new CustomerBuilder()
 				.withUsername(username)
 				.withPassword(password)
 				.makeCustomer(this);
+		if (unverifiedContainerIsSet) unverifiedContainer.remove(this);
 		numUnverifiedCustomers--;
 		return newCustomer;
 	}

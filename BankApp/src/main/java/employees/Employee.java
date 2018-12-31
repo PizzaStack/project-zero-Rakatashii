@@ -11,7 +11,7 @@ import utility.Helpers;
 public class Employee extends Person{
 	private static EmployeeDAO employeeDAO = new EmployeeDAO();
 	private static ArrayList<Integer> openIDs = null;
-	private static boolean sampleMode;
+	public static boolean sampleMode;
 	
 	private String username, password;
 	protected boolean isAdmin = false;
@@ -25,11 +25,11 @@ public class Employee extends Person{
 	static boolean employeeContainerIsSet = false;
 	
 	public Employee() { 
-		super(); 
+		//super(); 
 		employeeID = -1;
 	}
 	public Employee(String username, String password) {
-		super();
+		//super();
 		this.username = username;
 		this.password = password;
 		employeeID = numEmployees;
@@ -39,7 +39,7 @@ public class Employee extends Person{
 		if (employeeContainerIsSet) employeeContainer.push(this);
 	}
 	public Employee(String username, String password, boolean isAdmin) {
-		super();
+		//super();
 		this.employeeID = numEmployees;
 		this.username = username;
 		this.password = password;

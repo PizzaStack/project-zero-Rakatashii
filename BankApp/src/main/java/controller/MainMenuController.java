@@ -6,16 +6,20 @@ import java.util.Scanner;
 
 import com.BankApp.BankApp;
 
+import DAO.AdminDAO;
 import DAO.CustomerDAO;
 import DAO.EmployeeDAO;
+import DAO.UnverifiedCustomerDAO;
 import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
 import views.Login;
 import views.MenuOptions;
+import controller.AdminController.AdminMenus;
 import controller.CustomerController.CustomerMenus;
 import controller.EmployeeController.EmployeeMenus;
 import customers.Customer;
+import customers.UnverifiedCustomer;
 import employees.Employee;
 
 public class MainMenuController {
@@ -27,11 +31,16 @@ public class MainMenuController {
 	
 	CustomerController customerController = null;
 	EmployeeController employeeController = null;
+	AdminController adminController = null;
 	
 	CustomerDAO customerDAO = new CustomerDAO();
 	ArrayList<Customer> DBCustomers;
+	UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
+	ArrayList<UnverifiedCustomer> DBApplicants;
 	EmployeeDAO employeeDAO = new EmployeeDAO();
 	ArrayList<Employee> DBEmployees;
+	AdminDAO adminDAO = new AdminDAO();
+	ArrayList<Employee> DBAdmins;
 	
 	public MainMenuController(){ }
 	
@@ -43,14 +52,29 @@ public class MainMenuController {
 			RegistrationController registrationController = new RegistrationController();
 			registrationController.passContainers(containers);
 			registrationController.call();
+			System.out.println();
 			
+			Scanner cin = new Scanner(System.in);
+			String nextOption = "";
+
+			System.out.println("Enter \"o\" To Overide If You Are An Employee Or \"m\" To Return To The Menu.");
+			if (nextOption.toLowerCase().contains("a")) {
+				// TODO if login as employee is successful, convert unverified into customer and return to main menu.
+				begin(Menus.DEFAULT);
+			} else if (nextOption.toLowerCase().contains("m")) begin(Menus.DEFAULT);
+			
+			begin(Menus.DEFAULT);
 		} else if (selection == 2) { 
 			
 			login = new LoginController();
 			this.DBCustomers = customerDAO.getAllCustomers(false);
 			CustomerContainer customerContainer = containers.getCustomerContainer();
+			
 			if (customerContainer != null) customerController = new CustomerController(this, customerContainer);
-			if (LoginController.isLoggedIn()) { System.out.println("Customer already logged in."); isVerified = true; }
+			if (LoginController.isLoggedIn()) { 
+				System.out.println("Customer already logged in."); 
+				isVerified = true; 
+			}
 			else while (isVerified == false && login.getNumTries() > 0)
 				isVerified = login.loginAsCustomer(customerContainer);
 			if (isVerified == true) {
@@ -63,9 +87,14 @@ public class MainMenuController {
 	
 			login = new LoginController();
 			this.DBEmployees = employeeDAO.getAllEmployees(false);
+			this.DBApplicants = unverifiedDAO.getAllUnverifiedCustomers(false);
 			EmployeeContainer<Employee> employeeContainer = containers.getEmployeeContainer();
+			
 			if (containers != null) employeeController = new EmployeeController(this, containers);
-			if (LoginController.isLoggedIn()) { System.out.println("Employee already logged in."); isVerified = true; }
+			if (LoginController.isLoggedIn()) { 
+				System.out.println("Employee already logged in."); 
+				isVerified = true; 
+			}
 			else while (isVerified == false && login.getNumTries() > 0) 
 				isVerified = login.loginAsEmployee(employeeContainer);
 			if (isVerified == true) {
@@ -75,12 +104,25 @@ public class MainMenuController {
 			return;
 			
 		} else if (selection == 4) {
-			// ADMIN
-			if (LoginController.isLoggedIn()) isVerified = true; 
-			else while (isVerified == false && login.getNumTries() > 0) {
-				isVerified = login.loginAsAdmin(containers.getAdminContainer());
+
+			login = new LoginController();
+			this.DBEmployees = employeeDAO.getAllEmployees(false);
+			this.DBApplicants = unverifiedDAO.getAllUnverifiedCustomers(false);
+			EmployeeContainer<Employee> adminContainer = containers.getAdminContainer();
+			
+			if (containers != null) adminController = new AdminController(this, containers);
+			if (LoginController.isLoggedIn()) { 
+				System.out.println("Admin already logged in."); 
+				isVerified = true; 
 			}
+			else while (isVerified == false && login.getNumTries() > 0) 
+				isVerified = login.loginAsAdmin(adminContainer);
+			if (isVerified == true) {
+				//employeeController = new EmployeeController();
+				adminController.begin(AdminMenus.SELECTION);
+			} else System.out.println("Error. Admin could not be verified.");
 			return;
+			
 		}
 		else if (selection == stop) { System.out.println("Shutting down..."); }
 		else System.out.println(selection + " is not a valid input.\n");

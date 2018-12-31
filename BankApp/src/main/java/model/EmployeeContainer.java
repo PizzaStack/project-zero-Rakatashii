@@ -15,6 +15,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import DAO.CustomerDAO;
+import DAO.EmployeeDAO;
 import customers.Customer;
 import customers.UnverifiedCustomer;
 import employees.Admin;
@@ -30,6 +32,8 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	private String sampleTextFileName = "/Users/christianmeyer/java/project-zero-Rakatashii/BankApp/text_files/sample_umployees.txt";
 	private String textFileName = "no_text_file_destination_for_employees";
 	private String binaryFileName = "no_binary_file_destination_for_employees";
+	
+	private ArrayList<Employee> DBEmployees;
 
 	public EmployeeContainer() {
 		super();
@@ -267,16 +271,17 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		} 
 	}
 	
-	public boolean verifyLoginCredentials(String username, String password) {
+	public Employee verifyLoginCredentials(String username, String password) {
 		for (Employee e : employees) {
 			if (e.getUsername().equals(username) && e.getPassword().equals(password))
-				/*if (e.getClass() == Employee.class) return e.getID();
-				else if (e.getClass() == Admin.class) return ((Admin)e).getID();
-			//WATCH e.getClass may still interpret all admins as Employees. 
-				*/
-				return true;
+				return e;
 		}
-		return false;
+		DBEmployees = new EmployeeDAO().getAllEmployees(Employee.sampleMode);
+		for (Employee e : DBEmployees) {
+			if (e.getUsername().equals(username) && e.getPassword().equals(password))
+				return e;
+		}
+		return null;
 	}
 
 	/* // TODO Implement these

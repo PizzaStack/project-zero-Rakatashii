@@ -50,7 +50,7 @@ public class Registration /* extends Customer */ {
 		@SuppressWarnings("resource")
 		Scanner cin = new Scanner(System.in);
 		
-		System.out.println();
+		//System.out.println();
 		while (errors || registrationErrors.size() > 0) {
 			
 			if (errors && registrationErrors.size() > 0) {
