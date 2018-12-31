@@ -12,7 +12,7 @@ import customers.Customer;
 public class Schemas {
 
 	final String customerWithAccountSchema = "CREATE TABLE customers_with_accounts ("
-			+ "customer_id INTEGER PRIMARY KEY, "
+			+ "customer_id INTEGER PRIMARY KEY UNIQUE, "
 			+ "username VARCHAR(255) UNIQUE, "
 			+ "password VARCHAR(255), "
 			+ "first_name VARCHAR(255), "
@@ -37,7 +37,7 @@ public class Schemas {
 	
 		
 	final String sampleCustomerWithAccountSchema = "CREATE TABLE sample_customers_with_accounts ("
-			+ "customer_id INTEGER PRIMARY KEY, "
+			+ "customer_id INTEGER PRIMARY KEY UNIQUE, "
 			+ "username VARCHAR(255) UNIQUE, "
 			+ "password VARCHAR(255), "
 			+ "first_name VARCHAR(255), "
@@ -61,7 +61,7 @@ public class Schemas {
 			+ "WHERE joint=false;";
 	
 	final String customerSchema = "CREATE TABLE customers ("
-			+ "customer_id INTEGER, "
+			+ "customer_id INTEGER UNIQUE, "
 			+ "username VARCHAR(255) UNIQUE, "
 			+ "password VARCHAR(255), "
 			+ "first_name VARCHAR(255), "
@@ -76,7 +76,7 @@ public class Schemas {
 			+ "		REFERENCES customers_with_accounts(customer_id)"
 			+ ");";
 	final String customerSampleSchema = "CREATE TABLE sample_customers ("
-			+ "customer_id INTEGER, "
+			+ "customer_id INTEGER UNIQUE, "
 			+ "username VARCHAR(255) UNIQUE, "
 			+ "password VARCHAR(255), "
 			+ "first_name VARCHAR(255), "
@@ -91,7 +91,7 @@ public class Schemas {
 			+ "		REFERENCES sample_customers_with_accounts(customer_id)"
 			+ ");";
 	final String accountSchema = "CREATE TABLE accounts ("
-			+ "customer_id INTEGER, " 
+			+ "customer_id INTEGER UNIQUE, " 
 			+ "savings_number VARCHAR(255), "
 			+ "savings_amount DECIMAL(12, 2), "
 			+ "checking_number VARCHAR(255), "
@@ -100,11 +100,12 @@ public class Schemas {
 			+ "joint BOOLEAN, "
 			+ "joint_customer_id INTEGER, "
 			//+ "PRIMARY KEY (savings_number, joint_customer_id), "
+			// should prob add UNIQUE(savings_number, joint_customer_id)
 			+ "FOREIGN KEY (customer_id) "
 			+ "		REFERENCES customers_with_accounts"
 			+ ");";
 	final String accountSampleSchema = "CREATE TABLE sample_accounts ("
-			+ "customer_id INTEGER, "
+			+ "customer_id INTEGER UNIQUE, "
 			+ "savings_number VARCHAR(255), "
 			+ "savings_amount DECIMAL(12, 2), "
 			+ "checking_number VARCHAR(255), "
@@ -113,6 +114,7 @@ public class Schemas {
 			+ "joint BOOLEAN, "
 			+ "joint_customer_id INTEGER, "
 			//+ "PRIMARY KEY (savings_number, joint_customer_id), "
+			// should prob add UNIQUE(savings_number, joint_customer_id)
 			+ "FOREIGN KEY (customer_id) "
 			+ "		REFERENCES sample_customers_with_accounts"
 			+ ");";

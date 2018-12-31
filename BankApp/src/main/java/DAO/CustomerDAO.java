@@ -53,7 +53,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 				}
 			}
 			ps.setBoolean(11, customer.isFlagged());
-		
+			
 			if (ps.executeUpdate() != 0) {
 				ps.close();
 				return true;
@@ -108,11 +108,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 			
 			if (ps.executeUpdate() != 0) {
 				ps.close();
-				addCustomer(customer,  toSampleTable);
+				//addCustomer(customer,  toSampleTable);
 				return true;
 			} else {
 				ps.close();
-				addCustomer(customer,  toSampleTable);
+				//addCustomer(customer,  toSampleTable);
 				return false;
 			} 
 		} catch (SQLException e) {
@@ -170,8 +170,8 @@ public class CustomerDAO implements CustomerDAOInterface {
 		} catch (SQLException e) {
 			e.printStackTrace(); System.out.println();
 		}
-		updateCustomer(customer, toSampleTable);
-		accountDAO.updateAccounts(customer, toSampleTable);
+		//updateCustomer(customer, toSampleTable);
+		//accountDAO.updateAccounts(customer, toSampleTable);
 	}	
 	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
@@ -210,8 +210,8 @@ public class CustomerDAO implements CustomerDAOInterface {
 		} catch (SQLException e) {
 			e.printStackTrace(); System.out.println();
 		}
-		updateCustomer(customer, toSampleTable);
-		accountDAO.updateAccounts(customer, toSampleTable);
+		//updateCustomer(customer, toSampleTable);
+		//accountDAO.updateAccounts(customer, toSampleTable);
 	}
 	private void updateCustomer(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers" : "customers";
@@ -404,6 +404,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return openIDs;
 	}
+	/*
 	public boolean isUnique(Customer c, boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_customers" : "customers";
 		boolean unique = false;
@@ -433,6 +434,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return unique;
 	}
+	*/
 	public int getMaxID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_customers" : "customers";
 		int maxID = 0;

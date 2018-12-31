@@ -70,17 +70,118 @@ INSERT INTO customers_with_accounts VALUES(1, 'userr', 'passs', 'firstt', 'lastt
 // So dont need to rewrite
 INSERT INTO customers_with_accounts VALUES(1, 'user', 'pass', 'first', 'last', '1111111111', 'ex@gmail.org', false, true, 'rev', '12342678', 0.00, '23456718', 0.00, false, false, -1);
 INSERT INTO customers_with_accounts VALUES(2, 'userr', 'passs', 'firstt', 'lastt', '2111111111', 'ex1@gmail.org', false, true, 'rev1', '12434567', 1.00, '23495678', 1.50, false, false, -1); 
+INSERT INTO customers_with_accounts VALUES(5, 'dolphin', 'pashwarf', 'henry', 'hacker', '9283452345', 'lwerk@gmail.org', false, true, 'paper', '82434567', 19182.00, '63495678', 20394.50, false, false, -1); 
+INSERT INTO customers_with_accounts VALUES(6, 'warthog', 'pallmoarf', 'daniel', 'sagger', '1283452445', 'doubled@gmail.net', false, true, 'sandfish', '52424567', 282.00, '63491278', 42391.20, false, false, -1);
 
 
+// TO DROP TRIGGER: DROP TRIGGER IF EXISTS insert_customers ON customers_with_Accounts CASCADE;
+---------------------customers trigger------------------------
+CREATE OR REPLACE FUNCTION insert_update_customers() 
+RETURNS TRIGGER AS 
+$iuc$
+	BEGIN
+		IF (TG_OP = 'INSERT') THEN
+		
+			INSERT INTO customers 
+			VALUES(NEW.customer_id, NEW.username, NEW.password, 
+				NEW.first_name, NEW.last_name, NEW.telephone, NEW.email, NEW.us_citizen,
+				NEW.employed, NEW.employer, NEW.flagged);
+			
+		ELSIF (TG_OP = 'UPDATE') THEN
+		
+			IF (OLD.* <> NEW.*) THEN
+				UPDATE customers SET 
+					username = NEW.username,
+					password = NEW.password,
+					first_name = NEW.first_name,
+					last_name = NEW.last_name,
+					telephone = NEW.telephone,
+					email = NEW.email,
+					us_citizen = NEW.us_citizen,
+					employed = NEW.employed,
+					employer = NEW.employer,
+					flagged = NEW.flagged
+				WHERE customer_id = NEW.customer_id;
+			END IF;
+		
+		END IF;
+		RETURN NEW;
+	END;
+$iuc$ LANGUAGE plpgsql
 
+CREATE TRIGGER insert_update_customers_after
+	AFTER INSERT OR UPDATE ON customers_with_accounts
+	FOR EACH ROW 
+EXECUTE PROCEDURE insert_update_customers();
+--------------------------------------------------------------
+CREATE OR REPLACE FUNCTION delete_customers () 
+RETURNS TRIGGER AS 
+$dc$
+	BEGIN
+		IF (TG_OP = 'DELETE') THEN
+			
+			DELETE FROM customers WHERE customer_id = OLD.customer_id;
 
+		END IF;
+		RETURN OLD;
+	END;
+$dc$ LANGUAGE plpgsql
 
+CREATE TRIGGER delete_customers_before
+	BEFORE DELETE ON customers_with_accounts
+	FOR EACH ROW 
+EXECUTE PROCEDURE delete_customers();
+--------------------------------------------------------------
+---------------------- accounts trigger ----------------------
+CREATE OR REPLACE FUNCTION insert_update_accounts() 
+RETURNS TRIGGER AS 
+$iua$
+	BEGIN
+		IF (TG_OP = 'INSERT') THEN
+			INSERT INTO accounts VALUES(NEW.customer_id, NEW.savings_number, NEW.savings_amount, 
+			NEW.checking_number, NEW.checking_amount, NEW.flagged, NEW.joint, NEW.joint_customer_id);
+		
+		ELSIF (TG_OP = 'UPDATE') THEN
+		
+			IF (OLD.* <> NEW.*) THEN
+				UPDATE accounts SET 
+					savings_number = NEW.savings_number,
+					savings_amount = NEW.savings_amount,
+					checking_number = NEW.checking_number,
+					checking_amount = NEW.checking_amount,
+					flagged = NEW.flagged,
+					joint = NEW.joint,
+					joint_customer_id = NEW.joint_customer_id
+				WHERE customer_id = NEW.customer_id;
+			END IF;
+			
+		END IF;
+		RETURN NEW;
+	END;
+$iua$
+LANGUAGE plpgsql 
 
+CREATE TRIGGER insert_update_accounts_after
+	AFTER INSERT OR UPDATE ON customers_with_accounts
+	FOR EACH ROW 
+EXECUTE PROCEDURE insert_update_accounts();
+--------------------------------------------------------------
+CREATE OR REPLACE FUNCTION delete_accounts () 
+RETURNS TRIGGER AS 
+$da$
+	BEGIN
+		IF (TG_OP = 'DELETE') THEN
+			
+			DELETE FROM accounts WHERE customer_id = OLD.customer_id;
 
+		END IF;
+		RETURN OLD;
+	END;
+$da$ LANGUAGE plpgsql
 
-
-
-
-
-
+CREATE TRIGGER delete_accounts_before
+	BEFORE DELETE ON customers_with_accounts
+	FOR EACH ROW 
+EXECUTE PROCEDURE delete_accounts();
+--------------------------------------------------------------
 
