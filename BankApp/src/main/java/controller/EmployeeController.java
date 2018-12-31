@@ -17,7 +17,7 @@ import customers.Customer;
 import customers.UnverifiedCustomer;
 import employees.Employee;
 
-public class EmployeeController{
+public class EmployeeController {
 	EmployeeOptions employeeOptions;
 	public enum EmployeeMenus { SELECTION, LOGOUT, CUSTOMERS, UNVERIFIED };
 	private int stop;
@@ -42,18 +42,21 @@ public class EmployeeController{
 		if (selection == 1) {
 			System.out.println();
 			customerDAO = new CustomerDAO();
-			containers.getCustomerContainer().printColumnNames(true);
+			containers.getCustomerContainer().printColumnNames();
 			//customerDAO.printAllCustomers(false);
 			//ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
-			System.out.println("From DAO: ");
+			//System.out.println("From DAO: ");
 			ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
 			for (Customer c : customers) {
-				c.printRow(true);
+				c.printRow();
 			}
 			System.out.println();
+			
+			/*
 			System.out.println("From Containers");
-			containers.getCustomerContainer().printAll(true);
+			containers.getCustomerContainer().printAll();
 			System.out.println();
+			*/
 			
 			Scanner cin = new Scanner(System.in);
 			String done = "";
@@ -88,19 +91,30 @@ public class EmployeeController{
 				//System.out.println("customer username is " + customer.getUsername());
 				String done = "";
 				while (!done.toLowerCase().contains("c")) {
-					containers.getCustomerContainer().printColumnNames(true);
-					customer.printRow(true);
+					containers.getCustomerContainer().printColumnNames();
+					customer.printRow();
 					System.out.println();
 					
-					boolean flagged = customer.isFlagged();
-					if (flagged) {
+					boolean isFlagged = customer.isFlagged();
+					if (isFlagged) {
 						System.out.print("Enter \"c\" To Continue or \"e\" To Re-Enable Customer Account. ");
 						done = cin.next();
-						if (done.toLowerCase().contains("e")) customer.unflag();
+						if (done.toLowerCase().contains("e")) {
+							customer.unflag();
+							customerDAO.updateCustomerAndAccounts(customer, false);
+							//commitCustomerChanges();
+						} else if (done.toLowerCase().contains("c"))
+							break;
 					} else {
 						System.out.print("Enter \"c\" To Continue or \"d\" To Disable Customer Account. ");
 						done = cin.next();
-						if (done.toLowerCase().contains("d")) customer.flag();
+						if (done.toLowerCase().contains("d")) {
+							customer.flag();
+							customerDAO.updateCustomerAndAccounts(customer, false);
+							//commitCustomerChanges();
+						}
+						else if (done.toLowerCase().contains("c")) 
+							break;
 					}
 				}
 				
@@ -114,23 +128,6 @@ public class EmployeeController{
 
 			System.out.println();
 			return;
-		} else if (selection == 3) {
-			
-			customerDAO = new CustomerDAO();
-			//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
-			ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
-			if (customers != null) {
-				for (Customer c : customers) {
-					if (c != null) {
-						customerDAO.updateCustomerAndAccounts(c, false);
-						System.out.println("Updating \'customers_with_accounts\' Table Where customer_id = " + c.getCustomerID() + "...");
-					} else System.out.println("Unable to update customer.");
-				}
-			} else System.out.println("Unable to update customer.");
-		
-			System.out.println();
-			return;
-			
 		} else if (selection == stop) {
 			begin(EmployeeMenus.SELECTION);
 		}
@@ -139,6 +136,24 @@ public class EmployeeController{
 			begin(EmployeeMenus.SELECTION);
 		}
 	}
+	
+	public void commitCustomerChanges() {
+		customerDAO = new CustomerDAO();
+		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
+		ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
+		if (customers != null) {
+			for (Customer c : customers) {
+				if (c != null) {
+					customerDAO.updateCustomerAndAccounts(c, false);
+					System.out.println("Updating \'customers_with_accounts\' Table Where customer_id = " + c.getCustomerID() + "...");
+				} else System.out.println("Unable to update customer.");
+			}
+		} else System.out.println("Unable to update customer.");
+	
+		System.out.println();
+		return;
+	} 
+	
 	public void selectUnverifiedOption(int selection) throws InterruptedException {
 		
 		if (selection == 1) {
@@ -154,9 +169,6 @@ public class EmployeeController{
 			for (UnverifiedCustomer c : unverified) {
 				c.printRow();
 			}
-			System.out.println();
-			System.out.println("From Containers");
-			containers.getUnverifiedContainer().printAll(true);
 			System.out.println();
 			
 			Scanner cin = new Scanner(System.in);
@@ -208,14 +220,12 @@ public class EmployeeController{
 						customerDAO.addCustomerWithAccount(newCustomer, false);
 						
 						containers.getUnverifiedContainer().remove(applicant);
-						unverifiedDAO.deleteUnverifiedCustomer(applicantID,  false);
-						selectUnverifiedOption(3);
+						unverifiedDAO.deleteUnverifiedCustomerWithID(applicantID,  false);
 						break;
 					} else if (done.toLowerCase().contains("d")) {
 						containers.getUnverifiedContainer().remove(applicant);
-						unverifiedDAO.deleteUnverifiedCustomer(applicantID,  false);
+						unverifiedDAO.deleteUnverifiedCustomerWithID(applicantID,  false);
 						applicant = null;
-						selectUnverifiedOption(3);
 						break;
 					} else if (done.toLowerCase().contains("c")) {
 						break;
@@ -225,21 +235,6 @@ public class EmployeeController{
 
 			System.out.println();
 			return;
-		} else if (selection == 3) {
-			
-			unverifiedDAO = new UnverifiedCustomerDAO();
-			//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
-			ArrayList<UnverifiedCustomer> applicants = containers.getUnverifiedContainer().getArrayList();
-			if (applicants != null) {
-				for (UnverifiedCustomer c : applicants) {
-					if (c != null) {
-						unverifiedDAO.updateUnverifiedCustomer(c, false);
-						System.out.println("Updating \'unverified_customers\' Table Where unverified_id = " + c.getID() + "...");
-					} else System.out.println("Unable to update applicant.");
-				}
-			} else System.out.println("Unable to update applicant.");	
-			
-			return;
 		} else if (selection == stop) {
 			begin(EmployeeMenus.SELECTION);
 		}
@@ -247,7 +242,22 @@ public class EmployeeController{
 			System.out.println(selection + " Is Not A Valid Input.\n");
 			begin(EmployeeMenus.SELECTION);
 		}
-	}
+	 }
+	 public void commitApplicantChanges() {
+		unverifiedDAO = new UnverifiedCustomerDAO();
+		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
+		ArrayList<UnverifiedCustomer> applicants = containers.getUnverifiedContainer().getArrayList();
+		if (applicants != null) {
+			for (UnverifiedCustomer c : applicants) {
+				if (c != null) {
+					unverifiedDAO.updateUnverifiedCustomer(c, false);
+					System.out.println("Updating \'unverified_customers\' Table Where unverified_id = " + c.getID() + "...");
+				} else System.out.println("Unable to update applicant.");
+			}
+		} else System.out.println("Unable to update applicant.");	
+		return;
+	} 
+	
 	public void selectEmployeeOption(int selection) throws InterruptedException {
 		if (selection == 1) {
 			begin(EmployeeMenus.CUSTOMERS);

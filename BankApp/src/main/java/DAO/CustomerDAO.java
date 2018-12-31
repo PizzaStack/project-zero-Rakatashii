@@ -21,14 +21,13 @@ public class CustomerDAO implements CustomerDAOInterface {
 	private PreparedStatement ps;
 	//private DBUtil util;
 	private Helpers helper;
-	private AccountDAO accountDAO = new AccountDAO();
+	//private AccountDAO accountDAO = new AccountDAO();
 	
 	public CustomerDAO() {
 		//util = new DBUtil();
 		helper = new Helpers();
 	}
-	
-
+	/*
 	private boolean addCustomer(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers" : "customers";
 		//if (isUnique(customer, toSampleTable) == false) return false;
@@ -47,11 +46,6 @@ public class CustomerDAO implements CustomerDAOInterface {
 			ps.setBoolean(8, customer.getIsCitizen());
 			ps.setBoolean(9, customer.getIsEmployed());
 			ps.setString(10, customer.getEmployer());
-			if (customer.hasSavingsAccount() && customer.hasCheckingAccount()){
-				if (customer.getSavingsAccount().isFlagged() || customer.getCheckingAccount().isFlagged()) {
-					customer.flag();
-				}
-			}
 			ps.setBoolean(11, customer.isFlagged());
 			
 			if (ps.executeUpdate() != 0) {
@@ -67,6 +61,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 			return false;
 		}
 	}
+	*/
 	public boolean addCustomerWithAccount(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		//if (isUnique(customer, toSampleTable) == false) return false;
@@ -92,9 +87,6 @@ public class CustomerDAO implements CustomerDAOInterface {
 			ps.setDouble(12, customer.getSavingsAccount().getBalance());
 			ps.setString(13, customer.getCheckingAccount().getID());
 			ps.setDouble(14, customer.getCheckingAccount().getBalance());
-			if (customer.getSavingsAccount().isFlagged() || customer.getCheckingAccount().isFlagged()) {
-				customer.flag();
-			}
 			ps.setBoolean(15, customer.isFlagged());
 			ps.setBoolean(16, customer.hasJointAccounts());
 			if (customer.hasJointAccounts())
@@ -173,6 +165,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		//updateCustomer(customer, toSampleTable);
 		//accountDAO.updateAccounts(customer, toSampleTable);
 	}	
+	/*
 	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		try {
@@ -213,6 +206,8 @@ public class CustomerDAO implements CustomerDAOInterface {
 		//updateCustomer(customer, toSampleTable);
 		//accountDAO.updateAccounts(customer, toSampleTable);
 	}
+	*/
+	/*
 	private void updateCustomer(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers" : "customers";
 	    
@@ -244,6 +239,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 	}
+	*/
 	@Override
 	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable) {
 		Connection connection;
@@ -284,7 +280,6 @@ public class CustomerDAO implements CustomerDAOInterface {
 						helper.boolToString(rs.getBoolean(8)), helper.boolToString(rs.getBoolean(9)), 
 						rs.getString(10), helper.boolToString(rs.getBoolean(11)));
 				records.add(record);
-				record = null;
 			}
 			statement.close(); rs.close();
 			return records;
@@ -322,8 +317,10 @@ public class CustomerDAO implements CustomerDAOInterface {
 					customer.setSavingsAccount(savings);
 					CheckingAccount checking = new CheckingAccount(rs.getString(13), rs.getDouble(14), customer);
 					customer.setCheckingAccount(checking);
-					if (rs.getBoolean(15)) customer.flag();
-					if (rs.getBoolean(16)) customer.setSharedCustomerID(rs.getInt(17));
+					boolean recordIsFlagged = rs.getBoolean(15);
+					if (recordIsFlagged) customer.flag();
+					boolean customersAreJoined = rs.getBoolean(16);
+					if (customersAreJoined) customer.setSharedCustomerID(rs.getInt(17));
 					customers.add(customer);
 				}
 			}
@@ -358,9 +355,13 @@ public class CustomerDAO implements CustomerDAOInterface {
 				System.out.println("Got Here");
 				if (customer != null) {
 					SavingsAccount savings = new SavingsAccount(rs.getString(11), rs.getDouble(12), customer);
+					customer.setSavingsAccount(savings);
 					CheckingAccount checking = new CheckingAccount(rs.getString(13), rs.getDouble(14), customer);
-					if (rs.getBoolean(15)) customer.flag();
-					if (rs.getBoolean(16)) customer.setSharedCustomerID(rs.getInt(17));
+					customer.setCheckingAccount(checking);
+					boolean recordIsFlagged = rs.getBoolean(15);
+					if (recordIsFlagged) customer.flag();
+					boolean customersAreJoined = rs.getBoolean(16);
+					if (customersAreJoined) customer.setSharedCustomerID(rs.getInt(17));
 					statement.close(); rs.close();
 					return customer;
 				} else System.out.println("Customer is null here");
@@ -456,4 +457,5 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return maxID;
 	}
+	
 }

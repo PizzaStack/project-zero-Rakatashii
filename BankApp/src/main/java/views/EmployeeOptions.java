@@ -41,8 +41,8 @@ public class EmployeeOptions{
 		if (employeeOptions.size() > 0) employeeOptions.clear();
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "View Applicant By ID");
-		addFormattedOption(3, "Commit Changes");
-		addFormattedOption(4, "Go Back");
+		//addFormattedOption(3, "Commit Changes");
+		addFormattedOption(3, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -64,8 +64,8 @@ public class EmployeeOptions{
 		if (employeeOptions.size() > 0) employeeOptions.clear();
 		addFormattedOption(1, "View All Customers");
 		addFormattedOption(2, "View Customer By ID");
-		addFormattedOption(3, "Commit Changes");
-		addFormattedOption(4, "Go Back");
+		//addFormattedOption(3, "Commit Changes");
+		addFormattedOption(3, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";

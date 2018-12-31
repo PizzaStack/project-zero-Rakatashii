@@ -23,20 +23,18 @@ public class CheckingAccount implements Account {
 		checkingID = AccountContainer.generateNewID(10);
 		balance = 0.0;
 		joint = false;
-		flagged = false;
 	}
 	public CheckingAccount(Customer customer){
 		this.primaryHolder = customer;
 		checkingID = AccountContainer.generateNewID(10);
 		balance = 0.0;
 		joint = false;
-		flagged = false;
 	}
 	public CheckingAccount(String acc_num, double initial_balance){
-		flagged = false;
 		joint = false;
 		if (initial_balance >= minInitialBalance) balance = initial_balance;
-		else flagged = true;
+		else this.flag();
+		
 		checkingID = acc_num;
 	}
 	public CheckingAccount(String acc_num, double initial_balance, Customer primary){
@@ -46,15 +44,13 @@ public class CheckingAccount implements Account {
 		if (primaryHolder.hasCheckingAccount() == false) primaryHolder.setCheckingAccount(this);
 		if (primary.hasSavingsAccount()) {
 			pairedSavingsAccount = primary.getSavingsAccount();
-			if (pairedSavingsAccount.isFlagged()) if (primary.isFlagged() == false) primary.flag();
 		} else if (pairedSavingsAccount != null){
 			primary.setSavingsAccount(pairedSavingsAccount);
-			if (pairedSavingsAccount.isFlagged()) if (primary.isFlagged() == false)primary.flag();
-		} else flagged = false;
+		} 
 		
 		if (initial_balance >= minInitialBalance) balance = initial_balance;
 		else {
-			flag();
+			this.flag();
 			balance = 0.0;
 		}
 	}
@@ -67,11 +63,9 @@ public class CheckingAccount implements Account {
 		
 		if (primary.hasSavingsAccount()) {
 			pairedSavingsAccount = primary.getSavingsAccount();
-			flagged = pairedSavingsAccount.flagged;
 		} else if (pairedSavingsAccount != null){
 			primary.setSavingsAccount(pairedSavingsAccount);
-			flagged = pairedSavingsAccount.flagged;
-		} else flagged = false;
+		}
 		
 		joint = true;
 		if (sharedHolder.hasJointAccounts() == false) sharedHolder.setHasJointAccounts(true);
@@ -85,7 +79,7 @@ public class CheckingAccount implements Account {
 		if (initial_balance >= minInitialBalance) balance = initial_balance;
 		else {
 			this.balance = 0.0;
-			flag();
+			this.flag();
 		}
 	}
 	/*
@@ -95,30 +89,25 @@ public class CheckingAccount implements Account {
 	*/
 	@Override
 	public void setBalance(double b) {
-		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
-		if (b > minBalance && this.flagged == false) balance = b;
+		if (b >= minBalance) {
+			if (this.flagged == false) balance = b;
+		} else this.flag();
 	}
 	@Override
 	public double getBalance() {
-		if (balance < 0) {
-			flagged = true; 
-			if (pairedSavingsAccount != null) pairedSavingsAccount.flagged = true;
-		}
 		return balance;
 	}
 	@Override
 	public void deposit(double d) {
-		if (pairedSavingsAccount != null && pairedSavingsAccount.isFlagged()) flag();
-		if (d > maxDepositAmmount){
-			flagged = true;
-			return;
-		} 
-		if (this.flagged == false) balance += d;
+		if (d <= maxDepositAmmount){
+			if (this.flagged == false) balance += d;
+		} else this.flag();
 	}
 	@Override
 	public void withdraw(double w) {
-		if (pairedSavingsAccount != null && pairedSavingsAccount.flagged == true) this.flagged = true;
-		if ((balance - w) > minBalance && this.flagged == false) balance -= 2;
+		if ((balance - w) > minBalance) {
+			if (this.flagged == false) balance -= 2;
+		} else this.flag();
 	}
 	@Override
 	public void setID(String id) {
@@ -138,8 +127,10 @@ public class CheckingAccount implements Account {
 	public void setJointCustomer(Customer c) {
 		if (joint == false) joint = true;
 		sharedHolder = c;
+		
 		if (sharedHolder.hasCheckingAccount() == false) sharedHolder.setCheckingAccount(this);
 		sharedHolder.setHasJointAccounts(true);
+		
 		if (primaryHolder != null) {
 			primaryHolder.setHasJointAccounts(true);
 			primaryHolder.setSharedCustomer(sharedHolder);
@@ -179,12 +170,19 @@ public class CheckingAccount implements Account {
 	}
 	public void flag() {
 		this.flagged = true;
+		if (pairedSavingsAccount != null && pairedSavingsAccount.isFlagged() == false) pairedSavingsAccount.flag();
+		if (primaryHolder != null && primaryHolder.isFlagged() == false) primaryHolder.flag();
+		if (sharedHolder != null && sharedHolder.isFlagged() == false) sharedHolder.flag();
+		//log? System.out.println(this.primaryHolder.getUsername() + " WAS FLAGGED IN CHECKING!!!");
 	}
 	public void unflag() {
-		this.flagged = false;
+		if (this.flagged == true) this.flagged = false;
+		if (pairedSavingsAccount != null && pairedSavingsAccount.isFlagged() == true) pairedSavingsAccount.unflag();
+		if (primaryHolder != null && primaryHolder.isFlagged() == true) primaryHolder.unflag();
+		if (sharedHolder != null && sharedHolder.isFlagged() == true) sharedHolder.unflag();
 	}
 	public boolean isFlagged() {
-		return flagged;
+		return this.flagged;
 	}
 
 }

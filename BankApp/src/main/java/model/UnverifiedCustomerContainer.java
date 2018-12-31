@@ -98,6 +98,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
  		//unverifiedCustomer.setID(unverified.size()-1);
 		if (unverifiedCustomer.getID() < unverified.size()-1) reindex(0);
 	}
+
 	public void removeAt(int index) {
 		unverified.remove(index);
 		reindex(index);

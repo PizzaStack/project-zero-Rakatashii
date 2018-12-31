@@ -144,7 +144,7 @@ public class DBSetup {
         			c.getCheckingAccount().setPairedAccount(c.getSavingsAccount());
         			
         			customerDAO.addCustomerWithAccount(c, true);
-        			accountDAO.addAccounts(c.getSavingsAccount(),  c.getCheckingAccount(),  true);
+        			//accountDAO.addAccounts(c.getSavingsAccount(),  c.getCheckingAccount(),  true);
         		} else {
         			System.out.println("Customer and Account Containers are not the same size!");
         		} ++i;
@@ -265,10 +265,9 @@ public class DBSetup {
 		Customer firstCustomer = new Customer(0, "customer", "password", "firstname", "lastname", 
     			"telephone", "email", true, true, "employer");
 		customerDAO.addCustomerWithAccount(firstCustomer, false);
-		firstCustomer.unflag();
-		firstCustomer.getSavingsAccount().deposit(1000.00);
-		firstCustomer.getCheckingAccount().deposit(20000.82);
-		customerDAO.updateCustomerAndAccounts(firstCustomer,  firstCustomer.getSavingsAccount(),  firstCustomer.getCheckingAccount(),  false);
+		firstCustomer.getSavingsAccount().deposit(10000.00);
+		firstCustomer.getCheckingAccount().deposit(1500.00);
+		customerDAO.updateCustomerAndAccounts(firstCustomer, false);
 		
     	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "unverified", "customer", 
     			"000-000-0000", "email@address.com", true, true, "employer");

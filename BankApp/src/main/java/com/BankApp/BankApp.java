@@ -87,10 +87,6 @@ public class BankApp
     	setup = null;
     	System.gc();
     	
-    	char c = 0x25A0;
-    	String sym = String.valueOf(c);
-        System.out.println(sym);
-    	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);

@@ -43,8 +43,8 @@ adminContainer.getSize() = 1
 
 Actual Table Sizes:
 Number of           Customer Records: 7
-Number of UnverifiedCustomer Records: 1
-Number of           Employee Records: 1
+Number of UnverifiedCustomer Records: 9
+Number of           Employee Records: 2
 Number of              Admin Records: 1
 
 Sample Table Sizes:

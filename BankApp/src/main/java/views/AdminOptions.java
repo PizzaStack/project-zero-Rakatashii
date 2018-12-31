@@ -41,9 +41,9 @@ public class AdminOptions{
 	private void setUnverifiedViewArrayValues() {
 		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Applicants");
-		addFormattedOption(2, "View Applicant By ID");
-		addFormattedOption(3, "Commit Changes");
-		addFormattedOption(4, "Go Back");
+		addFormattedOption(2, "Approve/Deny Applicant");
+		//addFormattedOption(3, "Commit Changes");
+		addFormattedOption(3, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -64,8 +64,9 @@ public class AdminOptions{
 	private void setCustomersViewArrayValues() {
 		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Customers");
-		addFormattedOption(2, "View Customer By ID");
-		addFormattedOption(3, "Commit Changes");
+		addFormattedOption(2, "Enable or Disable Customer Account");
+		addFormattedOption(3, "Register New Customer");
+		//addFormattedOption(3, "Commit Changes");
 		addFormattedOption(4, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;

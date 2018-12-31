@@ -85,7 +85,25 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 	}
-    public void deleteUnverifiedCustomer(int id, boolean fromSampleTable) {
+    public void deleteUnverifiedCustomer(UnverifiedCustomer unverified, boolean fromSampleTable) {
+    	String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
+        String sql = "DELETE FROM " + tableName + " WHERE unverified_id = ?";
+        int unverifiedID = unverified.getID();
+ 
+        try {
+        	Connection connection = DBConnection.getConnection();
+        	PreparedStatement ps = connection.prepareStatement(sql);
+ 
+            ps.setInt(1, unverifiedID);
+            ps.executeUpdate();
+ 
+            ps.close();
+        } catch (SQLException e) {
+        	//e.printStackTrace(); System.out.println();
+            //System.out.println(e.getMessage()); System.out.println();
+        }
+    }
+    public void deleteUnverifiedCustomerWithID(int id, boolean fromSampleTable) {
     	String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
         String sql = "DELETE FROM " + tableName + " WHERE unverified_id = ?";
  

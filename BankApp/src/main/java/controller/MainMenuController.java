@@ -54,6 +54,7 @@ public class MainMenuController {
 			registrationController.call();
 			System.out.println();
 			
+			/*
 			Scanner cin = new Scanner(System.in);
 			String nextOption = "";
 
@@ -64,6 +65,7 @@ public class MainMenuController {
 			} else if (nextOption.toLowerCase().contains("m")) begin(Menus.DEFAULT);
 			
 			begin(Menus.DEFAULT);
+			*/
 		} else if (selection == 2) { 
 			
 			login = new LoginController();

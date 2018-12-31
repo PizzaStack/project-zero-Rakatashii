@@ -24,6 +24,7 @@ public class AccountDAO implements AccountDAOInterface {
 		helper = new Helpers();
 	}
 	
+	/*
 	@Override
 	public boolean addAccounts(SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_accounts" : "accounts";
@@ -39,11 +40,6 @@ public class AccountDAO implements AccountDAOInterface {
 			ps.setFloat(3, (float) savings.getBalance());
 			ps.setString(4, checking.getID());
 			ps.setFloat(5, (float) checking.getBalance());
-			if (savings.isFlagged() != checking.isFlagged()) {
-				savings.flag();
-				checking.flag();
-				
-			}
 			boolean flagged = (savings.getOwner() != null) ? savings.getOwner().isFlagged() : false;
 			ps.setBoolean(6, flagged);
 			ps.setBoolean(7,  savings.isJoint());
@@ -62,6 +58,8 @@ public class AccountDAO implements AccountDAOInterface {
 			return false;
 		}
 	}
+	*/
+	/*
 	void updateAccounts(Customer customer, boolean toSampleTable) {
 		SavingsAccount savings = null;
 		CheckingAccount checking = null;
@@ -109,6 +107,7 @@ public class AccountDAO implements AccountDAOInterface {
 			e.printStackTrace(); System.out.println();
 		}
 	}
+	*/
 	@Override
 	public int getNumAccounts(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_accounts" : "accounts";

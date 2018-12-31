@@ -35,7 +35,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 	private String textFileName = "no_text_file_destination_for_customers";
 	private String binaryFileName = "no_binary_file_destination_for_customers";
 	
-	private CustomerDAO customerDAO = new CustomerDAO();
+	private CustomerDAO customerDAO;
 	private ArrayList<Customer> DBCustomers;
 	
 	public CustomerContainer() {
@@ -94,18 +94,12 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return customers;
 	}
-	public void printColumnNames(boolean withAccounts) {
-		if (withAccounts) {
-			System.out.printf("%-10s%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", 
-					"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
-					"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "SAVINGS_NUMBER", "SAVINGS_AMOUNT", 
-					"CHECKING_NUMBER", "CHECKING_AMOUNT", "FLAGGED", "JOINT", "JOINT_CUST_ID");
-	    } else {
-	    	System.out.printf("%-10s%-20s%-20s%-15s%-15s%-14s%-40s%-10s%-10s%-35s%-10s\n", 
-					"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
-					"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "FLAGGED");
-		}
-}
+	public void printColumnNames() {
+		System.out.printf("%-10s%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", 
+				"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
+				"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "SAVINGS_NUMBER", "SAVINGS_AMOUNT", 
+				"CHECKING_NUMBER", "CHECKING_AMOUNT", "FLAGGED", "JOINT", "JOINT_CUST_ID");
+	}
 	public void push(Customer customer) {
 		/*if (this.type != person.getClass()) {
 			System.out.println("Failed to push. Object must be of same type as Container class.");
@@ -142,10 +136,9 @@ public class CustomerContainer implements PersonContainer<Person>{
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
-	public void printAll(boolean withAccounts) {
+	public void printAll() {
 		for (Customer c : customers) {
-			if (withAccounts) c.printRow(true);
-			else c.printRow();
+			 c.printRow();
 		}
 	}
 	public void readIn(File file) throws IOException {

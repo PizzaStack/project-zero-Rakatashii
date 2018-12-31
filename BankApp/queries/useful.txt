@@ -34,7 +34,7 @@ ON customers_with_accounts(savings_number, checking_number)
 WHERE joint=false;
 
 CREATE TABLE  customers (
-customer_id INTEGER, 
+customer_id INTEGER UNIQUE, 
 username VARCHAR(255) UNIQUE, 
 password VARCHAR(255), 
 first_name VARCHAR(255), 
@@ -50,7 +50,7 @@ FOREIGN KEY (customer_id)
 );
 	
 CREATE TABLE accounts (
-	customer_id INTEGER, 
+	customer_id INTEGER UNIQUE, 
 	savings_number VARCHAR(255), 
 	savings_amount DECIMAL(12, 2), 
 	checking_number VARCHAR(255), 
@@ -72,7 +72,6 @@ INSERT INTO customers_with_accounts VALUES(1, 'user', 'pass', 'first', 'last', '
 INSERT INTO customers_with_accounts VALUES(2, 'userr', 'passs', 'firstt', 'lastt', '2111111111', 'ex1@gmail.org', false, true, 'rev1', '12434567', 1.00, '23495678', 1.50, false, false, -1); 
 INSERT INTO customers_with_accounts VALUES(5, 'dolphin', 'pashwarf', 'henry', 'hacker', '9283452345', 'lwerk@gmail.org', false, true, 'paper', '82434567', 19182.00, '63495678', 20394.50, false, false, -1); 
 INSERT INTO customers_with_accounts VALUES(6, 'warthog', 'pallmoarf', 'daniel', 'sagger', '1283452445', 'doubled@gmail.net', false, true, 'sandfish', '52424567', 282.00, '63491278', 42391.20, false, false, -1);
-
 
 // TO DROP TRIGGER: DROP TRIGGER IF EXISTS insert_customers ON customers_with_Accounts CASCADE;
 ---------------------customers trigger------------------------
@@ -183,5 +182,40 @@ CREATE TRIGGER delete_accounts_before
 	BEFORE DELETE ON customers_with_accounts
 	FOR EACH ROW 
 EXECUTE PROCEDURE delete_accounts();
+--------------------------------------------------------------
+CREATE OR REPLACE FUNCTION insert_update_delete_employees() 
+RETURNS TRIGGER AS 
+$iude$
+	BEGIN
+		IF (TG_OP = 'INSERT') THEN
+			INSERT INTO employees VALUES(NEW.employee_id, NEW.username, NEW.password, 
+			NEW.admin, NEW.admin_id);
+		
+		ELSIF (TG_OP = 'UPDATE') THEN
+		
+			IF (OLD.* <> NEW.*) THEN
+				UPDATE employees SET 
+					username = NEW.username,
+					password = NEW.password,
+					admin = NEW.admin,
+					admin_id = NEW.admin_id
+				WHERE employee_id = NEW.employee_id;
+			END IF;
+		ELSIF (TG_OP = 'DELETE') THEN
+			
+			DELETE FROM employees WHERE employee_id = OLD.employee_id;
+
+			RETURN OLD;
+			
+		END IF;
+		RETURN NEW;
+	END;
+$iude$
+LANGUAGE plpgsql 
+
+CREATE TRIGGER insert_update_delete_employees_after
+	AFTER INSERT OR UPDATE OR DELETE ON admins
+	FOR EACH ROW 
+EXECUTE PROCEDURE insert_update_delete_employees();
 --------------------------------------------------------------
 
