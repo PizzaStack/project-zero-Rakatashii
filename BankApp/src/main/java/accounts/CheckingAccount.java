@@ -5,7 +5,7 @@ import customers.Customer;
 import model.AccountContainer;
 
 public class CheckingAccount implements Account {
-	private final double maxDepositAmmount = 100000.0;
+	protected final double maxDepositAmmount = 100000.0;
 	private final double minInitialBalance = 0.0;
 	private final double minBalance = -1000.0;
 	//public static boolean sampleMode;
@@ -106,7 +106,17 @@ public class CheckingAccount implements Account {
 	@Override
 	public void withdraw(double w) {
 		if ((balance - w) > minBalance) {
-			if (this.flagged == false) balance -= 2;
+			if (this.flagged == false) balance -= w;
+		} else this.flag();
+	}
+	public void transferToSavings(double amount) {
+		if ((balance - amount) > minBalance)
+			if (pairedSavingsAccount != null){
+				if (this.flagged == false) {
+					double prev_balance = pairedSavingsAccount.getBalance();
+					pairedSavingsAccount.deposit(amount);
+					if (pairedSavingsAccount.getBalance() > prev_balance) this.withdraw(amount);
+				}
 		} else this.flag();
 	}
 	@Override
@@ -127,14 +137,18 @@ public class CheckingAccount implements Account {
 	public void setJointCustomer(Customer c) {
 		if (joint == false) joint = true;
 		sharedHolder = c;
-		
-		if (sharedHolder.hasCheckingAccount() == false) sharedHolder.setCheckingAccount(this);
 		sharedHolder.setHasJointAccounts(true);
+		sharedHolder.setCheckingAccount(this);
+		
+		if (this.pairedSavingsAccount != null) {
+			if (pairedSavingsAccount.isJoint() == false) 
+				pairedSavingsAccount.setJointCustomer(sharedHolder);
+		}
 		
 		if (primaryHolder != null) {
-			primaryHolder.setHasJointAccounts(true);
-			primaryHolder.setSharedCustomer(sharedHolder);
-			sharedHolder.setSharedCustomer(primaryHolder);
+			if (primaryHolder.hasJointAccounts() == false) primaryHolder.setHasJointAccounts(true);
+			if (primaryHolder.getJointCustomer() == null) primaryHolder.setJointCustomer(sharedHolder);
+			if (sharedHolder.getJointCustomer() == null) sharedHolder.setJointCustomer(primaryHolder);
 		}
 	}
 	@Override

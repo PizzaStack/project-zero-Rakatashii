@@ -12,6 +12,7 @@ public class SavingsAccount implements Account{
 	protected String savingsID;
 	private double balance;
 	protected Customer primaryHolder, sharedHolder;
+	private int sharedHolderID;
 	private boolean joint;
 	protected boolean flagged;
 	CheckingAccount pairedCheckingAccount;
@@ -80,8 +81,8 @@ public class SavingsAccount implements Account{
 		
 		primaryHolder.setHasJointAccounts(true);
 		sharedHolder.setHasJointAccounts(true);
-		primaryHolder.setSharedCustomer(sharedHolder);
-		sharedHolder.setSharedCustomer(primaryHolder);
+		primaryHolder.setJointCustomer(sharedHolder);
+		sharedHolder.setJointCustomer(primaryHolder);
 		
 		if (primaryHolder.hasSavingsAccount() == false) primaryHolder.setSavingsAccount(this);
 		if (this.pairedCheckingAccount != null) {
@@ -128,6 +129,16 @@ public class SavingsAccount implements Account{
 			if (flagged == false) balance -= w;
 		else this.flag();
 	}
+	public void transferToChecking(double amount) {
+		if ((balance - amount) > minBalance)
+			if (pairedCheckingAccount != null){
+				if (this.flagged == false) {
+					double prev_balance = pairedCheckingAccount.getBalance();
+					pairedCheckingAccount.deposit(amount);
+					if (pairedCheckingAccount.getBalance() > prev_balance) this.withdraw(amount);
+				}
+		} else this.flag();
+	}
 	@Override
 	public void setID(String id) {
 		this.savingsID = id;
@@ -144,15 +155,18 @@ public class SavingsAccount implements Account{
 	public void setJointCustomer(Customer c) {
 		if (joint == false) joint = true;
 		sharedHolder = c;
-		if (sharedHolder.hasSavingsAccount() == false) sharedHolder.setSavingsAccount(this);
 		sharedHolder.setHasJointAccounts(true);
+		sharedHolder.setSavingsAccount(this);
+		
 		if (this.pairedCheckingAccount != null) {
-			pairedCheckingAccount.setJointCustomer(sharedHolder);
+			if (pairedCheckingAccount.isJoint() == false) 
+				pairedCheckingAccount.setJointCustomer(sharedHolder);
 		}
+		
 		if (primaryHolder != null) {
-			primaryHolder.setHasJointAccounts(true);
-			primaryHolder.setSharedCustomer(sharedHolder);
-			sharedHolder.setSharedCustomer(primaryHolder);
+			if (primaryHolder.hasJointAccounts() == false) primaryHolder.setHasJointAccounts(true);
+			if (primaryHolder.getJointCustomer() == null) primaryHolder.setJointCustomer(sharedHolder);
+			if (sharedHolder.getJointCustomer() == null) sharedHolder.setJointCustomer(primaryHolder);
 		}
 	}
 	@Override
@@ -204,4 +218,5 @@ public class SavingsAccount implements Account{
 	public boolean isFlagged() {
 		return flagged;
 	}
+
 }

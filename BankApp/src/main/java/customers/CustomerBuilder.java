@@ -14,6 +14,8 @@ public class CustomerBuilder {
 	private String password = UnverifiedCustomerContainer.generateNewPassword();
 	private boolean isFlagged = false;
 	private int id = -1; 
+	private boolean isJoint;
+	private int jointCustomerID = -1;
 
 	public CustomerBuilder withID(int id) {
 		this.id = id;
@@ -59,18 +61,26 @@ public class CustomerBuilder {
 		this.isFlagged = isFlagged;
 		return this;
 	}
+	public CustomerBuilder withIsJoint(boolean isJoint) {
+		this.isJoint = isJoint;
+		return this;
+	}
+	public CustomerBuilder withJointCustomerID(int jointCustomerID) {
+		this.jointCustomerID = jointCustomerID;
+		return this;
+	}
 	public UnverifiedCustomer makeUnverifiedCustomer() {
 		UnverifiedCustomer newUnverifiedCustomer = new UnverifiedCustomer(id, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
 		
 		return newUnverifiedCustomer;
 	}
 	public Customer makeCustomer() {
-		Customer newCustomer = new Customer(id, username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer);
+		Customer newCustomer = new Customer(id, username, password, firstName, lastName, telephone, email, isCitizen, isEmployed, employer, isJoint, jointCustomerID);
 		if (this.isFlagged) newCustomer.flag();
 		return newCustomer;
 	}
 	public Customer makeCustomer(UnverifiedCustomer u) {
-		Customer newCustomer = new Customer(id, username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer);
+		Customer newCustomer = new Customer(id, username, password, u.firstName, u.lastName, u.telephone, u.email, u.isCitizen, u.isEmployed, u.employer, isJoint, jointCustomerID);
 		newCustomer.verified = true;
 		if (newCustomer.isFlagged()) newCustomer.unflag();
 		return newCustomer;

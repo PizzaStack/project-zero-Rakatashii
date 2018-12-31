@@ -69,57 +69,6 @@ public class AdminController{
 			System.out.println();
 			return;
 		} else if (selection == 2) {
-			RegistrationController registrationController = new RegistrationController();
-			registrationController.passContainers(containers);
-			registrationController.call();
-	
-			UnverifiedCustomer applicant = containers.getUnverifiedContainer().getArrayList().get(containers.getUnverifiedContainer().getSize()-1);
-			
-			Scanner cin = new Scanner(System.in);
-			String option = "";
-			
-			while (!option.toLowerCase().contains("a") && !option.toLowerCase().contains("d")) {
-				System.out.println("Verify Applicant Information Is Correct:");
-				containers.getUnverifiedContainer().printColumnNames();
-				applicant.printRow();
-				System.out.println();
-				System.out.println("Enter \"a\" To Authorize New Customer Application.\n"
-						+ "Enter \"d\" To Discard New Customer Application.\n"
-						+ "Enter \"c\" To Continue.");
-				System.out.println();
-				System.out.print("Choose Option: ");
-				option = cin.next();
-				
-				System.out.println();
-				customerDAO = new CustomerDAO();
-				unverifiedDAO = new UnverifiedCustomerDAO();
-				if (applicant != null) {
-					if (option.toLowerCase().contains("a")) {
-						Customer newCustomer = applicant.convertToCustomer(null,  null);
-						customerDAO.addCustomerWithAccount(newCustomer, false);
-						containers.getUnverifiedContainer().remove(applicant);
-						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
-						applicant = null;
-						System.out.println("Success! New Accounts Have Been Established For " + newCustomer.getFirstname());
-						System.out.println("     Savings Account: " + newCustomer.getSavingsAccount().getID());
-						System.out.println("    Checking Account: " + newCustomer.getCheckingAccount().getID());
-						System.out.println();
-						break;
-					} else if (option.toLowerCase().contains("d")) {
-						System.out.println("Application Has Been Erased. ");
-						containers.getUnverifiedContainer().remove(applicant);
-						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
-						applicant = null;
-						System.out.println();
-						break;
-					} else if (option.toLowerCase().contains("c")) {
-						System.out.println();
-						break;
-					} 
-				}
-			}
-			
-		} else if (selection == 3) {
 			Scanner cin = new Scanner(System.in);
 			
 			int customerID;
@@ -181,7 +130,144 @@ public class AdminController{
 
 			System.out.println();
 			return;
-		} else if (selection == stop) {
+		} else if (selection == 3) {
+			
+			customerDAO = new CustomerDAO();
+			ArrayList<Customer> jointApplicants = new ArrayList<Customer>();
+			ArrayList<Customer> DBcustomers = customerDAO.getAllCustomers(false);
+			for (Customer c : DBcustomers) {
+				if (c.getJointCustomerID() > 0 && c.hasJointAccounts() == false) jointApplicants.add(c);
+			}
+			
+			if (jointApplicants.size() > 0) {
+				containers.getCustomerContainer().printColumnNames();
+				for (Customer c : jointApplicants) {
+					c.printRow();
+				}
+			} else {
+				System.out.println("No Active Joint Applications Were Found. ");
+				return;
+			}
+			
+			Scanner cin = new Scanner(System.in);
+			int applicantID = -1;
+			String option = "";
+			
+			boolean foundPrimary = false, foundJointCustomer = false;
+			Customer primary = null;
+			Customer jointCustomer = null;
+			int jointCustomerID = -1;
+			while (!foundPrimary && applicantID != 0) {
+				System.out.println();
+				System.out.print("Enter Customer_ID (\"0\" To Quit): ");
+				applicantID = Integer.parseInt(cin.nextLine());
+				foundPrimary = customerDAO.checkIfCustomerExists(applicantID, false);
+				if (foundPrimary) {
+					primary = jointCustomer = customerDAO.findCustomerByID(applicantID, false);
+					jointCustomerID = primary.getJointCustomerID();
+					foundJointCustomer = customerDAO.checkIfCustomerExists(jointCustomerID, false);
+					if (foundJointCustomer) {
+						System.out.println();
+						System.out.println("Joint Customer Was Located Within The Database: ");
+						jointCustomer = customerDAO.findCustomerByID(primary.getJointCustomerID(), false);
+						containers.getCustomerContainer().printColumnNames();
+						jointCustomer.printRow();
+					} else {
+						System.out.println("Unable To Locate Customer With The Joint ID Specified.");
+						option = "d";
+						return;
+					}
+				}
+			}
+			while (true) {
+				System.out.println();
+				System.out.println("Enter \"a\" To Authorize New Customer Application.\n"
+						+ "Enter \"d\" To Discard New Customer Application.\n"
+						+ "Enter \"c\" To Continue.");
+				System.out.println();
+				System.out.print("Choose Option: ");
+				if (!option.toLowerCase().contains("a") && !option.toLowerCase().contains("d")) option = cin.next();
+				
+				System.out.println();
+
+				if (jointCustomer != null) {
+					if (option.toLowerCase().contains("a")) {
+						System.out.println("Success! " + primary.getUsername() + " And " + jointCustomer.getUsername() + " Now Share The Same Accounts.");
+						
+						primary.setJointCustomer(jointCustomer);
+						jointCustomer.setJointCustomer(primary);
+						customerDAO.updateCustomerAndAccounts(primary, false);
+						customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						
+						System.out.println();
+						break;
+					} else if (option.toLowerCase().contains("d")) {
+						System.out.println("Application Has Been Erased. ");
+						
+						primary.setJointCustomerID(-1);
+						customerDAO.updateCustomerAndAccounts(primary, false);
+						
+						System.out.println();
+						break;
+					} else if (option.toLowerCase().contains("c")) {
+						System.out.println();
+						break;
+					} 
+				}
+			}
+			
+		} else if (selection == 4) {
+			RegistrationController registrationController = new RegistrationController();
+			registrationController.passContainers(containers);
+			registrationController.call();
+	
+			UnverifiedCustomer applicant = containers.getUnverifiedContainer().getArrayList().get(containers.getUnverifiedContainer().getSize()-1);
+			
+			Scanner cin = new Scanner(System.in);
+			String option = "";
+			
+			while (!option.toLowerCase().contains("a") && !option.toLowerCase().contains("d")) {
+				System.out.println("Verify Applicant Information Is Correct:");
+				containers.getUnverifiedContainer().printColumnNames();
+				applicant.printRow();
+				System.out.println();
+				System.out.println("Enter \"a\" To Authorize New Customer Application.\n"
+						+ "Enter \"d\" To Discard New Customer Application.\n"
+						+ "Enter \"c\" To Continue.");
+				System.out.println();
+				System.out.print("Choose Option: ");
+				option = cin.next();
+				
+				System.out.println();
+				customerDAO = new CustomerDAO();
+				unverifiedDAO = new UnverifiedCustomerDAO();
+				if (applicant != null) {
+					if (option.toLowerCase().contains("a")) {
+						Customer newCustomer = applicant.convertToCustomer(null,  null);
+						customerDAO.addCustomerWithAccount(newCustomer, false);
+						containers.getUnverifiedContainer().remove(applicant);
+						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
+						applicant = null;
+						System.out.println("Success! New Accounts Have Been Established For " + newCustomer.getFirstname());
+						System.out.println("     Savings Account: " + newCustomer.getSavingsAccount().getID());
+						System.out.println("    Checking Account: " + newCustomer.getCheckingAccount().getID());
+						System.out.println();
+						break;
+					} else if (option.toLowerCase().contains("d")) {
+						System.out.println("Application Has Been Erased. ");
+						containers.getUnverifiedContainer().remove(applicant);
+						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
+						applicant = null;
+						System.out.println();
+						break;
+					} else if (option.toLowerCase().contains("c")) {
+						System.out.println();
+						break;
+					} 
+				}
+			}
+			
+		}  else if (selection == stop) {
 			begin(AdminMenus.SELECTION);
 		}
 		else {

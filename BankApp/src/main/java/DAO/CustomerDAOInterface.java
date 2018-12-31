@@ -11,7 +11,7 @@ import database.DBConnection;
 
 public interface CustomerDAOInterface {
 	//public boolean addCustomer(Customer customer, boolean toSampleTable);
-	public int getNumCustomers(boolean withAccounts, boolean fromSampleTable);
+	public int getNumCustomers(boolean fromSampleTable);
 	public ArrayList<String> getAllRecords(boolean fromSampleTable);
 	public void printAllCustomers(boolean fromSampleTable);
 	public ArrayList<Integer> getOpenIDs(boolean fromSampleTable);

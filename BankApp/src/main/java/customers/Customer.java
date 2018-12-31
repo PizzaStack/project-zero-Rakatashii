@@ -23,9 +23,9 @@ public class Customer extends UnverifiedCustomer{
 	protected boolean verified = true;
 	
 	private boolean flagged = false;
-	private boolean shared = false;
-	private Customer sharedCustomer = null;
-	private int sharedCustomerID;
+	private boolean joint = false;
+	private Customer jointCustomer = null;
+	private int jointCustomerID = -1;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
 	//protected static int numCustomers = customerDAO.getNumCustomers(true, sampleMode)+1;
@@ -55,7 +55,7 @@ public class Customer extends UnverifiedCustomer{
 		if (customerContainerIsSet) customerContainer.push(this);
 		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
-	public Customer(int id, String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer) {
+	public Customer(int id, String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer, boolean joint, int jointCustomerID) {
 		//super(firstName, lastName, telephone, email, citizen, employed, employer);
 		if (id == -1) {
 			custID = numCustomers;
@@ -71,6 +71,8 @@ public class Customer extends UnverifiedCustomer{
 		this.isCitizen = citizen;
 		this.isEmployed = employed;
 		this.employer = employer;
+		this.joint = joint;
+		this.jointCustomerID = jointCustomerID;
 		if (customerContainer.checkUniqueCustomerInfo(this)) {
 			if (customerContainerIsSet) customerContainer.push(this);
 		}
@@ -125,15 +127,6 @@ public class Customer extends UnverifiedCustomer{
 	public boolean getIsCitizen()  { return this.isCitizen; }
 	public boolean getIsEmployed() { return this.isEmployed; }
 	public String getEmployer()    { return this.employer; }
-	
-	public int getSharedCustomerID() {
-		if (shared && sharedCustomer != null) {
-			return sharedCustomer.getCustomerID();
-		} else return -1;
-	}
-	public void setSharedCustomerID(int sharedCustomerID) {
-		this.sharedCustomerID = sharedCustomerID;
-	}
 
 	@Override
 	public void getInfo() {
@@ -180,7 +173,7 @@ public class Customer extends UnverifiedCustomer{
 				this.telephone, this.email, citizen, employed, this.employer, 
 				savings.getID(), savings.getBalance(), checking.getID(), checking.getBalance(),
 				helper.boolToString(this.isFlagged()), helper.boolToString(this.hasJointAccounts()), 
-				this.getSharedCustomerID()));
+				this.getJointCustomerID()));
 
 	}
 	public void printRowWithAccountInfo() {
@@ -204,7 +197,7 @@ public class Customer extends UnverifiedCustomer{
 				this.telephone, this.email, citizen, employed, this.employer, 
 				savings.getID(), savings.getBalance(), checking.getID(), checking.getBalance(),
 				helper.boolToString(this.isFlagged()), helper.boolToString(this.hasJointAccounts()), 
-				this.getSharedCustomerID());
+				this.getJointCustomerID());
 	}
 	
 	public void setSavingsAccount(SavingsAccount savings) {
@@ -239,13 +232,13 @@ public class Customer extends UnverifiedCustomer{
 		this.flagged = true;
 		if (this.hasSavingsAccount() && this.savingsAccount.isFlagged() == false) this.savingsAccount.flag();
 		if (this.hasCheckingAccount() && this.checkingAccount.isFlagged() == false) this.checkingAccount.flag();
-		if (this.sharedCustomer != null && this.sharedCustomer.isFlagged() == false) sharedCustomer.flag();
+		if (this.jointCustomer != null && this.jointCustomer.isFlagged() == false) jointCustomer.flag();
 	}
 	public void unflag() {
 		flagged = false;
 		if (this.hasSavingsAccount() && this.savingsAccount.isFlagged() == true) this.savingsAccount.unflag();
 		if (this.hasCheckingAccount() && this.checkingAccount.isFlagged() == true) this.checkingAccount.unflag();
-		if (this.sharedCustomer != null && this.sharedCustomer.isFlagged() == true) sharedCustomer.unflag();
+		if (this.jointCustomer != null && this.jointCustomer.isFlagged() == true) jointCustomer.unflag();
 		//log? System.out.println(this.username + " WAS FLAGGED IN CUSTOMER!!!");
 	}
 	public boolean isFlagged() {
@@ -257,13 +250,13 @@ public class Customer extends UnverifiedCustomer{
 	public static void sampleModeOn() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = true;
-		numCustomers = customerDAO.getNumCustomers(true,  sampleMode);
+		numCustomers = customerDAO.getNumCustomers(sampleMode);
 	}
 	public static void sampleModeOff() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = false;
 		numCustomers = 0;
-		numCustomers = customerDAO.getNumCustomers(true,  sampleMode);
+		numCustomers = customerDAO.getNumCustomers(sampleMode);
 	}
 	public int nextOpenID() {
 		int openID = numCustomers;
@@ -277,18 +270,27 @@ public class Customer extends UnverifiedCustomer{
 		return openID;
 	}
 	public boolean hasJointAccounts(){
-		return shared;
+		return joint;
 	}
-	public void setHasJointAccounts(boolean shared) {
-		this.shared = shared;
+	public void setHasJointAccounts(boolean joint) {
+		this.joint = joint;
 	}
-	public Customer getSharedCustomer() {
-		if (hasJointAccounts() && sharedCustomer != null) return sharedCustomer;
+	public Customer getJointCustomer() {
+		if (hasJointAccounts() && jointCustomer != null) return jointCustomer;
 		else return null;
 	}
-	public void setSharedCustomer(Customer c) {
-		this.sharedCustomer = c;
-		shared = true;
+	public void setJointCustomer(Customer c) {
+		this.jointCustomer = c;
+		joint = true;
+		this.jointCustomerID = jointCustomer.getCustomerID();
+		this.savingsAccount.setJointCustomer(c);
+		this.checkingAccount.setJointCustomer(c);
+	}
+	public int getJointCustomerID() {
+		return jointCustomerID;
+	}
+	public void setJointCustomerID(int jointCustomerID) {
+		this.jointCustomerID = jointCustomerID;
 	}
 	
 }

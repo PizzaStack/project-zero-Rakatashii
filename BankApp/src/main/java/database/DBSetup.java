@@ -104,7 +104,7 @@ public class DBSetup {
     	
     	DBUtil dbUtil = new DBUtil();
     	
-    	int numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
+    	int numSampleCustomersInDB = customerDAO.getNumCustomers(true);
     	int numSampleAccountsInDB = accountDAO.getNumAccounts(true);
     	
     	if (dbUtil.tableExists("sample_customers") == false || (numSampleCustomersInDB <= 1) || dbUtil.tableExists("sample_accounts") == false || (numSampleAccountsInDB <= 1)) {
@@ -154,7 +154,7 @@ public class DBSetup {
         		 		
         		//TODO make join table for customers and accounts
         	} 
-        	numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
+        	numSampleCustomersInDB = customerDAO.getNumCustomers(true);
         	numSampleAccountsInDB = accountDAO.getNumAccounts(true);
         	System.out.println();
         	System.out.println("updated sample_customers table...");
@@ -162,7 +162,7 @@ public class DBSetup {
     		System.out.println("updated sample_accounts table...");
     		System.out.println("sample_accounts count = " + numSampleAccountsInDB);
     	} else {
-    		numSampleCustomersInDB = customerDAO.getNumCustomers(true, true);
+    		numSampleCustomersInDB = customerDAO.getNumCustomers(true);
         	numSampleAccountsInDB = accountDAO.getNumAccounts(true);
     		System.out.println();
     		System.out.println("sample_customers table is not empty (OR)");
@@ -263,7 +263,7 @@ public class DBSetup {
 		Employee.sampleModeOff();
 		
 		Customer firstCustomer = new Customer(0, "customer", "password", "firstname", "lastname", 
-    			"telephone", "email", true, true, "employer");
+    			"telephone", "email", true, true, "employer", false, -1);
 		customerDAO.addCustomerWithAccount(firstCustomer, false);
 		firstCustomer.getSavingsAccount().deposit(10000.00);
 		firstCustomer.getCheckingAccount().deposit(1500.00);

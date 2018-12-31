@@ -35,7 +35,7 @@ public class CustomerOptions{
 			setCheckingAccountViewArrayValues();
 		} else if (customerMenuOption == CustomerMenus.SAVINGS) {
 			setSavingsAccountViewArrayValues();
-		}
+		} 
 		else {
 			mainMenuController.begin(Menus.DEFAULT);
 		}
@@ -45,7 +45,8 @@ public class CustomerOptions{
 		if (customerOptions.size() > 0) customerOptions.clear();
 		addFormattedOption(1, "to View Checkings Account");
 		addFormattedOption(2, "to View Savings Account");
-		addFormattedOption(3, "to Logout");
+		addFormattedOption(3, "to Add A Joint Customer");
+		addFormattedOption(4, "to Logout");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -69,7 +70,8 @@ public class CustomerOptions{
 		addFormattedOption(1, "Check Balance");
 		addFormattedOption(2, "Deposit");
 		addFormattedOption(3, "Withdraw");
-		addFormattedOption(4, "Go Back");
+		addFormattedOption(4, "Transfer To Checking Account");
+		addFormattedOption(5, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -91,7 +93,8 @@ public class CustomerOptions{
 		addFormattedOption(1, "Check Balance");
 		addFormattedOption(2, "Deposit");
 		addFormattedOption(3, "Withdraw");
-		addFormattedOption(4, "Go Back");
+		addFormattedOption(4, "Transfer To Savings Account");
+		addFormattedOption(5, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";

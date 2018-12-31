@@ -65,9 +65,10 @@ public class AdminOptions{
 		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Customers");
 		addFormattedOption(2, "Enable or Disable Customer Account");
-		addFormattedOption(3, "Register New Customer");
+		addFormattedOption(3, "View Joint Account Applications");
+		addFormattedOption(4, "Register New Customer");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(4, "Go Back");
+		addFormattedOption(5, "Go Back");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";

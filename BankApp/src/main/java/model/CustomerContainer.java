@@ -344,7 +344,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 	public boolean checkUniqueAccountInfo(Customer customer) {
 		for (Customer c : customers) {
 			if (customer.getSavingsAccount().getID() == c.getSavingsAccount().getID())
-				if (customer.getSharedCustomerID() != c.getCustomerID())
+				if (customer.getJointCustomerID() != c.getCustomerID())
 					return false;
 		}
 		return true;
