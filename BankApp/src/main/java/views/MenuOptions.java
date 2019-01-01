@@ -12,6 +12,7 @@ import com.BankApp.BankApp;
 import controller.LoginController;
 import controller.MainMenuController;
 import controller.MainMenuController.Menus;
+import utility.Symbols;
 import controller.CustomerController.CustomerMenus;
 
 public class MenuOptions { 
@@ -42,7 +43,7 @@ public class MenuOptions {
 		addFormattedOption(4, "For Admin Login");
 		
 		maxLineLength = maxOptionLength()-1;
-		lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		lineSeparator = "|" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "|\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
 		String title = "Main Menu";
@@ -60,11 +61,10 @@ public class MenuOptions {
 	public int displayHomeMenu() throws IOException {
 		for (int i = 0; i < mainOptions.size(); i++){
 			if (i != 0) System.out.print(lineSeparator);
-			if (i == 1 && LoginController.isLoggedIn()) {
-				System.out.println("* (Logged in as " + LoginController.getLoggedInUsername() + ")");
-				System.out.print(lineSeparator);
-			} 
-			System.out.print(mainOptions.get(i));
+			if (i != 0 && i != mainOptions.size()-1) System.out.print(Symbols.diamond 
+					+ mainOptions.get(i).substring(0,  mainOptions.get(i).length()-2) 
+					+ Symbols.diamond + "\n");
+			else System.out.print(mainOptions.get(i));
 		}
 		int selection = 0;
 		while (!inBounds(selection)) {
@@ -87,7 +87,11 @@ public class MenuOptions {
 			selection = 0;
 			System.out.println();
 			//System.out.print(lineSeparator);
-			System.out.print("* Select option number: "); 
+			//\u25BA
+			//\u2630
+			//\u2732
+			//\u273B
+			System.out.print(Symbols.blackDiamond + "  Select option number: "); 
 			selection = cin.nextInt();
 			//System.out.println();
 			//System.out.print("  --------- Selection = " + selection + lineSeparator.substring(15, lineSeparator.length()-1));
@@ -105,7 +109,7 @@ public class MenuOptions {
 		return max;
 	}
 	public void addFormattedOption(int i, String optionName) {
-		mainOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
+		mainOptions.add(String.format("  Select Option - %-2d- %-43s ", i, optionName));
 	}
 	public int getEndCondition() {
 		return endCondition;

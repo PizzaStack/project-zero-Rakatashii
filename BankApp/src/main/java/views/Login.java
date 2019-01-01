@@ -15,12 +15,12 @@ public class Login {
 	}
 	public String getUsername() {
 		//System.out.println();
-		System.out.print("Username: ");
+		System.out.print("  Username: ");
 		username = in.nextLine();
 		return username;
 	}
 	public String getPassword() {
-		System.out.print("Password: ");
+		System.out.print("  Password: ");
 		password = in.nextLine();
 		return password;
 	}

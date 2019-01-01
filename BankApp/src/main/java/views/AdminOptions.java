@@ -11,6 +11,7 @@ import controller.MainMenuController;
 import controller.MainMenuController.Menus;
 import employees.Admin;
 import employees.Employee;
+import utility.Symbols;
 
 
 public class AdminOptions{
@@ -43,7 +44,7 @@ public class AdminOptions{
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "Approve/Deny Applicant");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(3, "Go Back To Administrator Menu");
+		addFormattedOption(3, "Go Back To Administrati");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -69,7 +70,7 @@ public class AdminOptions{
 		addFormattedOption(4, "View Joint Account Applications");
 		addFormattedOption(5, "Register New Customer");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(6, "Go Back To Administrator Menu");
+		addFormattedOption(6, "Go Back To Administrator Options");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -94,10 +95,10 @@ public class AdminOptions{
 		addFormattedOption(3, "Logout And Return To Main Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
-		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		this.lineSeparator = "|" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "|\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Admin View";
+		String title = "Admin Options";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
@@ -114,10 +115,17 @@ public class AdminOptions{
 		for (int i = 0; i < adminOptions.size(); i++){
 			if (i != 0) System.out.print(lineSeparator);
 			if (i == 1 && LoginController.isLoggedIn()) {
-				System.out.println("* (Logged In As: " + LoginController.getLoggedInUsername() + ")");
+				String loginStatement = Symbols.whiteKing + " [Logged In As: " + LoginController.getLoggedInUsername() + "]";
+				System.out.println(loginStatement
+						+ String.join("", Collections.nCopies(maxLineLength-(1+loginStatement.length()), " "))
+						+ Symbols.whiteKing);
 				System.out.print(lineSeparator);
 			}
-			System.out.print(adminOptions.get(i));
+			//System.out.print(adminOptions.get(i));
+			if (i != 0 && i != adminOptions.size()-1) System.out.print(Symbols.diamond 
+					+ adminOptions.get(i).substring(0,  adminOptions.get(i).length()-2) 
+					+ Symbols.diamond + "\n");
+			else System.out.print(adminOptions.get(i));
 		}
 		int selection = 0;
 		while (!inBounds(selection)) {
@@ -139,7 +147,7 @@ public class AdminOptions{
 		while (!(inBounds(selection))) {
 			selection = 0;
 			System.out.println();
-			System.out.print("* Select Option Number: "); 
+			System.out.print(Symbols.blackDiamond + "  Select Option Number: "); 
 			
 			selection = cin.nextInt();
 			//System.out.print("- Selection = " + selection + lineSeparator.substring(15));
@@ -157,7 +165,7 @@ public class AdminOptions{
 		return max;
 	}
 	public void addFormattedOption(int i, String optionName) {
-		adminOptions.add(String.format("* Select Option - %-2d- %-41s *\n", i, optionName));
+		adminOptions.add(String.format("  Select Option - %-2d- %-43s ", i, optionName));
 	}
 	public int getEndCondition() {
 		return endCondition;
