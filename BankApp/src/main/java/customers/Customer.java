@@ -281,10 +281,12 @@ public class Customer extends UnverifiedCustomer{
 	}
 	public void setJointCustomer(Customer c) {
 		this.jointCustomer = c;
-		joint = true;
-		this.jointCustomerID = jointCustomer.getCustomerID();
-		this.savingsAccount.setJointCustomer(c);
-		this.checkingAccount.setJointCustomer(c);
+		if (jointCustomer != null) {
+			joint = true;
+			this.jointCustomerID = jointCustomer.getCustomerID();
+			this.savingsAccount.setJointCustomer(c);
+			this.checkingAccount.setJointCustomer(c);
+		}
 	}
 	public int getJointCustomerID() {
 		return jointCustomerID;
@@ -292,5 +294,18 @@ public class Customer extends UnverifiedCustomer{
 	public void setJointCustomerID(int jointCustomerID) {
 		this.jointCustomerID = jointCustomerID;
 	}
-	
+	public void unjoin() {
+		if (this.hasJointAccounts()) {
+			if (this.getJointCustomer() != null) {
+				this.jointCustomer.setHasJointAccounts(false);
+				this.jointCustomer.setJointCustomerID(-1);
+				if (this.jointCustomer.getJointCustomer() != null)
+					this.jointCustomer.makeNewAccounts();
+					this.jointCustomer.setJointCustomer(null);
+			}
+			setJointCustomer(null);
+			this.joint = false;
+			this.jointCustomerID = -1;
+		}
+	}
 }

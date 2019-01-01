@@ -54,7 +54,7 @@ public class MenuOptions {
 		
 		mainOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
 		endCondition = mainOptions.size();
-		addFormattedOption(mainOptions.size(), "Save Progress and Quit");
+		addFormattedOption(mainOptions.size(), "To Quit");
 		mainOptions.add(mainOptions.size(), menuEndLine);
 	} 
 	public int displayHomeMenu() throws IOException {

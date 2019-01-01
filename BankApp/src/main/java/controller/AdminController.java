@@ -6,6 +6,9 @@ import java.util.Scanner;
 
 import DAO.CustomerDAO;
 import DAO.UnverifiedCustomerDAO;
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
+import model.AccountContainer;
 import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
@@ -71,6 +74,196 @@ public class AdminController{
 		} else if (selection == 2) {
 			Scanner cin = new Scanner(System.in);
 			
+			String header = "------------------------- Edit Options --------------------------";
+			String footer = "-----------------------------------------------------------------";
+
+			System.out.println(header);
+			System.out.println();
+			int customerID;
+			System.out.print("Enter Customer_ID (\"0\" To Return To Menu): ");
+			customerID = Integer.parseInt(cin.nextLine());
+			boolean found = false;
+			
+			Customer customer = null;
+			customerDAO = new CustomerDAO();
+			ArrayList<Customer> DBcustomers = customerDAO.getAllCustomers(false);
+			ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
+			if (customerDAO.checkIfCustomerExists(customerID, false)) {
+				found = true;
+				customer = customerDAO.findCustomerByID(customerID, false);
+			} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
+			
+			int option = -1;
+			int numOptions = 8;
+			while (found && customer != null && option != 0){
+				if (option != -1) {
+					System.out.println();
+					System.out.println(header);
+				}
+				System.out.println();
+				System.out.println("Customer Information: ");
+				containers.getCustomerContainer().printColumnNames();
+				customer.printRow();
+				System.out.println();
+				System.out.println("\"0\" - To Quit.");
+				System.out.println("\"1\" - To Generate New Savings Account Number.");
+				System.out.println("\"2\" - To Add Custom Savings Account Number.");
+				System.out.println("\"3\" - To Alter Savings Account Balance.");
+				System.out.println("\"4\" - To Generate New Checking Account Number.");
+				System.out.println("\"5\" - To Add Custom Checking Account Number.");
+				System.out.println("\"6\" - To Alter Checking Account Balance.");
+				System.out.println("\"7\" - To Unlink Joint Accounts (This ID Will Be The New Account Holder).");
+				System.out.println("\"8\" - To Delete Customer.");
+				System.out.println();
+				System.out.println(footer);
+				System.out.println();
+				System.out.print("Select Option: ");
+				option = Integer.parseInt(cin.nextLine());
+				
+				SavingsAccount savings = customer.getSavingsAccount();
+				CheckingAccount checking = customer.getCheckingAccount();
+				
+				Customer jointCustomer = null;
+				if (customer.hasJointAccounts())
+					if (customer.getJointCustomer() == null) {
+						if (customerDAO.checkIfCustomerExists(customer.getJointCustomerID(), false))
+							jointCustomer = customerDAO.findCustomerByID(customer.getJointCustomerID(), false);
+					} else jointCustomer = customer.getJointCustomer();
+				
+				boolean finishedOption = false;
+				System.out.println();
+				if (option >= 0 && option <= numOptions) {
+					if (option == 0) {
+						System.out.println("Returning To The Menu.");
+						System.out.println();
+						break;
+					} else if (option == 1) {
+						savings.setID(AccountContainer.generateNewID(10));
+						customerDAO.updateCustomerAndAccounts(customer, false);
+						if (jointCustomer != null) {
+							jointCustomer.getSavingsAccount().setID(customer.getSavingsAccount().getID());
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						System.out.println("New Savings Account ID: " + checking.getID());
+						System.out.println();
+						finishedOption = true;
+					} else if (option == 2) {
+						String savingsID;
+						System.out.print("Enter A New Savings Account Number: ");
+						savingsID = cin.nextLine();
+						savings.setID(savingsID);
+						customerDAO.updateCustomerAndAccounts(customer, false);
+						if (jointCustomer != null) {
+							jointCustomer.getSavingsAccount().setID(savingsID);
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						System.out.println();
+						finishedOption = true;
+					}
+					else if (option == 3) {
+						if (customer.isFlagged()) {
+							customer.unflag();
+							System.out.println("WARNING. Customer " + customer.getID() + " Has Been Re-Enabled.");
+							System.out.println();
+						}
+						double newBalance = 0.0;
+						System.out.print("Enter A New Savings Account Balance $");
+						newBalance = Double.parseDouble(cin.nextLine());
+						savings.setBalance(newBalance);
+						if (customer.isFlagged()) customer.unflag();
+						if (savings.getBalance() == 0 && newBalance != 0) System.out.println("Error. Customer Will Not Be Updated.");
+						else {
+							customerDAO.updateCustomerAndAccounts(customer, false);
+							if (jointCustomer != null) {
+								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+							}
+						}
+						System.out.println();
+						finishedOption = true;
+					} else if (option == 4) {
+						checking.setID(AccountContainer.generateNewID(10));
+						customerDAO.updateCustomerAndAccounts(customer, false);
+						if (jointCustomer != null) {
+							jointCustomer.getCheckingAccount().setID(customer.getCheckingAccount().getID());
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						System.out.println("New Checking Account ID: " + checking.getID());
+						System.out.println();
+						finishedOption = true;
+					} else if (option == 5) {
+						String checkingID;
+						System.out.print("Enter A New Checking Account Number: ");
+						checkingID = cin.nextLine();
+						checking.setID(checkingID);
+						customerDAO.updateCustomerAndAccounts(customer, false);
+						if (jointCustomer != null) {
+							jointCustomer.getCheckingAccount().setID(checkingID);
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						System.out.println();
+						finishedOption = true;
+					}
+					else if (option == 6) {
+						if (customer.isFlagged()) {
+							customer.unflag();
+							System.out.println("WARNING. Customer " + customer.getID() + " Has Been Re-Enabled.");
+							System.out.println();
+						}
+						double newBalance = 0.0;
+						System.out.print("Enter A New Checking Account Balance $");
+						newBalance = Double.parseDouble(cin.nextLine());
+						checking.setBalance(newBalance);
+						if (customer.isFlagged()) customer.unflag();
+						if (savings.getBalance() == 0 && newBalance != 0) System.out.println("Error. Customer Will Not Be Updated.");
+						else {
+							customerDAO.updateCustomerAndAccounts(customer, false);
+							if (jointCustomer != null) {
+								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+							}
+						}
+						System.out.println();
+						finishedOption = true;
+					} else if (option == 7) {
+						if (customer.hasJointAccounts()) {
+							customer.unjoin();
+							System.out.println("Customers " + customer.getUsername() + " And " + jointCustomer.getUsername() + " Have Been Unjoined.");
+						} else 
+							System.out.println("Customer " + customer.getUsername() + " Is Not Joined To Another Account.");
+						if (jointCustomer != null) {
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						System.out.println();
+						finishedOption = true;
+					} else if (option == 8) {
+						if (jointCustomer != null) {
+							jointCustomer.unjoin();
+							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+						}
+						customerDAO.deleteCustomer(customer, false);
+						System.out.println();
+						finishedOption = true;
+					}
+					
+					if (finishedOption == true) {
+						String done = "";
+						while (!done.toLowerCase().contains("m") && !done.toLowerCase().contains("e")) {
+							System.out.println("Enter \"m\" To Return To The Main Menu, Or \"e\" To Continue Editing");
+							done = cin.nextLine();
+							if (done.toLowerCase().contains("m")) {
+								return;
+							} else if (done.toLowerCase().contains("e")) {
+								continue;
+							}
+						}
+					}
+
+				}
+				
+			}
+			return;
+		} else if (selection == 3) {
+			Scanner cin = new Scanner(System.in);
+			
 			int customerID;
 			System.out.print("Enter Customer_ID: ");
 			customerID = Integer.parseInt(cin.nextLine());
@@ -130,7 +323,7 @@ public class AdminController{
 
 			System.out.println();
 			return;
-		} else if (selection == 3) {
+		} else if (selection == 4) {
 			
 			customerDAO = new CustomerDAO();
 			ArrayList<Customer> jointApplicants = new ArrayList<Customer>();
@@ -146,6 +339,7 @@ public class AdminController{
 				}
 			} else {
 				System.out.println("No Active Joint Applications Were Found. ");
+				System.out.println();
 				return;
 			}
 			
@@ -216,7 +410,7 @@ public class AdminController{
 				}
 			}
 			
-		} else if (selection == 4) {
+		} else if (selection == 5) {
 			RegistrationController registrationController = new RegistrationController();
 			registrationController.passContainers(containers);
 			registrationController.call();

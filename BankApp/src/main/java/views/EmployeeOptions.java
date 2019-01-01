@@ -42,13 +42,13 @@ public class EmployeeOptions{
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "View Applicant By ID");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(3, "Go Back");
+		addFormattedOption(3, "Go Back To Employee Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Customer Database";
+		String title = "New Customer Applications";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
@@ -65,7 +65,7 @@ public class EmployeeOptions{
 		addFormattedOption(1, "View All Customers");
 		addFormattedOption(2, "View Customer By ID");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(3, "Go Back");
+		addFormattedOption(3, "Go Back To Employee Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -87,13 +87,13 @@ public class EmployeeOptions{
 		if (employeeOptions.size() > 0) employeeOptions.clear();
 		addFormattedOption(1, "Customer Database");
 		addFormattedOption(2, "Applicant Database");
-		addFormattedOption(3, "to Logout");
+		addFormattedOption(3, "Logout And Return To Main Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Employee View";
+		String title = "Employee Menu";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));

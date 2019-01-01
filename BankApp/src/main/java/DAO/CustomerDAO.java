@@ -12,6 +12,7 @@ import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import customers.Customer;
 import customers.CustomerBuilder;
+import customers.UnverifiedCustomer;
 import database.DBConnection;
 import database.DBUtil;
 import utility.Helpers;
@@ -166,6 +167,24 @@ public class CustomerDAO implements CustomerDAOInterface {
 		//updateCustomer(customer, toSampleTable);
 		//accountDAO.updateAccounts(customer, toSampleTable);
 	}	
+    public void deleteCustomer(Customer customer, boolean fromSampleTable) {
+    	String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
+        String sql = "DELETE FROM " + tableName + " WHERE customer_id = ?";
+        int customerID = customer.getID();
+ 
+        try {
+        	Connection connection = DBConnection.getConnection();
+        	PreparedStatement ps = connection.prepareStatement(sql);
+ 
+            ps.setInt(1, customerID);
+            ps.executeUpdate();
+ 
+            ps.close();
+        } catch (SQLException e) {
+        	//e.printStackTrace(); System.out.println();
+            //System.out.println(e.getMessage()); System.out.println();
+        }
+    }
 	/*
 	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";

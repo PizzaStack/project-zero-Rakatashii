@@ -78,5 +78,4 @@ public class DBUtil {
 		System.out.println("Number of           Employee (sample) Records: " + employeeDAO.getNumEmployees(true));
 		System.out.println("Number of              Admin (sample) Records: " + adminDAO.getNumAdmins(true));
 	}
-	
 }

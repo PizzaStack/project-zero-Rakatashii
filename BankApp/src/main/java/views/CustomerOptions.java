@@ -46,20 +46,20 @@ public class CustomerOptions{
 		addFormattedOption(1, "to View Checkings Account");
 		addFormattedOption(2, "to View Savings Account");
 		addFormattedOption(3, "to Add A Joint Customer");
-		addFormattedOption(4, "to Logout");
+		addFormattedOption(4, "Logout And Return To Main Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
-		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Accounts:";
+		String title = "Accounts";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
-		String menuLeftHalf = menuSideLine + " ";
-		String menuRightHalf = " " + menuSideLine + "-";
+		String menuLeftHalf = menuSideLine + "- ";
+		String menuRightHalf = " --" + menuSideLine;
 		
-		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
+		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "\n");
 		this.endCondition = customerOptions.size();
 		if (endCondition == customerOptions.size()) endCondition--;
 		this.customerOptions.add(customerOptions.size(), menuEndLine);
@@ -71,7 +71,7 @@ public class CustomerOptions{
 		addFormattedOption(2, "Deposit");
 		addFormattedOption(3, "Withdraw");
 		addFormattedOption(4, "Transfer To Checking Account");
-		addFormattedOption(5, "Go Back");
+		addFormattedOption(5, "Go Back To Accounts Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -94,7 +94,7 @@ public class CustomerOptions{
 		addFormattedOption(2, "Deposit");
 		addFormattedOption(3, "Withdraw");
 		addFormattedOption(4, "Transfer To Savings Account");
-		addFormattedOption(5, "Go Back");
+		addFormattedOption(5, "Go Back To Accounts Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -104,10 +104,10 @@ public class CustomerOptions{
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
-		String menuLeftHalf = menuSideLine + " ";
-		String menuRightHalf = " " + menuSideLine + "-";
+		String menuLeftHalf = menuSideLine + "- ";
+		String menuRightHalf = " -" + menuSideLine;
 		
-		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + "-" + menuRightHalf) + "-\n");
+		this.customerOptions.add(0, String.join(" ", menuLeftHalf + title + menuRightHalf) + "-\n");
 		this.endCondition = customerOptions.size();
 		if (endCondition == customerOptions.size()) endCondition--;
 		this.customerOptions.add(customerOptions.size(), menuEndLine);

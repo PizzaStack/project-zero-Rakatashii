@@ -43,13 +43,13 @@ public class AdminOptions{
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "Approve/Deny Applicant");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(3, "Go Back");
+		addFormattedOption(3, "Go Back To Administrator Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
-		String title = "Customer Database";
+		String title = "New Applications";
 		int halfLineLength = (maxLineLength / 2) - (title.length() / 2) - 2;
 		
 		String menuSideLine = String.join("", Collections.nCopies(halfLineLength, "-"));
@@ -64,11 +64,12 @@ public class AdminOptions{
 	private void setCustomersViewArrayValues() {
 		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "View All Customers");
-		addFormattedOption(2, "Enable or Disable Customer Account");
-		addFormattedOption(3, "View Joint Account Applications");
-		addFormattedOption(4, "Register New Customer");
+		addFormattedOption(2, "Edit Customer Account");
+		addFormattedOption(3, "Enable or Disable Customer Account");
+		addFormattedOption(4, "View Joint Account Applications");
+		addFormattedOption(5, "Register New Customer");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(5, "Go Back");
+		addFormattedOption(6, "Go Back To Administrator Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -90,7 +91,7 @@ public class AdminOptions{
 		if (adminOptions.size() > 0) adminOptions.clear();
 		addFormattedOption(1, "Customer Database");
 		addFormattedOption(2, "Applicant Database");
-		addFormattedOption(3, "to Logout");
+		addFormattedOption(3, "Logout And Return To Main Menu");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
