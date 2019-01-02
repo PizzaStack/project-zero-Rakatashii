@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import DAO.CustomerDAO;
 import DAO.UnverifiedCustomerDAO;
 import model.Containers;
@@ -30,6 +32,8 @@ public class EmployeeController {
 	CustomerDAO customerDAO;
 	UnverifiedCustomerDAO unverifiedDAO;
 	
+	static final Logger log = Logger.getLogger(EmployeeController.class);
+	
 	public EmployeeController() { }
 	public EmployeeController(MainMenuController mainMenu, Containers containers) { 
 		if (LoginController.isLoggedIn()) employee = LoginController.getLoggedInEmployee();
@@ -40,23 +44,13 @@ public class EmployeeController {
 	public void selectCustomerOption(int selection) throws InterruptedException {
 			
 		if (selection == 1) {
-			//System.out.println();
 			customerDAO = new CustomerDAO();
 			containers.getCustomerContainer().printColumnNames();
-			//customerDAO.printAllCustomers(false);
-			//ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
-			//System.out.println("From DAO: ");
 			ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
 			for (Customer c : customers) {
 				c.printRow();
 			}
 			System.out.println();
-			
-			/*
-			System.out.println("From Containers");
-			containers.getCustomerContainer().printAll();
-			System.out.println();
-			*/
 			
 			Scanner cin = new Scanner(System.in);
 			String done = "";
@@ -81,14 +75,11 @@ public class EmployeeController {
 			if (customerID < customers.size()) {
 				customer = customers.get(customerID);
 				if (customer != null) {
-					//containers.getCustomerContainer().printColumnNames(true);
-					//customer.printRow();
 					found = true;
 				} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
 			} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
 			
 			if (found && customer != null){
-				//System.out.println("customer username is " + customer.getUsername());
 				String done = "";
 				while (!done.toLowerCase().contains("c")) {
 					containers.getCustomerContainer().printColumnNames();
@@ -101,8 +92,8 @@ public class EmployeeController {
 						done = cin.next();
 						if (done.toLowerCase().contains("e")) {
 							customer.unflag();
+							log.debug("Attempting to unflag customer where customer_id = " + customer.getID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
-							//commitCustomerChanges();
 						} else if (done.toLowerCase().contains("c"))
 							break;
 					} else {
@@ -110,14 +101,13 @@ public class EmployeeController {
 						done = cin.next();
 						if (done.toLowerCase().contains("d")) {
 							customer.flag();
+							log.debug("Attempting to flag customer where customer_id = " + customer.getID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
-							//commitCustomerChanges();
 						}
 						else if (done.toLowerCase().contains("c")) 
 							break;
 					}
 				}
-				
 			} else {
 				String done = "";
 				while (!done.toLowerCase().contains("c")) {
@@ -125,7 +115,6 @@ public class EmployeeController {
 					done = cin.next();
 				}
 			}
-
 			System.out.println();
 			return;
 		} else if (selection == stop) {
@@ -141,6 +130,7 @@ public class EmployeeController {
 		customerDAO = new CustomerDAO();
 		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
 		ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
+		log.debug("Attempting to update all customers in ArrayList from customerDAO:");
 		if (customers != null) {
 			for (Customer c : customers) {
 				if (c != null) {
@@ -149,6 +139,7 @@ public class EmployeeController {
 				} else System.out.println("Unable to update customer.");
 			}
 		} else System.out.println("Unable to update customer.");
+		log.debug("End update all customers in ArrayList from customerDAO:");
 	
 		System.out.println();
 		return;
@@ -160,12 +151,9 @@ public class EmployeeController {
 			System.out.println();
 			unverifiedDAO = new UnverifiedCustomerDAO();
 			containers.getUnverifiedContainer().printColumnNames();
-			//customerDAO.printAllCustomers(false);
-			//ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
 			System.out.println("From DAO: ");
 			ArrayList<UnverifiedCustomer> unverified = unverifiedDAO.getAllUnverifiedCustomers(false);
-			//ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>();
-			// Need ^ but have to make changes in DAO  first
+
 			for (UnverifiedCustomer c : unverified) {
 				c.printRow();
 			}
@@ -189,19 +177,17 @@ public class EmployeeController {
 			
 			UnverifiedCustomer applicant = null;
 			unverifiedDAO = new UnverifiedCustomerDAO();
-			//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
+
 			ArrayList<UnverifiedCustomer> unverifiedCustomers = containers.getUnverifiedContainer().getArrayList();
 			if (applicantID <= unverifiedDAO.getMaxID(false)) {
 				applicant = containers.getUnverifiedContainer().get(applicantID);
 				if (applicant != null) {
-					//containers.getCustomerContainer().printColumnNames(true);
-					//customer.printRow();
 					found = true;
 				} else System.out.println("No Customer Was Found With Applicant_ID: " + applicantID);
 			} else System.out.println("No Customer Was Found With Applicant_ID: " + applicantID);
 			
 			if (found && applicant != null){
-				//System.out.println("customer username is " + customer.getUsername());
+
 				String done = "";
 				while (!done.toLowerCase().contains("a") && !done.toLowerCase().contains("d")) {
 					containers.getUnverifiedContainer().printColumnNames();
@@ -217,15 +203,22 @@ public class EmployeeController {
 					if (done.toLowerCase().contains("a")) {
 						customerDAO = new CustomerDAO();
 						Customer newCustomer = applicant.convertToCustomer(null,  null);
+						log.debug("Attempting to approve application where unverified_id = " + applicant.getID() + " and create new customer with customer_id " + newCustomer.getID());
 						customerDAO.addCustomerWithAccount(newCustomer, false);
-						
 						containers.getUnverifiedContainer().remove(applicant);
 						unverifiedDAO.deleteUnverifiedCustomerWithID(applicantID,  false);
+						System.out.println("Success! New Accounts Have Been Established For " + newCustomer.getFirstname());
+						System.out.println("     Savings Account: " + newCustomer.getSavingsAccount().getID());
+						System.out.println("    Checking Account: " + newCustomer.getCheckingAccount().getID());
+						System.out.println();
 						break;
 					} else if (done.toLowerCase().contains("d")) {
 						containers.getUnverifiedContainer().remove(applicant);
+						log.debug("Attempting to discard application where unverified_id = " + applicant.getID());
 						unverifiedDAO.deleteUnverifiedCustomerWithID(applicantID,  false);
 						applicant = null;
+						System.out.println("The Application Has Been Erased... ");
+						System.out.println();
 						break;
 					} else if (done.toLowerCase().contains("c")) {
 						break;
@@ -243,10 +236,11 @@ public class EmployeeController {
 			begin(EmployeeMenus.SELECTION);
 		}
 	 }
+	
 	 public void commitApplicantChanges() {
 		unverifiedDAO = new UnverifiedCustomerDAO();
-		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
 		ArrayList<UnverifiedCustomer> applicants = containers.getUnverifiedContainer().getArrayList();
+		log.debug("Attempting to update all unverified customers in ArrayList from unverifiedCustomerDAO:");
 		if (applicants != null) {
 			for (UnverifiedCustomer c : applicants) {
 				if (c != null) {
@@ -255,6 +249,7 @@ public class EmployeeController {
 				} else System.out.println("Unable to update applicant.");
 			}
 		} else System.out.println("Unable to update applicant.");	
+		log.debug("End update all unverified customers in ArrayList from unverifiedCustomerDAO");
 		return;
 	} 
 	
@@ -274,6 +269,7 @@ public class EmployeeController {
 			begin(EmployeeMenus.SELECTION);
 		}
 	}
+	
 	public void begin(EmployeeMenus employeeMenu) throws InterruptedException {
 		if (employee == null) {
 			employee = LoginController.getLoggedInEmployee();
@@ -355,14 +351,4 @@ public class EmployeeController {
 			}
 		}
 	}
-	/*
-	public void passContainers(Containers containers) {
-		this.containers = containers;
-	}
-	*/
-	/*
-	void passLoginInfo(LoginController loginInfo){
-		this.login = loginInfo;
-	}
-	*/
 }

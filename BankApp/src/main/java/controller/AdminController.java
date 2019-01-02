@@ -52,21 +52,12 @@ public class AdminController{
 			//System.out.println();
 			customerDAO = new CustomerDAO();
 			containers.getCustomerContainer().printColumnNames();
-			//customerDAO.printAllCustomers(false);
-			
-			//System.out.println("From DAO: ");
+
 			ArrayList<Customer> DBcustomers = customerDAO.getAllCustomers(false);
 			for (Customer c : DBcustomers) {
 				c.printRow();
 			}
 			System.out.println();
-			//containers.getCustomerContainer().printAll();
-			
-			/*
-			System.out.println("From Containers");
-			containers.getCustomerContainer().printAll(true);
-			System.out.println();
-			*/
 			
 			Scanner cin = new Scanner(System.in);
 			String done = "";
@@ -143,10 +134,13 @@ public class AdminController{
 						System.out.println();
 						break;
 					} else if (option == 1) {
-						savings.setID(AccountContainer.generateNewID(10));
+						String savingsID = AccountContainer.generateNewID(10);
+						savings.setID(savingsID);
+						log.debug("Attempting to set savings_id to " + savingsID + " where customerID = " + jointCustomer.getCustomerID());
 						customerDAO.updateCustomerAndAccounts(customer, false);
 						if (jointCustomer != null) {
 							jointCustomer.getSavingsAccount().setID(customer.getSavingsAccount().getID());
+							log.debug("Attempting to set savings_id to " + savingsID + " where customerID = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						System.out.println("New Savings Account ID: " + checking.getID());
@@ -157,9 +151,11 @@ public class AdminController{
 						System.out.print("Enter A New Savings Account Number: ");
 						savingsID = cin.nextLine();
 						savings.setID(savingsID);
+						log.debug("Attempting to set savings_id to " + savingsID + " where customerID = " + customer.getCustomerID());
 						customerDAO.updateCustomerAndAccounts(customer, false);
 						if (jointCustomer != null) {
 							jointCustomer.getSavingsAccount().setID(savingsID);
+							log.debug("Attempting to set savings_id to " + savingsID + " where customerID = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						System.out.println();
@@ -178,18 +174,23 @@ public class AdminController{
 						if (customer.isFlagged()) customer.unflag();
 						if (savings.getBalance() == 0 && newBalance != 0) System.out.println("Error. Customer Will Not Be Updated.");
 						else {
+							log.debug("Attempting to set savings_balance to " + newBalance+ " where customerID = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
 							if (jointCustomer != null) {
+								log.debug("Attempting to set savings_balance to " + newBalance+ " where customerID = " + jointCustomer.getCustomerID());
 								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 							}
 						}
 						System.out.println();
 						finishedOption = true;
 					} else if (option == 4) {
-						checking.setID(AccountContainer.generateNewID(10));
+						String checkingID = AccountContainer.generateNewID(10);
+						checking.setID(checkingID);
+						log.debug("Attempting to set checking_id to " + checkingID + " where customerID = " + customer.getCustomerID());
 						customerDAO.updateCustomerAndAccounts(customer, false);
 						if (jointCustomer != null) {
 							jointCustomer.getCheckingAccount().setID(customer.getCheckingAccount().getID());
+							log.debug("Attempting to set checking_id to " + checkingID + " where customerID = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						System.out.println("New Checking Account ID: " + checking.getID());
@@ -200,9 +201,11 @@ public class AdminController{
 						System.out.print("Enter A New Checking Account Number: ");
 						checkingID = cin.nextLine();
 						checking.setID(checkingID);
+						log.debug("Attempting to set checking_id to " + checkingID + " where customerID = " + customer.getCustomerID());
 						customerDAO.updateCustomerAndAccounts(customer, false);
 						if (jointCustomer != null) {
 							jointCustomer.getCheckingAccount().setID(checkingID);
+							log.debug("Attempting to set checking_id to " + checkingID + " where customerID = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						System.out.println();
@@ -221,8 +224,10 @@ public class AdminController{
 						if (customer.isFlagged()) customer.unflag();
 						if (savings.getBalance() == 0 && newBalance != 0) System.out.println("Error. Customer Will Not Be Updated.");
 						else {
+							log.debug("Attempting to set checking_balance to " + newBalance + " where customerID = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
 							if (jointCustomer != null) {
+								log.debug("Attempting to set savings_balance to " + newBalance+ " where customerID = " + jointCustomer.getCustomerID());
 								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 							}
 						}
@@ -231,10 +236,13 @@ public class AdminController{
 					} else if (option == 7) {
 						if (customer.hasJointAccounts()) {
 							customer.unjoin();
+							log.debug("Attempting to unjoin accounts for where customer_id = " + customer.getCustomerID());
+							customerDAO.updateCustomerAndAccounts(customer, false);
 							System.out.println("Customers " + customer.getUsername() + " And " + jointCustomer.getUsername() + " Have Been Unjoined.");
 						} else 
 							System.out.println("Customer " + customer.getUsername() + " Is Not Joined To Another Account.");
 						if (jointCustomer != null) {
+							log.debug("Attempting to unjoin accounts for where customer_id = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						System.out.println();
@@ -242,6 +250,7 @@ public class AdminController{
 					} else if (option == 8) {
 						if (jointCustomer != null) {
 							jointCustomer.unjoin();
+							log.debug("Attempting to unjoin accounts for where customer_id = " + jointCustomer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						}
 						customerDAO.deleteCustomer(customer, false);
@@ -281,14 +290,11 @@ public class AdminController{
 			if (customerID < customers.size()) {
 				customer = customers.get(customerID);
 				if (customer != null) {
-					//containers.getCustomerContainer().printColumnNames(true);
-					//customer.printRow();
 					found = true;
 				} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
 			} else System.out.println("No Customer Was Found With Customer_ID: " + customerID);
 			
 			if (found && customer != null){
-				//System.out.println("customer username is " + customer.getUsername());
 				String done = "";
 				while (!done.toLowerCase().contains("c")) {
 					containers.getCustomerContainer().printColumnNames();
@@ -301,8 +307,8 @@ public class AdminController{
 						done = cin.next();
 						if (done.toLowerCase().contains("e")) {
 							customer.unflag();
+							log.debug("Attempting to unflag customer where customer_id = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
-							//commitCustomerChanges();
 						} else if (done.toLowerCase().contains("c"))
 							break;
 					} else {
@@ -310,11 +316,10 @@ public class AdminController{
 						done = cin.next();
 						if (done.toLowerCase().contains("d")) {
 							customer.flag();
+							log.debug("Attempting to flag customer where customer_id = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
-							//commitCustomerChanges();
 						}
-						else if (done.toLowerCase().contains("c")) 
-							break;
+						else if (done.toLowerCase().contains("c")) break;
 					}
 				}
 				
@@ -380,8 +385,8 @@ public class AdminController{
 			}
 			while (true) {
 				System.out.println();
-				System.out.println("Enter \"a\" To Authorize New Customer Application.\n"
-						+ "Enter \"d\" To Discard New Customer Application.\n"
+				System.out.println("Enter \"a\" To Authorize Joint Customer Application.\n"
+						+ "Enter \"d\" To Discard Joint Customer Application.\n"
 						+ "Enter \"c\" To Continue.");
 				System.out.println();
 				System.out.print("Choose Option: ");
@@ -395,6 +400,7 @@ public class AdminController{
 						
 						primary.setJointCustomer(jointCustomer);
 						jointCustomer.setJointCustomer(primary);
+						log.debug("Attempting to join customers where customer_id = " + primary.getCustomerID() + " and joint_customer_id = " + primary.getJointCustomerID());
 						customerDAO.updateCustomerAndAccounts(primary, false);
 						customerDAO.updateCustomerAndAccounts(jointCustomer, false);
 						
@@ -443,6 +449,7 @@ public class AdminController{
 				if (applicant != null) {
 					if (option.toLowerCase().contains("a")) {
 						Customer newCustomer = applicant.convertToCustomer(null,  null);
+						log.debug("Attempting to approve application where unverified_id = " + applicant.getID() + " and create new customer with customer_id " + newCustomer.getID());
 						customerDAO.addCustomerWithAccount(newCustomer, false);
 						containers.getUnverifiedContainer().remove(applicant);
 						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
@@ -454,6 +461,7 @@ public class AdminController{
 						break;
 					} else if (option.toLowerCase().contains("d")) {
 						System.out.println("Application Has Been Erased. ");
+						log.debug("Attempting to discard application where unverified_id = " + applicant.getID());
 						containers.getUnverifiedContainer().remove(applicant);
 						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
 						applicant = null;
@@ -477,8 +485,8 @@ public class AdminController{
 	
 	public void commitCustomerChanges() {
 		customerDAO = new CustomerDAO();
-		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
 		ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
+		log.debug("Attempting to update all customers in ArrayList from customerDAO:");
 		if (customers != null) {
 			for (Customer c : customers) {
 				if (c != null) {
@@ -487,6 +495,7 @@ public class AdminController{
 				} else System.out.println("Unable to update customer.");
 			}
 		} else System.out.println("Unable to update customer.");
+		log.debug("End update all customers in ArrayList from customerDAO");
 	
 		System.out.println();
 		return;
@@ -498,21 +507,11 @@ public class AdminController{
 			//System.out.println();
 			unverifiedDAO = new UnverifiedCustomerDAO();
 			containers.getUnverifiedContainer().printColumnNames();
-			//customerDAO.printAllCustomers(false);
-			//ArrayList<Customer> customers = containers.getCustomerContainer().getArrayList();
-			//System.out.println("From DAO: ");
 			ArrayList<UnverifiedCustomer> unverified = unverifiedDAO.getAllUnverifiedCustomers(false);
-			//ArrayList<UnverifiedCustomer> unverified = new ArrayList<UnverifiedCustomer>();
-			// Need ^ but have to make changes in DAO  first
 			for (UnverifiedCustomer c : unverified) {
 				c.printRow();
 			}
 			System.out.println();
-			/*
-			System.out.println();
-			System.out.println("From Containers");
-			containers.getUnverifiedContainer().printAll(true);
-			*/
 			
 			Scanner cin = new Scanner(System.in);
 			String done = "";
@@ -532,19 +531,16 @@ public class AdminController{
 			
 			UnverifiedCustomer applicant = null;
 			unverifiedDAO = new UnverifiedCustomerDAO();
-			//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
+
 			ArrayList<UnverifiedCustomer> unverifiedCustomers = containers.getUnverifiedContainer().getArrayList();
 			if (applicantID <= unverifiedDAO.getMaxID(false)) {
 				applicant = containers.getUnverifiedContainer().get(applicantID);
 				if (applicant != null) {
-					//containers.getCustomerContainer().printColumnNames(true);
-					//customer.printRow();
 					found = true;
 				} else System.out.println("No Customer Was Found With Applicant_ID: " + applicantID);
 			} else System.out.println("No Customer Was Found With Applicant_ID: " + applicantID);
 			
 			if (found && applicant != null){
-				//System.out.println("customer username is " + customer.getUsername());
 				String done = "";
 				while (!done.toLowerCase().contains("a") && !done.toLowerCase().contains("d")) {
 					containers.getUnverifiedContainer().printColumnNames();
@@ -560,6 +556,7 @@ public class AdminController{
 					customerDAO = new CustomerDAO();
 					if (done.toLowerCase().contains("a")) {
 						Customer newCustomer = applicant.convertToCustomer(null,  null);
+						log.debug("Attempting to approve application where unverified_id = " + applicant.getID() + " and create new customer with customer_id " + newCustomer.getID());
 						customerDAO.addCustomerWithAccount(newCustomer, false);
 						containers.getUnverifiedContainer().remove(applicant);
 						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
@@ -569,10 +566,11 @@ public class AdminController{
 						System.out.println("    Checking Account: " + newCustomer.getCheckingAccount().getID());
 						System.out.println();
 					} else if (done.toLowerCase().contains("d")) {
-						System.out.println("The Application Has Been Erased... ");
+						log.debug("Attempting to discard application where unverified_id = " + applicant.getID());
 						containers.getUnverifiedContainer().remove(applicant);
 						unverifiedDAO.deleteUnverifiedCustomer(applicant, false);
 						applicant = null;
+						System.out.println("The Application Has Been Erased... ");
 						System.out.println();
 					} else if (done.toLowerCase().contains("c")) {
 						break;
@@ -593,8 +591,9 @@ public class AdminController{
 	
 	public void commitApplicantChanges() {
 		unverifiedDAO = new UnverifiedCustomerDAO();
-		//ArrayList<Customer> customers = customerDAO.getAllCustomers(false);
+
 		ArrayList<UnverifiedCustomer> applicants = containers.getUnverifiedContainer().getArrayList();
+		log.debug("Attempting to update all unverified customers in ArrayList from unverifiedCustomerDAO:");
 		if (applicants != null) {
 			for (UnverifiedCustomer c : applicants) {
 				if (c != null) {
@@ -603,6 +602,7 @@ public class AdminController{
 				} else System.out.println("Unable to update applicant.");
 			}
 		} else System.out.println("Unable to update applicant.");	
+		log.debug("End update all unverified customers in ArrayList from unverifiedCustomerDAO");
 		return;
 	}
 	
@@ -623,6 +623,7 @@ public class AdminController{
 			begin(AdminMenus.SELECTION);
 		}
 	}
+	
 	public void begin(AdminMenus adminMenu) throws InterruptedException {
 		if (admin == null) {
 			admin = (Admin) LoginController.getLoggedInAdmin();

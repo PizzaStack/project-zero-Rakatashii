@@ -57,6 +57,7 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 			return false;
 		}
 	}
+	
 	@Override
 	public int getNumEmployees(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_employees" : "employees";
@@ -78,6 +79,7 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return 0;
 	}
+	
 	@Override
 	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_employees" : "employees";
@@ -105,12 +107,14 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return records;
 	}
+	
 	public void printAllEmployees(boolean fromSampleTable) {
 		ArrayList<String> actualEmployeeRecords = getAllRecords(fromSampleTable);
 		for (String actualEmployeeRecord : actualEmployeeRecords) {
 			System.out.println(actualEmployeeRecord);
 		}
 	}
+	
 	public ArrayList<Employee> getAllEmployees(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_employees" : "employees";
 		ArrayList<Employee> employees = new ArrayList<Employee>();
@@ -138,6 +142,7 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return employees;
 	}
+	
 	public ArrayList<Integer> getOpenIDs(boolean fromSampleTable){
 		ArrayList<Integer> openIDs = new ArrayList<Integer>();
 		String tableName = (fromSampleTable) ? "sample_employees" : "employees";
@@ -161,6 +166,7 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return openIDs;
 	}
+	
 	public int getMaxEmployeeID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_employees" : "employees";
 		int maxID = 0;
@@ -182,5 +188,4 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return maxID;
 	}
-	
 }

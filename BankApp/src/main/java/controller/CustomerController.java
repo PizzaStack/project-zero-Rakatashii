@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import DAO.CustomerDAO;
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
@@ -26,6 +28,8 @@ public class CustomerController{
 	
 	private CustomerContainer customerContainer;
 	private CustomerDAO customerDAO;
+	
+	static final Logger log = Logger.getLogger(CustomerController.class);
 	
 	public CustomerController(MainMenuController mainMenu, CustomerContainer customerContainer){
 		if (LoginController.isLoggedIn()) this.customer = LoginController.getLoggedInCustomer();
@@ -65,6 +69,7 @@ public class CustomerController{
 			else {
 				checking.deposit(depositAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to deposit " + depositAmount + " into checking account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
 				System.out.println("Success! $" + depositAmount + " Has Been Added To Your Checking Account.");
 			}
@@ -94,6 +99,7 @@ public class CustomerController{
 			else {
 				checking.withdraw(withdrawelAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to withdraw " + withdrawelAmount + " from checking account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
 				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Checking Account.");
 			}
@@ -124,6 +130,7 @@ public class CustomerController{
 			else {
 				checking.transferToSavings(transferAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to transfer " + transferAmount + " from checking account to savings account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
 				System.out.println("Success! $" + transferAmount + " Has Been Deposited To Your Savings Account.");
 			}
@@ -175,6 +182,7 @@ public class CustomerController{
 			else {
 				savings.deposit(depositAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to deposit " + depositAmount + " into savings account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
 				System.out.println(String.format("Success! $%.2f Has Been Added To Your Savings Account.", depositAmount));
 			}
@@ -204,6 +212,7 @@ public class CustomerController{
 			else {
 				savings.withdraw(withdrawelAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to withdraw " + withdrawelAmount + " from savings account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
 				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Savings Account.");
 			}
@@ -234,6 +243,7 @@ public class CustomerController{
 			else {
 				savings.transferToChecking(transferAmount);
 				customerDAO = new CustomerDAO();
+				log.debug("Attempting to transfer " + transferAmount + " from savings account to checking account where customer_id = " + customer.getID());
 				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
 				System.out.println("Success! $" + transferAmount + " Has Been Deposited To Your Checking Account.");
 			}
@@ -274,6 +284,7 @@ public class CustomerController{
 				boolean customerFound = customerDAO.checkIfCustomerExists(customerID, false);
 				if (customerFound) {
 					customer.setJointCustomerID(customerID);
+					log.debug("Attempting to create new joint customer application for customer where customer_id = " + customer.getID());
 					customerDAO.updateCustomerAndAccounts(customer,  false);
 					System.out.println("Success! Your Application Has Been Submitted For Administrative Approval. \n" + 
 							"It May Take A Few Days To Process Your Request.");
@@ -386,25 +397,10 @@ public class CustomerController{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				/*
-				try {
-					selection = customerOptions.displayAccountsMenu();
-					if (this.customerOptions.inBounds(selection)) selectCustomerOption(selection);
-					else continue;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				*/
 			}
 		}
-		//return customerOption;
 	}
 	public void passCustomerContainer(CustomerContainer customerContainer) {
 		this.customerContainer = customerContainer;
 	}
-	/*
-	void passLoginInfo(LoginController loginInfo){
-		this.login = loginInfo;
-	}
-	*/
 }

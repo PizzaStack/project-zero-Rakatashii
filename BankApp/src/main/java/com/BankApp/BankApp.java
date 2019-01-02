@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import DAO.AccountDAO;
@@ -51,6 +52,8 @@ public class BankApp
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
     	PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator +
     			"\\src\\main\\java\\resources\\log4j.properties");
+    	final Logger log = Logger.getLogger(BankApp.class);
+    	log.debug("New Run: ");
     	
     	DBSetup setup = new DBSetup(true);
     	setup.initializeSampleTables();
@@ -92,6 +95,7 @@ public class BankApp
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
     	System.out.println("Program Terminated.");
+    	log.debug("Program Reached End.");
     }
     
     /** TODO Checklist

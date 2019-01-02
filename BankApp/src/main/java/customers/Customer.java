@@ -61,7 +61,6 @@ public class Customer extends UnverifiedCustomer{
 			custID = numCustomers;
 			++numCustomers;
 		} else this.custID = id;
-		//System.out.println("customer " + username + " has id = " + this.custID);
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -76,11 +75,7 @@ public class Customer extends UnverifiedCustomer{
 		if (customerContainer.checkUniqueCustomerInfo(this)) {
 			if (customerContainerIsSet) customerContainer.push(this);
 		}
-			/*if (custID != -1) {
-				custID = numCustomers - 1;
-				++numCustomers;
-			} else custID = customerDAO.getNumCustomers(true, sampleMode) - 1;
-		} else custID = -1;*/
+
 		--numUnverifiedCustomers;
 		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
@@ -150,17 +145,7 @@ public class Customer extends UnverifiedCustomer{
 		else 
 			System.out.println("Currently employed: false");
 	}
-	/*
-	@Override
-	public void printRow() {
-		Helpers helper = new Helpers();
-		String citizen = helper.boolToString(this.isCitizen);
-		String employed = helper.boolToString(this.isEmployed);
-		System.out.printf(String.format("%-10d%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-15s\n", 
-				this.getID(), this.username, this.password, this.firstName, this.lastName, 
-				this.telephone, this.email, citizen, employed, this.employer, 
-				helper.boolToString(this.flagged)));
-	} */
+
 	public void printRow() {
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
@@ -174,8 +159,8 @@ public class Customer extends UnverifiedCustomer{
 				savings.getID(), savings.getBalance(), checking.getID(), checking.getBalance(),
 				helper.boolToString(this.isFlagged()), helper.boolToString(this.hasJointAccounts()), 
 				this.getJointCustomerID()));
-
 	}
+	
 	public void printRowWithAccountInfo() {
 		Helpers helper = new Helpers();
 		String citizen = helper.boolToString(this.isCitizen);
@@ -185,6 +170,7 @@ public class Customer extends UnverifiedCustomer{
 				this.telephone, this.email, citizen, employed, this.employer, 
 				helper.boolToString(this.flagged)));
 	}
+	
 	@Override
 	public String getRow() {
 		Helpers helper = new Helpers();
@@ -204,36 +190,44 @@ public class Customer extends UnverifiedCustomer{
 		this.savingsAccount = savings;
 		this.savingsAccount.setOwner(this);
 	}
+	
 	public SavingsAccount getSavingsAccount() {
 		return savingsAccount;
 	}
+	
 	public void setCheckingAccount(CheckingAccount checking) {
 		this.checkingAccount = checking;
 		this.checkingAccount.setOwner(this);
 	}
+	
 	public CheckingAccount getCheckingAccount() {
 		return checkingAccount;
 	}
+	
 	public boolean hasSavingsAccount() {
 		if (savingsAccount == null) return false;
 		return true;
 	}
+	
 	public boolean hasCheckingAccount() {
 		if (checkingAccount == null) return false;
 		return true;
 	}
+	
 	public void makeNewAccounts() {
 		this.savingsAccount = new SavingsAccount(this);
 		this.checkingAccount = new CheckingAccount(this);
 		this.savingsAccount.setPairedAccount(this.checkingAccount);
 		this.checkingAccount.setPairedAccount(this.savingsAccount);
 	}
+	
 	public void flag() {
 		this.flagged = true;
 		if (this.hasSavingsAccount() && this.savingsAccount.isFlagged() == false) this.savingsAccount.flag();
 		if (this.hasCheckingAccount() && this.checkingAccount.isFlagged() == false) this.checkingAccount.flag();
 		if (this.jointCustomer != null && this.jointCustomer.isFlagged() == false) jointCustomer.flag();
 	}
+	
 	public void unflag() {
 		flagged = false;
 		if (this.hasSavingsAccount() && this.savingsAccount.isFlagged() == true) this.savingsAccount.unflag();
@@ -241,23 +235,28 @@ public class Customer extends UnverifiedCustomer{
 		if (this.jointCustomer != null && this.jointCustomer.isFlagged() == true) jointCustomer.unflag();
 		//log? System.out.println(this.username + " WAS FLAGGED IN CUSTOMER!!!");
 	}
+	
 	public boolean isFlagged() {
 		return flagged;
 	}
+	
 	public static void synchronizeIDsWithDB() {
 		openIDs = customerDAO.getOpenIDs(sampleMode);
 	}
+	
 	public static void sampleModeOn() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = true;
 		numCustomers = customerDAO.getNumCustomers(sampleMode);
 	}
+	
 	public static void sampleModeOff() {
 		if (openIDs != null) openIDs.clear();
 		sampleMode = false;
 		numCustomers = 0;
 		numCustomers = customerDAO.getNumCustomers(sampleMode);
 	}
+	
 	public int nextOpenID() {
 		int openID = numCustomers;
 		if (openIDs != null && openIDs.size() <= 1) synchronizeIDsWithDB();
@@ -269,16 +268,20 @@ public class Customer extends UnverifiedCustomer{
 		}
 		return openID;
 	}
+	
 	public boolean hasJointAccounts(){
 		return joint;
 	}
+	
 	public void setHasJointAccounts(boolean joint) {
 		this.joint = joint;
 	}
+	
 	public Customer getJointCustomer() {
 		if (hasJointAccounts() && jointCustomer != null) return jointCustomer;
 		else return null;
 	}
+	
 	public void setJointCustomer(Customer c) {
 		this.jointCustomer = c;
 		if (jointCustomer != null) {
@@ -288,12 +291,15 @@ public class Customer extends UnverifiedCustomer{
 			this.checkingAccount.setJointCustomer(c);
 		}
 	}
+	
 	public int getJointCustomerID() {
 		return jointCustomerID;
 	}
+	
 	public void setJointCustomerID(int jointCustomerID) {
 		this.jointCustomerID = jointCustomerID;
 	}
+	
 	public void unjoin() {
 		if (this.hasJointAccounts()) {
 			if (this.getJointCustomer() != null) {
