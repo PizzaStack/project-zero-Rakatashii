@@ -1,5 +1,6 @@
 package com.BankApp;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -19,6 +20,10 @@ import java.util.ArrayList;
 
 public class BankAppTest
 {	
+	CustomerContainer customers;
+	ArrayList<Customer> customerContainer;
+	Customer customer1, customer2;
+	
 	EmployeeContainer<Employee> admins;
 	ArrayList<Employee> adminContainer;
 	Admin admin1, admin2;
@@ -31,79 +36,72 @@ public class BankAppTest
 	ArrayList<UnverifiedCustomer> unverifiedContainer;
 	UnverifiedCustomer unverifiedCustomer1, unverifiedCustomer2;
 	
-	CustomerContainer customers;
-	ArrayList<Customer> customerContainer;
-	Customer customer1, customer2;
+	boolean match1, match2, match3, match4, match5, match6, match7, match8;
+	String name1, name2, name3, name4, name5, name6, name7, name8;
 	
-	//@BeforeClass
-	/* public void setUp() { Apparently @BeforeClass -> setUp must be static... @Before prob worse } */
-	// opting to redefine in each @test..
-	
-	@Test
-	public void checkPersonSubclassCountsDoNotInterfere() {
-		unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
-    	unverifiedContainer = unverified.getArrayList();
+	@Before
+	public void SetUp() {
     	customers = new CustomerContainer();
     	customerContainer = customers.getArrayList();
+		unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+    	unverifiedContainer = unverified.getArrayList();
     	employees = new EmployeeContainer<Employee>();
     	employeeContainer = employees.getArrayList();
     	admins = new EmployeeContainer<Employee>();
     	adminContainer = admins.getArrayList();
-    	
-		customer1 = new Customer("Lindsay", "Lohan"); 
-		unverifiedCustomer1 = new UnverifiedCustomer("Harry", "Hacker"); 
-		customer2 = new CustomerBuilder()
+
+		Customer.passCustomerContainer(customers);
+		UnverifiedCustomer.passUnverifiedContainer(unverified);
+		Admin.passAdminContainer(admins);
+		Employee.passEmployeeContainer(employees);
+		
+		customer1 = new CustomerBuilder()
+				.withID(0)
 				.withUsername("user")
 				.withPassword("password")
-				.makeCustomer(customer1);
-		unverifiedCustomer2 = new CustomerBuilder()
+				.withFirstName("firstname")
+				.withLastName("lastname")
+				.withTelephone("1111111111")
+				.withEmail("newcustomer@test.com")
+				.withIsCitizen(false)
+				.withIsEmployed(true)
+				.withEmployer("TestClass")
+				.makeCustomer();
+		unverifiedCustomer1 = new CustomerBuilder()
+				.withID(0)
 				.withFirstName("Mark")
-				.withLastName("b")
+				.withLastName("Sagger")
 				.withTelephone("2342342345")
-				.withEmail("Markg@gmail.com")
+				.withEmail("Marks@gmail.com")
 				.withIsCitizen(false)
 				.withIsEmployed(false)
 				.withEmployer(null)
 				.makeUnverifiedCustomer();
-
-		employee1 = new Employee("Jake", "Dog"); //people.add(employee);
-    	employee2 = new EmployeeBuilder()
-    			.withUsername("crazyhacker")
-    			.withPassword("Illhacku")
+    	employee1 = new EmployeeBuilder()
+    			.withUsername("tompickle")
+    			.withPassword("chuckycheese")
     			.withIsAdmin(false)
     			.makeEmployee();
-    	admin1 = new Admin ("Dr.", "Evil"); //people.add(admin);
-    	admin2 = new EmployeeBuilder()
+    	admin1 = new EmployeeBuilder()
     			.withUsername("crazyhacker")
-    			.withPassword("Illhacku")
+    			.withPassword("IWillHackYou")
     			.withIsAdmin(true)
     			.makeAdmin();
-		
-		unverifiedContainer.add(unverifiedCustomer1);
-		customerContainer.add(customer1);
-		unverifiedContainer.add(unverifiedCustomer2);
-		customerContainer.add(customer2);
-		
-		employeeContainer.add(employee1); 
-		adminContainer.add(admin1);
-		employeeContainer.add(employee2);
-		adminContainer.add(admin2); 
-    	
+	}
+	
+	@Test
+	public void checkPersonSubclassCountsDoNotInterfere() {
 		assertTrue(employeeContainer.size() == employees.getSize());
-		assertTrue(employees.getSize() == employee1.getCount() - admin1.getCount());
 		assertTrue(adminContainer.size() == admins.getSize());
-		assertTrue(admins.getSize() == admin1.getCount());
-		assertTrue(customerContainer.size() == customers.getSize() && customers.getSize() == customer1.getCount());
-		assertTrue(unverifiedContainer.size() == unverified.getSize() && unverified.getSize() == unverifiedCustomer1.getCount());
+		assertTrue(employeeContainer.size() > adminContainer.size());
+		assertTrue(customerContainer.size() == customers.getSize());
+		assertTrue(unverifiedContainer.size() == unverified.getSize());
 	}
 	
 	@Test
 	public void checkRegistrationValidationFunctions() {
-    	boolean match1, match2, match3, match4, match5, match6, match7, match8;
-    	
     	Registration register = new Registration();
-    	
-    	String name1, name2, name3, name4, name5, name6, name7, name8;
+
     	name1 = "Dave";
     	name2 = "B";
     	name3 = "B9";
@@ -132,10 +130,9 @@ public class BankAppTest
     	String tele1, tele2, tele3, tele4, tele5, tele6, tele7, tele8;
     	tele1 = "321-321-1234";
     	tele2 = "3213211234";
-    	tele3 = "123-sdkj2392";
     	tele3 = "123 123 2392";
-    	tele4 = "123456789";
-    	tele5 = "123//123//1234";
+    	tele4 = "123-sdkj2392";
+    	tele5 = "123456789";
     	tele6 = "12345678901";
     	tele7 = "";
     	tele8 = null;
@@ -149,7 +146,7 @@ public class BankAppTest
     	match8 = register.validTelephone(tele8);
     	assertTrue(match1);
     	assertTrue(match2);
-    	assertFalse(match3);
+    	assertTrue(match3);
     	assertFalse(match4);
     	assertFalse(match5);
     	assertFalse(match6);
@@ -187,8 +184,6 @@ public class BankAppTest
 		assertTrue(customer1.getSavingsAccount() != null && customer2.getCheckingAccount() != null);
 		assertTrue(customer1.getSavingsAccount().getPairedAccount() == customer1.getCheckingAccount());
 		assertTrue(customer1.getCheckingAccount().getPairedAccount() == customer1.getSavingsAccount());
-		//customer1.setJoinedAccount(customer2);
-		//assertTrue(customer1.getSavingsAccount().isJoint() && customer1.getCheckingAccount().isJoint());
 	}
 }
 

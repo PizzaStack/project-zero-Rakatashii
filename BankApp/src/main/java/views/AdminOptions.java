@@ -44,10 +44,10 @@ public class AdminOptions{
 		addFormattedOption(1, "View All Applicants");
 		addFormattedOption(2, "Approve/Deny Applicant");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(3, "Go Back To Administrati");
+		addFormattedOption(3, "Go Back To Admin Options");
 		
 		this.maxLineLength = maxOptionLength()-1;
-		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
+		this.lineSeparator = "|" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "|\n";
 		menuEndLine = String.join("", Collections.nCopies(maxLineLength, "-")) + "\n";
 		
 		String title = "New Applications";
@@ -70,7 +70,7 @@ public class AdminOptions{
 		addFormattedOption(4, "View Joint Account Applications");
 		addFormattedOption(5, "Register New Customer");
 		//addFormattedOption(3, "Commit Changes");
-		addFormattedOption(6, "Go Back To Administrator Options");
+		addFormattedOption(6, "Go Back To Admin Options");
 		
 		this.maxLineLength = maxOptionLength()-1;
 		this.lineSeparator = "-" + String.join("", Collections.nCopies(maxLineLength-2, " ")) + "-\n";
@@ -149,9 +149,15 @@ public class AdminOptions{
 			System.out.println();
 			System.out.print(Symbols.blackDiamond + "  Select Option Number: "); 
 			
-			selection = cin.nextInt();
-			//System.out.print("- Selection = " + selection + lineSeparator.substring(15));
-	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
+			//selection = cin.nextInt();
+			try {
+				selection = Integer.parseInt(cin.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println();
+				System.out.println(Symbols.warning + "   Error: Option Number Must Be Numeric.");
+				continue;
+			}
+			
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}
 		System.out.print("Should not be at the end of getSelection()");
@@ -176,9 +182,4 @@ public class AdminOptions{
 	public boolean inBounds(int selection) {
 		return (selection > 0 && selection <= endCondition) ? true : false;
 	}
-	/*
-	public void passLoginInfo(LoginController loginInfo){
-		this.loginStatus = loginInfo;
-	}
-	*/
 }

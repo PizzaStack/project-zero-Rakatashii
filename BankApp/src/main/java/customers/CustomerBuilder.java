@@ -84,7 +84,6 @@ public class CustomerBuilder {
 		newCustomer.verified = true;
 		if (newCustomer.isFlagged()) newCustomer.unflag();
 		return newCustomer;
-		
 	}
 	
 }

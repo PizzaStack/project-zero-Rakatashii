@@ -10,6 +10,7 @@ import controller.LoginController;
 import controller.MainMenuController;
 import customers.CustomerBuilder;
 import customers.UnverifiedCustomer;
+import utility.Symbols;
 
 public class Registration /* extends Customer */ {
 	private UnverifiedCustomer unverifiedCustomer;
@@ -57,63 +58,63 @@ public class Registration /* extends Customer */ {
 				System.out.println();
 				System.out.println("Errors: ");
 				for (String registrationError : registrationErrors) {
-					System.out.println(registrationError);
+					System.out.println(Symbols.warning + "  " + registrationError);
 				}
 				this.registrationErrors.clear();
 				System.out.println();
 			}
 			errors = false;
 			
-			System.out.println("----- Customer Registration -----");
-			System.out.print("First Name: ");
+			System.out.println("--------------------- Customer Registration ---------------------\n");
+			System.out.print(Symbols.asterisk3 + "  First Name: ");
 			this.firstName = cin.nextLine();
 			if (!(validFirstName(firstName))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.FN));
 				continue;
-			}
+			} else System.out.println();
 			
-			System.out.print("Last Name: ");
+			System.out.print(Symbols.asterisk3 + "  Last Name: ");
 			this.lastName = cin.nextLine();
 			if (!(validLastName(lastName))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.LN));
 				continue;
-			}
-			System.out.print("Telephone: ");
+			} else System.out.println();
+			System.out.print(Symbols.asterisk3 + "  Telephone: ");
 			this.telephone = cin.nextLine();
 			if (!(validTelephone(telephone))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.T));
 				continue;
-			}
+			} else System.out.println();
 			
-			System.out.print("Email: ");
+			System.out.print(Symbols.asterisk3 + "  Email: ");
 			this.email = cin.nextLine();
 			if (!(validEmail(email))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.EM));
 				continue;
-			}
+			} else System.out.println();
 			
-			System.out.print("Are You A US Citizen? ");
+			System.out.print(Symbols.asterisk3 + "  Are You A US Citizen? ");
 			this.citizenAnswer = cin.nextLine();
 			if (!(validCitizenAnswer(citizenAnswer))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.C));
 				continue;
-			} 
+			} else System.out.println();
 			
-			System.out.print("Are You Currently Employed? ");
+			System.out.print(Symbols.asterisk3 + "  Are You Currently Employed? ");
 			this.isEmployedAnswer = cin.nextLine();
 			if (!(validEmployedAnswer(isEmployedAnswer))) {
 				errors = true;
 				this.registrationErrors.add(errorMessages.get(codes.EMPLD));
 				continue;
-			} 
+			} else System.out.println();
 			
 			if (this.isEmployed) {
-				System.out.print("What Is The Name Of Your Employer? ");
+				System.out.print(Symbols.asterisk3 + "  What Is The Name Of Your Employer? ");
 				this.employer = cin.nextLine();
 				if (!(validEmployer(employer))){
 					errors = true;
@@ -155,7 +156,7 @@ public class Registration /* extends Customer */ {
 		return false;
 	}
 	public boolean validTelephone(String telephone) {
-		String pattern = "[\\d]{3}-?[\\d]{3}-?[\\d]{4}";
+		String pattern = "[\\d]{3}[\\s|-]?[\\d]{3}[\\s|-]?[\\d]{4}";
 		if (telephone != null && telephone.length() >= 10 && telephone.length() <= 12) {
 			if (telephone.matches(pattern))
 				return true;

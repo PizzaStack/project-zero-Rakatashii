@@ -89,12 +89,12 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		    ps.setInt(9,  customer.getID());
 		    
 		    ps.executeUpdate();
-		    if (!toSampleTable) log.debug("Updated " + tableName + " Where unverified_id = " + customer.getID() + " And email = " 
-					+ customer.getEmail() + "...");
+		    if (!toSampleTable) log.debug("Updated " + tableName + " Where unverified_id = " + customer.getID() + ", email = " 
+					+ customer.getEmail() + ", ...");
 		    ps.close();
 		} catch (SQLException e) {
-			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where unverified_id = " + customer.getID() + " And email = " 
-					+ customer.getUsername() + "...");
+			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where unverified_id = " + customer.getID() + ", email = " 
+					+ customer.getUsername() + ", ...");
 			e.printStackTrace(); System.out.println();
 		}
 	}
@@ -111,12 +111,12 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
             ps.setInt(1, unverifiedID);
             ps.executeUpdate();
  
-            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where unverified_id = " + unverified.getID() + " And email = " 
-					+ unverified.getUsername() + "...");
+            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where unverified_id = " + unverified.getID() + ", email = " 
+					+ unverified.getUsername() + ", ...");
             ps.close();
         } catch (SQLException e) {
-        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where unverified_id = " + unverified.getID() + " And email = " 
-					+ unverified.getUsername() + "...");
+        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where unverified_id = " + unverified.getID() + ", email = " 
+					+ unverified.getUsername() + ", ...");
         	//e.printStackTrace(); System.out.println();
             //System.out.println(e.getMessage()); System.out.println();
         }

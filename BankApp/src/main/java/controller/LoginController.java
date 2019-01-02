@@ -1,11 +1,13 @@
 package controller;
 
+import DAO.AdminDAO;
 import customers.Customer;
 import employees.Admin;
 import employees.Employee;
 import model.Containers;
 import model.CustomerContainer;
 import model.EmployeeContainer;
+import utility.Symbols;
 import views.Login;
 import views.MenuOptions;
 
@@ -73,7 +75,7 @@ public class LoginController {
 			}
 		
 			tries--;
-			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
+			if (tries > 0) System.out.println("\n" + Symbols.warning + "  Invalid Login Credentials. [" + tries + " attempts remaining]\n");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
 				if (!isLoggedIn()) Thread.sleep(2000);
@@ -104,7 +106,7 @@ public class LoginController {
 			}
 			
 			tries--;
-			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
+			if (tries > 0) System.out.println("\n" + Symbols.warning + "  Invalid Login Credentials. [" + tries + " attempts remaining]\n");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
 				if (!isLoggedIn()) Thread.sleep(2000);
@@ -135,7 +137,7 @@ public class LoginController {
 			}
 			
 			tries--;
-			if (tries > 0) System.out.println("\nInvalid Login Credentials. " + tries + " attempts remaining.");
+			if (tries > 0) System.out.println("\n" + Symbols.warning + "  Invalid Login Credentials. [" + tries + " attempts remaining]\n");
 			else {
 				System.out.println("\nToo many login attempts. Returning to the Main Menu.");
 				if (!isLoggedIn()) Thread.sleep(2000);

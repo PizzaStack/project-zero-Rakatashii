@@ -72,7 +72,7 @@ public class MenuOptions {
 			if (inBounds(selection))
 				return selection;
 			else {
-				System.out.println("* " + selection + " is not a valid option.");
+				System.out.println("* " + selection + " Is Not A Valid Option.");
 				selection = 0;
 			}
 		} 
@@ -86,16 +86,20 @@ public class MenuOptions {
 		while (!(inBounds(selection))) {
 			selection = 0;
 			System.out.println();
-			//System.out.print(lineSeparator);
 
-			System.out.print(Symbols.blackDiamond + "  Select option number: "); 
-			selection = cin.nextInt();
-			//System.out.println();
-			//System.out.print("  --------- Selection = " + selection + lineSeparator.substring(15, lineSeparator.length()-1));
-	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
+			System.out.print(Symbols.blackDiamond + "  Select Option Number: "); 
+			//selection = cin.nextInt();
+			try {
+				selection = Integer.parseInt(cin.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println();
+				System.out.println(Symbols.warning + "   Error: Option Number Must Be Numeric.");
+				continue;
+			}
+			
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}
-		System.out.print("Should not be at the end of getSelection()");
+		System.out.print("Should Not Be At The End Of #getSelection()");
 		return 0;
 	}	
 	public int maxOptionLength() {

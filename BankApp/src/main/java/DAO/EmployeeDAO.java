@@ -46,10 +46,13 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 				ps.close();
 				return true;
 			} else {
+				if (!toSampleTable) log.debug("Failed To Insert Into " + tableName + " Employee With customer_id = " + employee.getID() 
+				+ ", username = " + employee.getUsername() + ", ... ");
 				ps.close();
 				return false;
 			} 
 		} catch (SQLException e) {
+			//e.printStackTrace(); System.out.println();
 			//System.out.println("SQLException in EmployeeDAO#addEmployee"); System.out.println();
 			return false;
 		}
@@ -67,10 +70,11 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 			rs.next();
 			int count = rs.getInt("count");
 			statement.close(); rs.close();
+			if (!fromSampleTable) log.debug("Current Count For " + tableName + " Is " + count);
 			return count;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println();
+			if (!fromSampleTable) log.debug("Could Not Get Count For Table " + tableName);
+			e.printStackTrace(); System.out.println();
 		}
 		return 0;
 	}
@@ -157,42 +161,6 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 		}
 		return openIDs;
 	}
-	public boolean isUnique(Employee e, boolean inSampleTable) {
-		String tableName = (inSampleTable) ? "sample_employees" : "employees";
-		boolean unique = false;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName
-					+ " WHERE employee_id=?"
-					+ " AND username=?";
-					
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			
-			preparedStatement.setInt(1, e.getEmployeeID());
-			preparedStatement.setString(2, e.getUsername());
-			
-			ResultSet rs = preparedStatement.executeQuery();
-			
-			String printString = "Employee with employee_id " + e.getEmployeeID() + " and username " + e.getUsername();
-			
-			while (rs.next()) {
-				if (rs.getInt(1) == e.getEmployeeID() || rs.getString(2).equalsIgnoreCase(e.getUsername())) {
-					System.out.println(printString + " is not unique.");
-				}
-				unique = false;
-				preparedStatement.close(); rs.close();
-				return unique;
-			}
-			System.out.println(printString + " is unique.");
-			unique = true;
-			preparedStatement.close(); rs.close();
-			return unique;
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			System.out.println();
-		}
-		return unique;
-	}
 	public int getMaxEmployeeID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_employees" : "employees";
 		int maxID = 0;
@@ -210,8 +178,7 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 			statement.close(); rs.close();
 			return maxID;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println();
+			e.printStackTrace(); System.out.println();
 		}
 		return maxID;
 	}

@@ -10,11 +10,8 @@ public class Admin extends Employee{
 	private AdminDAO adminDAO = new AdminDAO();
 	private String username, password;
 	private String firstName, lastName;
-	// TODO: private static int numAdmins = adminDAO.getNumAdminsInDB;
-	protected static int numAdmins;// = 0;
+	protected static int numAdmins = 0;
 	private int adminID;
-	//private int adminID = numAdmins; // is this really needed for admins?
-	//private int employeeID;
 	private boolean isAdmin = true;
 	
 	static EmployeeContainer<Employee> adminContainer;

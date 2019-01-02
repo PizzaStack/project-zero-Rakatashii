@@ -50,23 +50,6 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public void setSampleFile(String sampleFile) {
 		sampleTextFileName = sampleFile;
 	}
-	/*
-	public ArrayList<Employee> getArrayListFromSample(boolean adminOnly) { 
-		File file = new File(this.sampleTextFileName);
-		if (file.exists() == false) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			readIn(new File(sampleTextFileName), adminOnly);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return this.employees;
-	} */
 	//@Override
 	public void printColumnNames() {
 		System.out.printf("%-10s%-20s%-20s%-10s%-10s\n", "EMPL_ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");

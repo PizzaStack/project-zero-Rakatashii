@@ -40,9 +40,9 @@ public class CustomerController{
 			
 			Scanner cin = new Scanner(System.in);
 			String cont = "";
-			while (!cont.toLowerCase().contains("c")) {
+			while (!cont.toLowerCase().contains("c") && cont.length() < 2) {
 				System.out.print("Enter \"c\" To Continue. ");
-				cont = cin.next();
+				cont = cin.nextLine();
 			}
 			System.out.println();
 			return;

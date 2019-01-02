@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
+import DAO.AdminDAO;
 import DAO.CustomerDAO;
 import DAO.UnverifiedCustomerDAO;
 import accounts.CheckingAccount;
@@ -34,6 +37,8 @@ public class AdminController{
 	
 	CustomerDAO customerDAO;
 	UnverifiedCustomerDAO unverifiedDAO;
+	
+	static final Logger log = Logger.getLogger(AdminController.class);
 	
 	public AdminController() { }
 	public AdminController(MainMenuController mainMenu, Containers containers) { 

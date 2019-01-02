@@ -20,7 +20,7 @@ public class UnverifiedCustomer extends Person{
 	
 	// TODO private static int numUnverifiedCustomers = unverifiedCustomerDAO.getNumUnverifiedCustomersInDB() + 1;
 	//CHANGE BACK TO THIS IF V DOESNT WORK! protected static int numUnverifiedCustomers = unverifiedDAO.getNumUnverifiedCustomers(false)+1;
-	 protected static int numUnverifiedCustomers = unverifiedDAO.getMaxID(false);
+	protected static int numUnverifiedCustomers = unverifiedDAO.getMaxID(false);
 	private int unverifiedID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
 	

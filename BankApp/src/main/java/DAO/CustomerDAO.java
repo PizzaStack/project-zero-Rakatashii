@@ -69,7 +69,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 			} 
 		} catch (SQLException e) {
 			//e.printStackTrace(); System.out.println();
-			//System.out.println("SQLException in CustomerDAO#addCustomer"); System.out.println();
+			System.out.println("SQLException in CustomerDAO#addCustomer"); System.out.println();
 			return false;
 		}
 	}
@@ -122,12 +122,12 @@ public class CustomerDAO implements CustomerDAOInterface {
 		    ps.setInt(18, customer.getCustomerID());
 		    
 		    ps.executeUpdate();
-		    if (!toSampleTable) log.debug("Updated " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
-					+ customer.getUsername() + "...");
+		    if (!toSampleTable) log.debug("Updated " + tableName + " Where customer_id = " + customer.getID() + ", username = " 
+		    		+ customer.getUsername() + ", ...");
 		    ps.close();
 		} catch (SQLException e) {
-			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
-					+ customer.getUsername() + "...");
+			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where customer_id = " + customer.getID() + ", username = " 
+					+ customer.getUsername() + ", ...");
 			e.printStackTrace(); System.out.println();
 		}
 	}	
@@ -144,12 +144,12 @@ public class CustomerDAO implements CustomerDAOInterface {
             ps.setInt(1, customerID);
             ps.executeUpdate();
  
-            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
-					+ customer.getUsername() + "...");
+            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where customer_id = " + customer.getID() + ", username = " 
+					+ customer.getUsername() + ", ...");
             ps.close();
         } catch (SQLException e) {
-        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
-					+ customer.getUsername() + "...");
+        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where customer_id = " + customer.getID() + ", username = " 
+					+ customer.getUsername() + ", ...");
         	//e.printStackTrace(); System.out.println();
             //System.out.println(e.getMessage()); System.out.println();
         }

@@ -145,9 +145,15 @@ public class EmployeeOptions{
 			System.out.println();
 			System.out.print(Symbols.blackDiamond + "  Select Option Number: "); 
 			
-			selection = cin.nextInt();
-			//System.out.print("- Selection = " + selection + lineSeparator.substring(15));
-	    	//System.out.print("Selection = " + selection + " (Press Enter Twice)\n");
+			//selection = cin.nextInt();
+			try {
+				selection = Integer.parseInt(cin.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println();
+				System.out.println(Symbols.warning + "   Error: Option Number Must Be Numeric.");
+				continue;
+			}
+
 	    	if (inBounds(selection)) { System.out.println(); return selection; }
 		}
 		System.out.print("Should not be at the end of getSelection()");
@@ -172,9 +178,4 @@ public class EmployeeOptions{
 	public boolean inBounds(int selection) {
 		return (selection > 0 && selection <= endCondition) ? true : false;
 	}
-	/*
-	public void passLoginInfo(LoginController loginInfo){
-		this.loginStatus = loginInfo;
-	}
-	*/
 }

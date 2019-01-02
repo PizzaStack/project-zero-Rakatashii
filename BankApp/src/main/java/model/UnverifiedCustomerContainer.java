@@ -311,7 +311,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		String alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((14 - 8) + 1) + 8;
+        int usernameLength = rand.nextInt((12 - 6) + 1) + 6;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphaChars.length());
             idBuild.append(alphaChars.charAt(index));
@@ -323,7 +323,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		String alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((12 - 8) + 1) + 8;
+        int usernameLength = rand.nextInt((10 - 8) + 1) + 10;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphanumericChars.length());
             idBuild.append(alphanumericChars.charAt(index));

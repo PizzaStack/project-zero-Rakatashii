@@ -40,7 +40,7 @@ public class EmployeeController {
 	public void selectCustomerOption(int selection) throws InterruptedException {
 			
 		if (selection == 1) {
-			System.out.println();
+			//System.out.println();
 			customerDAO = new CustomerDAO();
 			containers.getCustomerContainer().printColumnNames();
 			//customerDAO.printAllCustomers(false);

@@ -48,7 +48,6 @@ import model.UnverifiedCustomerContainer;
 
 public class BankApp 
 {
-	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
     	PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator +
     			"\\src\\main\\java\\resources\\log4j.properties");
@@ -65,14 +64,11 @@ public class BankApp
     	Containers containers = new Containers();
     	setup.passContainers(containers);
     	
-    	// TODO accounts
     	containers.setUnverifiedContainer(unverifiedContainer);
     	containers.setCustomerContainer(customerContainer);
     	containers.setEmployeeContainer(employeeContainer);
     	containers.setAdminContainer(adminContainer);
     	
-    	//SavingsAccount.passAccountContainer(accountContainer);
-    	//CheckingAccount.passAccountContainer(accountContainer);
     	Customer.passCustomerContainer(containers.getCustomerContainer());
     	UnverifiedCustomer.passUnverifiedContainer(containers.getUnverifiedContainer());
     	Employee.passEmployeeContainer(containers.getEmployeeContainer());
@@ -101,8 +97,7 @@ public class BankApp
     /** TODO Checklist
      * Normalize tables (prob skip at this point...)
      * Way More More Tests
-     * Make scanner less error-prone by casting nextLine
-     * Logging
+     * Finish Controller Logging
      * May want to add triggers to sample tables as well
        - may want to automatically generate triggers if possible
      
@@ -113,9 +108,9 @@ public class BankApp
      * Expand database features
     
    		TODO Presentation
-     * MVC may not be best here. May be better to organize in a way that would exploit Java's
+     * MVC may not be optimal. May be better to organize in a way that would exploit Java's
        strengths - i.e., grouping related classes in the same package. 
-       - Evident especially in problems arrising from having the controllers and views
+       - Evident especially in problems arising from having the controllers and views
            communicate with one another between packages.
     */
     
