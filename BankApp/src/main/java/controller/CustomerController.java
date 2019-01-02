@@ -261,8 +261,14 @@ public class CustomerController{
 			System.out.print("(Type \"0\" To Cancel): ");
 			int customerID = Integer.parseInt(cin.nextLine());
 			if (customerID == 0) {
+				System.out.println();
 				System.out.println("Returning The Customer Menu...");
+				System.out.println();
 				begin(CustomerMenus.SELECTION);
+			} else if (customer.getCustomerID() == 0){
+				System.out.println();
+				System.out.println("Cannot Link Accounts For This Customer. Returning The Customer Menu...");
+				System.out.println();
 			} else {
 				customerDAO = new CustomerDAO();
 				boolean customerFound = customerDAO.checkIfCustomerExists(customerID, false);

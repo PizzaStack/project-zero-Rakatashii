@@ -53,7 +53,7 @@ public class MainMenuController {
 			registrationController.passContainers(containers);
 			registrationController.call();
 			System.out.println();
-			
+			begin(Menus.DEFAULT);
 			/*
 			Scanner cin = new Scanner(System.in);
 			String nextOption = "";

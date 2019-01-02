@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import customers.Customer;
@@ -21,6 +23,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 	private PreparedStatement ps;
 	DBUtil util;
 	Helpers helper;
+	static final Logger log = Logger.getLogger(UnverifiedCustomerDAO.class);
 	
 	public UnverifiedCustomerDAO() {
 		util = new DBUtil();
@@ -45,9 +48,13 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 			ps.setString(8, unverifiedCustomer.getEmployer());
 		
 			if (ps.executeUpdate() != 0) {
+				if (!toSampleTable) log.debug("Inserted Into " + tableName + " Values(" + unverifiedCustomer.getID() + ", " 
+						+ unverifiedCustomer.getUsername() + ", ... )");
 				ps.close();
 				return true;
 			} else {
+				if (!toSampleTable) log.debug("Failed To Insert Into " + tableName + " UnverifiedCustomer With unverified_id = " + unverifiedCustomer.getID() 
+					+ ", username = " + unverifiedCustomer.getUsername() + ", ... ");
 				ps.close();
 				return false;
 			} 
@@ -57,6 +64,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 			return false;
 		}
 	}
+	
 	public void updateUnverifiedCustomer(UnverifiedCustomer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_unverified_customers" : "unverified_customers";
 	    
@@ -67,6 +75,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		    		+ "unverified_id = ?, first_name = ?, last_name = ?, telephone = ?, "
 		    		+ "email = ?, us_citizen = ?, employed = ?, employer = ? "
 			    	+ "WHERE unverified_id = ?;";
+		    
 		    PreparedStatement ps = connection.prepareStatement(sql);
 		    ps.setInt(1, customer.getID());
 		    ps.setString(2, customer.getFirstname());
@@ -80,11 +89,16 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		    ps.setInt(9,  customer.getID());
 		    
 		    ps.executeUpdate();
+		    if (!toSampleTable) log.debug("Updated " + tableName + " Where unverified_id = " + customer.getID() + " And email = " 
+					+ customer.getEmail() + "...");
 		    ps.close();
 		} catch (SQLException e) {
+			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where unverified_id = " + customer.getID() + " And email = " 
+					+ customer.getUsername() + "...");
 			e.printStackTrace(); System.out.println();
 		}
 	}
+	
     public void deleteUnverifiedCustomer(UnverifiedCustomer unverified, boolean fromSampleTable) {
     	String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
         String sql = "DELETE FROM " + tableName + " WHERE unverified_id = ?";
@@ -97,12 +111,17 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
             ps.setInt(1, unverifiedID);
             ps.executeUpdate();
  
+            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where unverified_id = " + unverified.getID() + " And email = " 
+					+ unverified.getUsername() + "...");
             ps.close();
         } catch (SQLException e) {
+        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where unverified_id = " + unverified.getID() + " And email = " 
+					+ unverified.getUsername() + "...");
         	//e.printStackTrace(); System.out.println();
             //System.out.println(e.getMessage()); System.out.println();
         }
     }
+    
     public void deleteUnverifiedCustomerWithID(int id, boolean fromSampleTable) {
     	String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
         String sql = "DELETE FROM " + tableName + " WHERE unverified_id = ?";
@@ -114,12 +133,15 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
             ps.setInt(1, id);
             ps.executeUpdate();
  
+            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where unverified_id = " + id);
             ps.close();
         } catch (SQLException e) {
+        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where unverified_id = " + id);
         	//e.printStackTrace(); System.out.println();
             //System.out.println(e.getMessage()); System.out.println();
         }
     }
+    
 	@Override
 	public int getNumUnverifiedCustomers(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
@@ -133,16 +155,20 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 			ResultSet rs = statement.executeQuery(sql);
 			if (rs.next()) count = rs.getInt("count");
 			else {
+				if (!fromSampleTable) log.debug("Could Not Get Count For Table " + tableName);
 				statement.close(); rs.close();
 				return count;
 			}
+			if (!fromSampleTable) log.debug("Current Count For " + tableName + " Is " + count);
 			statement.close(); rs.close();
 			return count;
 		} catch (SQLException e) {
+			if (!fromSampleTable) log.debug("Could Not Get Count For Table " + tableName);
 			//e.printStackTrace(); System.out.println();
 		}
 		return 0;
 	}
+	
 	@Override
 	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
@@ -171,6 +197,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		}
 		return records;
 	}
+	
 	public ArrayList<UnverifiedCustomer> getAllUnverifiedCustomers(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
 		ArrayList<UnverifiedCustomer> unverifiedCustomers = new ArrayList<UnverifiedCustomer>();
@@ -204,6 +231,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		}
 		return unverifiedCustomers;
 	}
+	
 	@Override
 	public void printAllUnverifiedCustomers(boolean fromSampleTable) {
 		ArrayList<String> unverifiedCustomerRecords = getAllRecords(fromSampleTable);
@@ -234,35 +262,7 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
 		}
 		return openIDs;
 	}
-	/*
-	public boolean isUnique(UnverifiedCustomer c, boolean inSampleTable) {
-		String tableName = (inSampleTable) ? "sample_unverified_customers" : "unverified_customers";
-		boolean unique = false;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName
-					+ " WHERE unverified_id=?;";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, c.getID());
-			ResultSet rs = preparedStatement.executeQuery(sql);
-			
-			if (rs.next() && rs.getInt(1) == c.getID()) {
-				System.out.println("UnverifiedCustomer with id " + c.getID() + " is not unique.");
-				unique = false;
-			}
-			else {
-				System.out.println("UnverifiedCustomer with id " + c.getID() + " is unique.");
-				unique = true;
-			}
 
-			rs.close();
-			return unique;
-		} catch (SQLException e) {
-			//e.printStackTrace(); System.out.println();
-		}
-		return unique;
-	}
-	*/
 	public int getMaxID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_unverified_customers" : "unverified_customers";
 		int maxID = 0;

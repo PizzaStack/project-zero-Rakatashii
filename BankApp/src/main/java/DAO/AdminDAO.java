@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import customers.UnverifiedCustomer;
 import database.DBConnection;
 import database.DBUtil;
@@ -17,19 +19,16 @@ import utility.Helpers;
 public class AdminDAO implements AdminDAOInterface{
 	private Connection connection;
 	private PreparedStatement ps;
-	private DBUtil util;
 	private Helpers helper;
+	static final Logger log = Logger.getLogger(AdminDAO.class);
 	
 	public AdminDAO() {
-		util = new DBUtil();
 		helper = new Helpers();
 	}
 	
 	@Override
 	public boolean addAdmin(Employee admin, boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_admins" : "admins";
-		//if (!isUnique(admin, inSampleTable)) return false;
-		//else 
 		try {
 			connection = DBConnection.getConnection();
 			String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?,?)";
@@ -41,17 +40,23 @@ public class AdminDAO implements AdminDAOInterface{
 			ps.setInt(5,  admin.getAdminID());
 		
 			if (ps.executeUpdate() != 0) {
+				if (!inSampleTable) log.debug("Inserted Into " + tableName + " Values(" + admin.getAdminID() + ", " 
+					+ admin.getUsername() + ", ... )");
 				ps.close();
 				return true;
 			} else {
+				if (!inSampleTable) log.debug("Failed To Insert Into " + tableName + " Admin With admin_id = " + admin.getID() 
+					+ ", username = " + admin.getUsername() + ", ... ");
 				ps.close();
 				return false;
 			} 
 		} catch (SQLException e) {
-			System.out.println("SQLException in AdminDAO#addAdmin");
+			//e.printStackTrace(); System.out.println();
+			System.out.println("SQLException in AdminDAO#addAdmin"); System.out.println();
 			return false;
 		}
 	}
+	
 	@Override
 	public int getNumAdmins(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_admins" : "admins";
@@ -65,9 +70,11 @@ public class AdminDAO implements AdminDAOInterface{
 			rs.next();
 			int count = rs.getInt("count");
 			statement.close(); rs.close();
+			if (!fromSampleTable) log.debug("Current Count For " + tableName + " Is " + count);
 			return count;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (!fromSampleTable) log.debug("Could Not Get Count For Table " + tableName);
+			e.printStackTrace(); System.out.println();
 		}
 		return 0;
 	}
@@ -93,10 +100,11 @@ public class AdminDAO implements AdminDAOInterface{
 			statement.close(); rs.close();
 			return records;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); System.out.println();
 		}
 		return records;
 	}
+	
 	@Override
 	public void printAllAdmins(boolean fromSampleTable) {
 		ArrayList<String> actualAdminRecords = getAllRecords(fromSampleTable);
@@ -104,6 +112,7 @@ public class AdminDAO implements AdminDAOInterface{
 			System.out.println(actualAdminRecord);
 		}
 	}
+	
 	public ArrayList<Integer> getOpenIDs(boolean fromSampleTable){
 		ArrayList<Integer> openIDs = new ArrayList<Integer>();
 		String tableName = (fromSampleTable) ? "sample_admins" : "admins";
@@ -122,44 +131,11 @@ public class AdminDAO implements AdminDAOInterface{
 			statement.close(); rs.close();
 			return openIDs;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); System.out.println();
 		}
 		return openIDs;
 	}
-	public boolean isUnique(Employee a, boolean inSampleTable) {
-		String tableName = (inSampleTable) ? "sample_admins" : "admins";
-		boolean unique = false;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName
-					+ " WHERE employee_id=?"
-					+ " AND username=?"
-					+ " AND admin_id=?;";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, a.getEmployeeID());
-			preparedStatement.setString(2, a.getUsername());
-			preparedStatement.setInt(5, a.getAdminID());
-			ResultSet rs = preparedStatement.executeQuery(sql);
-			
-			if (rs.next() && (rs.getInt(1) == a.getEmployeeID() || rs.getString(2) == a.getUsername() || rs.getInt(5) == a.getAdminID())) {
-				System.out.println("Admin with employee_id " + a.getEmployeeID() 
-						+ " and username " + a.getUsername()
-						+ " and admin_id " + a.getAdminID() 
-						+ " is not unique.");
-				unique = false;
-			}
-			else {
-				System.out.println("Admin with employee_id " + a.getEmployeeID() + " and admin_id " + a.getAdminID() + " is unique.");
-				unique = true;
-			}
 
-			preparedStatement.close(); rs.close();
-			return unique;
-		} catch (SQLException e) {
-			//e.printStackTrace();
-		}
-		return unique;
-	}
 	public int getMaxAdminID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_admins" : "admins";
 		int maxID = 0;
@@ -177,10 +153,9 @@ public class AdminDAO implements AdminDAOInterface{
 			statement.close(); rs.close();
 			return maxID;
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			//e.printStackTrace(); System.out.println();
 		}
 		return maxID;
 	}
-
 
 }

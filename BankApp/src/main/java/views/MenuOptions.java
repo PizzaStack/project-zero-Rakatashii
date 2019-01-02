@@ -87,10 +87,7 @@ public class MenuOptions {
 			selection = 0;
 			System.out.println();
 			//System.out.print(lineSeparator);
-			//\u25BA
-			//\u2630
-			//\u2732
-			//\u273B
+
 			System.out.print(Symbols.blackDiamond + "  Select option number: "); 
 			selection = cin.nextInt();
 			//System.out.println();

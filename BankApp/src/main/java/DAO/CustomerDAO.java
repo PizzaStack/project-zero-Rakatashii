@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import accounts.CheckingAccount;
 import accounts.SavingsAccount;
 import customers.Customer;
@@ -20,53 +22,15 @@ import utility.Helpers;
 public class CustomerDAO implements CustomerDAOInterface {
 	private Connection connection;
 	private PreparedStatement ps;
-	//private DBUtil util;
 	private Helpers helper;
-	//private AccountDAO accountDAO = new AccountDAO();
+	static final Logger log = Logger.getLogger(CustomerDAO.class);
 	
 	public CustomerDAO() {
-		//util = new DBUtil();
 		helper = new Helpers();
 	}
-	/*
-	private boolean addCustomer(Customer customer, boolean toSampleTable) {
-		String tableName = (toSampleTable) ? "sample_customers" : "customers";
-		//if (isUnique(customer, toSampleTable) == false) return false;
-		//else 
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?,?,?,?,?,?,?,?);";
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1,  customer.getID());
-			ps.setString(2, customer.getUsername());
-			ps.setString(3, customer.getPassword());
-			ps.setString(4, customer.getFirstname());
-			ps.setString(5, customer.getLastname());
-			ps.setString(6, customer.getTelephone());
-			ps.setString(7, customer.getEmail());
-			ps.setBoolean(8, customer.getIsCitizen());
-			ps.setBoolean(9, customer.getIsEmployed());
-			ps.setString(10, customer.getEmployer());
-			ps.setBoolean(11, customer.isFlagged());
-			
-			if (ps.executeUpdate() != 0) {
-				ps.close();
-				return true;
-			} else {
-				ps.close();
-				return false;
-			} 
-		} catch (SQLException e) {
-			//e.printStackTrace(); System.out.println();
-			//System.out.println("SQLException in CustomerDAO#addCustomer"); System.out.println();
-			return false;
-		}
-	}
-	*/
+
 	public boolean addCustomerWithAccount(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
-		//if (isUnique(customer, toSampleTable) == false) return false;
-		//else 
 		try {
 			connection = DBConnection.getConnection();
 			String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -90,22 +54,17 @@ public class CustomerDAO implements CustomerDAOInterface {
 			ps.setDouble(14, customer.getCheckingAccount().getBalance());
 			ps.setBoolean(15, customer.isFlagged());
 			ps.setBoolean(16, customer.hasJointAccounts());
-			//if (customer.hasJointAccounts())
 			ps.setInt(17, customer.getJointCustomerID());
-			//else ps.setInt(17,  -1);
-			
-			/*
-			addCustomer(customer, toSampleTable);
-			accountDAO.addAccounts(customer.getSavingsAccount(),  customer.getCheckingAccount(),  toSampleTable);
-			*/
 			
 			if (ps.executeUpdate() != 0) {
+				if (!toSampleTable) log.debug("Inserted Into " + tableName + " Values(" + customer.getID() + ", " 
+					+ customer.getUsername() + ", ... )");
 				ps.close();
-				//addCustomer(customer,  toSampleTable);
 				return true;
 			} else {
+				if (!toSampleTable) log.debug("Failed To Insert Into " + tableName + " Customer With customer_id = " + customer.getID() 
+					+ ", username = " + customer.getUsername() + ", ... ");
 				ps.close();
-				//addCustomer(customer,  toSampleTable);
 				return false;
 			} 
 		} catch (SQLException e) {
@@ -114,10 +73,12 @@ public class CustomerDAO implements CustomerDAOInterface {
 			return false;
 		}
 	}
+	
 	public void updateCustomerAndAccounts(Customer customer, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		SavingsAccount savings = customer.getSavingsAccount();
 		CheckingAccount checking = customer.getCheckingAccount();
+
 		try {
 	    	connection = DBConnection.getConnection();
 	    	
@@ -128,6 +89,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		    		+ "savings_number = ?, savings_amount = ?, checking_number = ?, checking_amount = ?, "
 		    		+ "flagged = ?, joint = ?, joint_customer_id = ? "
 			    	+ "WHERE customer_id = ?;";
+		    
 		    PreparedStatement ps = connection.prepareStatement(sql);
 		    ps.setInt(1, customer.getCustomerID());
 		    ps.setString(2, customer.getUsername());
@@ -160,13 +122,16 @@ public class CustomerDAO implements CustomerDAOInterface {
 		    ps.setInt(18, customer.getCustomerID());
 		    
 		    ps.executeUpdate();
+		    if (!toSampleTable) log.debug("Updated " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
+					+ customer.getUsername() + "...");
 		    ps.close();
 		} catch (SQLException e) {
+			if (!toSampleTable) log.debug("Failed To Update " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
+					+ customer.getUsername() + "...");
 			e.printStackTrace(); System.out.println();
 		}
-		//updateCustomer(customer, toSampleTable);
-		//accountDAO.updateAccounts(customer, toSampleTable);
 	}	
+	
     public void deleteCustomer(Customer customer, boolean fromSampleTable) {
     	String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
         String sql = "DELETE FROM " + tableName + " WHERE customer_id = ?";
@@ -179,93 +144,20 @@ public class CustomerDAO implements CustomerDAOInterface {
             ps.setInt(1, customerID);
             ps.executeUpdate();
  
+            if (!fromSampleTable) log.debug("Deleted From " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
+					+ customer.getUsername() + "...");
             ps.close();
         } catch (SQLException e) {
+        	if (!fromSampleTable) log.debug("Failed To Delete From " + tableName + " Where customer_id = " + customer.getID() + " And username = " 
+					+ customer.getUsername() + "...");
         	//e.printStackTrace(); System.out.println();
             //System.out.println(e.getMessage()); System.out.println();
         }
     }
-	/*
-	public void updateCustomerAndAccounts(Customer customer, SavingsAccount savings, CheckingAccount checking, boolean toSampleTable) {
-		String tableName = (toSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
-		try {
-	    	connection = DBConnection.getConnection();
-	    	
-		    String sql = "UPDATE " + tableName + " SET "
-		    		+ "customer_id = ?, username = ?, password = ?, "
-		    		+ "first_name = ?, last_name = ?, telephone = ?, email = ?, "
-		    		+ "us_citizen = ?, employed = ?, employer = ?, "
-		    		+ "savings_number = ?, savings_amount = ?, checking_number = ?, checking_amount = ?, "
-		    		+ "flagged = ?, joint = ?, joint_customer_id = ? "
-			    	+ "WHERE customer_id = ?;";
-		    PreparedStatement ps = connection.prepareStatement(sql);
-		    ps.setInt(1, customer.getCustomerID());
-		    ps.setString(2, customer.getUsername());
-		    ps.setString(3, customer.getPassword());
-		    ps.setString(4, customer.getFirstname());
-		    ps.setString(5,  customer.getLastname());
-		    ps.setString(6, customer.getTelephone());
-		    ps.setString(7,  customer.getEmail());
-		    ps.setBoolean(8, customer.getIsCitizen());
-		    ps.setBoolean(9,  customer.getIsEmployed());
-		    ps.setString(10,  customer.getEmployer());
-		    ps.setString(11, savings.getID());
-		    ps.setDouble(12,  savings.getBalance());
-		    ps.setString(13,  checking.getID());
-		    ps.setDouble(14,  checking.getBalance());
-		    ps.setBoolean(15,  customer.isFlagged());
-		    ps.setBoolean(16,  customer.hasJointAccounts());
-		    ps.setInt(17, customer.getSharedCustomerID());
-		    ps.setInt(18,  customer.getCustomerID());
-		    
-		    ps.executeUpdate();
-		    ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-		//updateCustomer(customer, toSampleTable);
-		//accountDAO.updateAccounts(customer, toSampleTable);
-	}
-	*/
-	/*
-	private void updateCustomer(Customer customer, boolean toSampleTable) {
-		String tableName = (toSampleTable) ? "sample_customers" : "customers";
-	    
-		try {
-	    	connection = DBConnection.getConnection();
-	    	
-		    String sql = "UPDATE " + tableName + " SET "
-		    		+ "customer_id = ?, username = ?, password = ?, "
-		    		+ "first_name = ?, last_name = ?, telephone = ?, email = ?, "
-		    		+ "us_citizen = ?, employed = ?, employer = ?, flagged = ? "
-			    	+ "WHERE customer_id = ?;";
-		    PreparedStatement ps = connection.prepareStatement(sql);
-		    ps.setInt(1, customer.getCustomerID());
-		    ps.setString(2, customer.getUsername());
-		    ps.setString(3, customer.getPassword());
-		    ps.setString(4, customer.getFirstname());
-		    ps.setString(5,  customer.getLastname());
-		    ps.setString(6, customer.getTelephone());
-		    ps.setString(7,  customer.getEmail());
-		    ps.setBoolean(8, customer.getIsCitizen());
-		    ps.setBoolean(9,  customer.getIsEmployed());
-		    ps.setString(10,  customer.getEmployer());
-		    ps.setBoolean(11, customer.isFlagged());
-		    ps.setInt(12,  customer.getCustomerID());
-		    
-		    ps.executeUpdate();
-		    ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-	}
-	*/
 	@Override
 	public int getNumCustomers(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
-		/*String tableName = (withAccounts) 
-				? ((fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts") 
-				: ((fromSampleTable) ? "sample_customers" : "customers");*/
+		
 		try {
 			connection = DBConnection.getConnection();
 			String sql = "SELECT COUNT(*) AS count FROM " + tableName + ";";
@@ -276,12 +168,15 @@ public class CustomerDAO implements CustomerDAOInterface {
 			rs.next();
 			int count = rs.getInt("count");
 			statement.close(); rs.close();
+			if (!fromSampleTable) log.debug("Current Count For " + tableName + " Is " + count);
 			return count;
 		} catch (SQLException e) {
+			if (!fromSampleTable) log.debug("Could Not Get Count For Table " + tableName);
 			e.printStackTrace(); System.out.println();
 		}
 		return 0;
 	}
+	
 	public ArrayList<String> getAllRecords(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers" : "customers";
 		ArrayList<String> records = new ArrayList<String>();
@@ -308,6 +203,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return records;
 	}
+	
 	public ArrayList<Customer> getAllCustomers(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		ArrayList<Customer> customers = new ArrayList<Customer>();
@@ -341,9 +237,6 @@ public class CustomerDAO implements CustomerDAOInterface {
 					customer.setCheckingAccount(checking);
 					boolean recordIsFlagged = rs.getBoolean(15);
 					if (recordIsFlagged) customer.flag();
-					//boolean customersAreJoined = rs.getBoolean(16);
-					//customer.setJointCustomerID(rs.getInt(17));
-					//customer.setHasJointAccounts(customersAreJoined);
 					customers.add(customer);
 				}
 			}
@@ -354,6 +247,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return customers;
 	}
+	
 	public Customer findCustomerByID(int id, boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		try {
@@ -385,18 +279,17 @@ public class CustomerDAO implements CustomerDAOInterface {
 					customer.setCheckingAccount(checking);
 					boolean recordIsFlagged = rs.getBoolean(15);
 					if (recordIsFlagged) customer.flag();
-					//boolean customersAreJoined = rs.getBoolean(16);
-					//customer.setHasJointAccounts(customersAreJoined);
-					//customer.setJointCustomerID(rs.getInt(17));
 					statement.close(); rs.close();
+					if (!fromSampleTable) log.debug("Customer Found In Table " + tableName + " With customer_id = " + id);
 					return customer;
-				} else System.out.println("Customer is null here");
+				} else if (!fromSampleTable) log.debug("No Customer Found In Table " + tableName + " With customer_id = " + id);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(); System.out.println();
 		}
 		return null;
 	}
+	
 	public boolean checkIfCustomerExists(int id, boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_customers_with_accounts" : "customers_with_accounts";
 		try {
@@ -408,9 +301,11 @@ public class CustomerDAO implements CustomerDAOInterface {
 			
 			if (rs.next()) {
 				ps.close(); rs.close();
+				if (!fromSampleTable) log.debug("Customer With ID = " + id + " Exists In Table " + tableName);
 				return true;
 			} else {
 				ps.close(); rs.close();
+				if (!fromSampleTable) log.debug("Customer With ID = " + id + " Does Not Exists In Table " + tableName);
 				return false;
 			}
 		} catch (SQLException e) {
@@ -448,37 +343,7 @@ public class CustomerDAO implements CustomerDAOInterface {
 		}
 		return openIDs;
 	}
-	/*
-	public boolean isUnique(Customer c, boolean inSampleTable) {
-		String tableName = (inSampleTable) ? "sample_customers" : "customers";
-		boolean unique = false;
-		try {
-			connection = DBConnection.getConnection();
-			String sql = "SELECT * FROM " + tableName
-					+ " WHERE customer_id=?"
-					+ " AND username=?;";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, c.getID());
-			preparedStatement.setString(2,  c.getUsername());
-			ResultSet rs = preparedStatement.executeQuery();
-			
-			if (rs.next() && (rs.getInt(1) == c.getID() || rs.getString(2).equals(c.getUsername()))) {
-				System.out.println("Customer with customer_id " + c.getID() + " and username " + c.getUsername() + " is not unique.");
-				unique = false;
-			}
-			else {
-				System.out.println("Customer with customer_id " + c.getID() + " and username " + c.getUsername() + " is unique.");
-				unique = true;
-			}
-
-			preparedStatement.close(); rs.close();
-			return unique;
-		} catch (SQLException e) {
-			e.printStackTrace(); System.out.println();
-		}
-		return unique;
-	}
-	*/
+	
 	public int getMaxID(boolean inSampleTable) {
 		String tableName = (inSampleTable) ? "sample_customers" : "customers";
 		int maxID = 0;

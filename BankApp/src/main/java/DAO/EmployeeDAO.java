@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import customers.Customer;
 import customers.CustomerBuilder;
 import database.DBConnection;
@@ -18,19 +20,16 @@ import utility.Helpers;
 public class EmployeeDAO implements EmployeeDAOInterface{
 	private Connection connection;
 	private PreparedStatement ps;
-	private DBUtil util;
 	private Helpers helper;
+	static final Logger log = Logger.getLogger(EmployeeDAO.class);
 	
 	public EmployeeDAO() {
-		util = new DBUtil();
 		helper = new Helpers();
 	}
 	
 	@Override
 	public boolean addEmployee(Employee employee, boolean toSampleTable) {
 		String tableName = (toSampleTable) ? "sample_employees" : "employees";
-		//if (!isUnique(employee, toSampleTable)) return false;
-		//else 
 		try {
 			connection = DBConnection.getConnection();
 			String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?,?);";
@@ -42,6 +41,8 @@ public class EmployeeDAO implements EmployeeDAOInterface{
 			ps.setInt(5,  employee.getAdminID());
 		
 			if (ps.executeUpdate() != 0) {
+				if (!toSampleTable) log.debug("Inserted Into " + tableName + " Values(" + employee.getID() + ", " 
+						+ employee.getUsername() + ", ... )");
 				ps.close();
 				return true;
 			} else {

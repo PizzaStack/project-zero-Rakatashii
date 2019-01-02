@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import org.apache.log4j.PropertyConfigurator;
+
 import DAO.AccountDAO;
 import DAO.AdminDAO;
 import DAO.CustomerDAO;
@@ -48,6 +50,9 @@ public class BankApp
 {
 	final static String dir = "/c/Users/Associate/java/project-zero-Rakatashii";
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
+    	PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator +
+    			"\\src\\main\\java\\resources\\log4j.properties");
+    	
     	DBSetup setup = new DBSetup(true);
     	setup.initializeSampleTables();
     	
@@ -91,31 +96,15 @@ public class BankApp
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
     	System.out.println("Program Terminated.");
-    	
-    	// TODO - option for admin...
-    	// unverifiedContainer.updateRows();
-    	// customerContainer.updateRows();
-    	// employeeContainer.updateRows();
-    	// adminContainer.updateRows();
-    	
     }
     
     /** TODO Checklist
-     + * (Clean up main()) 
-     + * Create import/export from  containers to controller in order to populate
-     ~ * Create sample data for Admin and Employee, maybe Customer too to verify that Unverified is being converted correctly
-       - (need to be able to run ruby to generate sample data) 
-     + * Finish login pages for Admin, Employee, Customer
-       - would be better to have the sample data first to populate customers with usernames and passwords
-     + * Create accounts class and update all customer classes with account numbers and balances (Savings/Checking)
-     * Tests for controller and account classes
-     ~ * Probably a good time for joint accounts feature (Just give a reference to primary accounts holders account number
-     and set the primary account holder field in the Accounts classes to the id of that person
-     ~ * Connect to the database and create sample tables to get basic inserts, updates, and removes working
-     * Normalize tables
-     * Finalize containers for storing and removing persistent data (rebase, reindex, removeduplicates, etc)
-     * Give privileges to Employees and Admins to manipulate data
-     * More Tests
+     * Normalize tables (prob skip at this point...)
+     * Way More More Tests
+     * Make scanner less error-prone by casting nextLine
+     * Logging
+     * May want to add triggers to sample tables as well
+       - may want to automatically generate triggers if possible
      
         TODO (OPTIONAL)
      * set up H2
@@ -130,15 +119,4 @@ public class BankApp
            communicate with one another between packages.
     */
     
-    /** TODO Doesn't Work Anymore, but consider if needed:
-	Bash bash = new Bash();
-	String output;
-	try {
-		output = bash.getTerminalOutput("cd text_files && ls");
-		if (output != null) System.out.println("\n" + output);
-		else System.out.println("output is null");
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-	*/
 }
