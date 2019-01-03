@@ -3,6 +3,8 @@ package com.BankApp;
 import org.junit.Before;
 import org.junit.Test;
 
+import controller.LoginController;
+
 import static org.junit.Assert.*;
 
 import customers.Customer;
@@ -20,20 +22,20 @@ import java.util.ArrayList;
 
 public class BankAppTest
 {	
-	CustomerContainer customers;
-	ArrayList<Customer> customerContainer;
+	CustomerContainer customerContainer;
+	ArrayList<Customer> customers;
 	Customer customer1, customer2;
 	
-	EmployeeContainer<Employee> admins;
-	ArrayList<Employee> adminContainer;
+	EmployeeContainer<Employee> adminContainer;
+	ArrayList<Employee> admins;
 	Admin admin1, admin2;
 	
-	EmployeeContainer<Employee> employees;
-	ArrayList<Employee> employeeContainer;
+	EmployeeContainer<Employee> employeeContainer;
+	ArrayList<Employee> employees;
 	Employee employee1, employee2;
 	
-	UnverifiedCustomerContainer<UnverifiedCustomer> unverified;
-	ArrayList<UnverifiedCustomer> unverifiedContainer;
+	UnverifiedCustomerContainer<UnverifiedCustomer> unverifiedContainer;
+	ArrayList<UnverifiedCustomer> unverifiedCustomers;
 	UnverifiedCustomer unverifiedCustomer1, unverifiedCustomer2;
 	
 	boolean match1, match2, match3, match4, match5, match6, match7, match8;
@@ -41,23 +43,23 @@ public class BankAppTest
 	
 	@Before
 	public void SetUp() {
-    	customers = new CustomerContainer();
-    	customerContainer = customers.getArrayList();
-		unverified = new UnverifiedCustomerContainer<UnverifiedCustomer>();
-    	unverifiedContainer = unverified.getArrayList();
-    	employees = new EmployeeContainer<Employee>();
-    	employeeContainer = employees.getArrayList();
-    	admins = new EmployeeContainer<Employee>();
-    	adminContainer = admins.getArrayList();
+    	customerContainer = new CustomerContainer();
+    	customers = customerContainer.getArrayList();
+		unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+    	unverifiedCustomers = unverifiedContainer.getArrayList();
+    	employeeContainer = new EmployeeContainer<Employee>();
+    	employees = employeeContainer.getArrayList();
+    	adminContainer = new EmployeeContainer<Employee>();
+    	admins = adminContainer.getArrayList();
 
-		Customer.passCustomerContainer(customers);
-		UnverifiedCustomer.passUnverifiedContainer(unverified);
-		Admin.passAdminContainer(admins);
-		Employee.passEmployeeContainer(employees);
+		Customer.passCustomerContainer(customerContainer);
+		UnverifiedCustomer.passUnverifiedContainer(unverifiedContainer);
+		Admin.passAdminContainer(adminContainer);
+		Employee.passEmployeeContainer(employeeContainer);
 		
 		customer1 = new CustomerBuilder()
 				.withID(0)
-				.withUsername("user")
+				.withUsername("customer")
 				.withPassword("password")
 				.withFirstName("firstname")
 				.withLastName("lastname")
@@ -69,33 +71,37 @@ public class BankAppTest
 				.makeCustomer();
 		unverifiedCustomer1 = new CustomerBuilder()
 				.withID(0)
-				.withFirstName("Mark")
-				.withLastName("Sagger")
+				.withFirstName("unverified")
+				.withLastName("customer")
 				.withTelephone("2342342345")
-				.withEmail("Marks@gmail.com")
+				.withEmail("unverified@customer.com")
 				.withIsCitizen(false)
 				.withIsEmployed(false)
 				.withEmployer(null)
 				.makeUnverifiedCustomer();
     	employee1 = new EmployeeBuilder()
-    			.withUsername("tompickle")
-    			.withPassword("chuckycheese")
+    			.withUsername("employee")
+    			.withPassword("password")
     			.withIsAdmin(false)
     			.makeEmployee();
     	admin1 = new EmployeeBuilder()
-    			.withUsername("crazyhacker")
-    			.withPassword("IWillHackYou")
+    			.withUsername("admin")
+    			.withPassword("password")
     			.withIsAdmin(true)
     			.makeAdmin();
 	}
 	
 	@Test
 	public void checkPersonSubclassCountsDoNotInterfere() {
-		assertTrue(employeeContainer.size() == employees.getSize());
-		assertTrue(adminContainer.size() == admins.getSize());
-		assertTrue(employeeContainer.size() > adminContainer.size());
-		assertTrue(customerContainer.size() == customers.getSize());
-		assertTrue(unverifiedContainer.size() == unverified.getSize());
+		assertTrue(employeeContainer.getSize() > 0);
+		assertTrue(employeeContainer.getSize() == employees.size());
+		assertTrue(adminContainer.getSize() > 0);
+		assertTrue(adminContainer.getSize() == admins.size());
+		assertTrue(employeeContainer.getSize() > adminContainer.getSize());
+		assertTrue(customerContainer.getSize() > 0);
+		assertTrue(customerContainer.getSize() == customers.size());
+		assertTrue(unverifiedContainer.getSize() > 0);
+		assertTrue(unverifiedContainer.getSize() == unverifiedCustomers.size());
 	}
 	
 	@Test
@@ -175,15 +181,116 @@ public class BankAppTest
 	}
 	@Test
 	public void TestJointAccounts() {
-		customer1 = new Customer("user1", "password");
 		customer2 = new CustomerBuilder()
+				.withID(0)
 				.withUsername("user2")
-				.withPassword("password")
-				.makeCustomer(customer1);
-		customer1.makeNewAccounts();
+				.withPassword("password2")
+				.withFirstName("firstname2")
+				.withLastName("lastname2")
+				.withTelephone("1111111111")
+				.withEmail("newcustomer2@test.com")
+				.withIsCitizen(false)
+				.withIsEmployed(true)
+				.withEmployer("TestClass2")
+				.makeCustomer();
+		
+		customer1.setJointCustomer(customer2);		
+
 		assertTrue(customer1.getSavingsAccount() != null && customer2.getCheckingAccount() != null);
 		assertTrue(customer1.getSavingsAccount().getPairedAccount() == customer1.getCheckingAccount());
 		assertTrue(customer1.getCheckingAccount().getPairedAccount() == customer1.getSavingsAccount());
+		assertTrue(customer1.getID() == customer2.getJointCustomerID());
+		
+		assertTrue(customer1.getSavingsAccount().getBalance() == 0.0);
+		assertTrue(customer1.getCheckingAccount().getBalance() == 0.0);
+		customer1.getSavingsAccount().deposit(100);
+		assertTrue(customer1.getSavingsAccount().getBalance() == customer2.getSavingsAccount().getBalance() 
+				&& customer1.getSavingsAccount().getBalance() == 100);
+		
+		customer2.getCheckingAccount().deposit(100);
+		assertTrue(customer1.getCheckingAccount().getBalance() == customer2.getCheckingAccount().getBalance() 
+				&& customer1.getCheckingAccount().getBalance() == 100);
+		
+		assertTrue(customer1.getSavingsAccount().getID() == customer2.getSavingsAccount().getID());
+		assertTrue(customer1.getCheckingAccount().getID() == customer2.getCheckingAccount().getID());
+		
+		customer1.flag();
+		assertTrue(customer1.isFlagged() == customer2.isFlagged());
+		customer2.unflag();
+		assertTrue(customer1.isFlagged() == customer2.isFlagged());
+	}
+	
+	@Test
+	public void TestAccountTransfers() {
+		assertTrue(customer1.hasSavingsAccount());
+		assertTrue(customer1.hasCheckingAccount());
+		assertTrue(customer1.getSavingsAccount().getBalance() == 0.0);
+		assertTrue(customer1.getCheckingAccount().getBalance() == 0.0);
+		
+		assertTrue(customer1.getSavingsAccount().getOwner() == customer1);
+		assertTrue(customer1.getCheckingAccount().getOwner() == customer1);
+		
+		customer1.flag();
+		assertTrue(customer1.isFlagged());
+		assertTrue(customer1.getSavingsAccount().isFlagged());
+		assertTrue(customer1.getCheckingAccount().isFlagged());
+		customer1.unflag();
+		assertFalse(customer1.isFlagged());
+		assertFalse(customer1.getSavingsAccount().isFlagged());
+		assertFalse(customer1.getCheckingAccount().isFlagged());
+		
+		customer1.getSavingsAccount().deposit(-1.0);
+		assertTrue(customer1.isFlagged());
+		customer1.unflag();
+		assertFalse(customer1.isFlagged());
+		assertTrue(customer1.getSavingsAccount().getBalance() == 0.0);
+		customer1.getCheckingAccount().deposit(-1);
+		assertTrue(customer1.isFlagged());
+		customer1.unflag();
+		
+		customer1.getSavingsAccount().withdraw(1.0);
+		assertTrue(customer1.isFlagged());
+		assertTrue(customer1.getSavingsAccount().getBalance() == 0.0);
+		customer1.unflag();
+		customer1.getCheckingAccount().withdraw(1.0);
+		assertTrue(customer1.isFlagged());
+		assertTrue(customer1.getCheckingAccount().getBalance() == 0.0);
+		customer1.unflag();
+		
+		customer1.getSavingsAccount().deposit(1000.0);
+		customer1.getSavingsAccount().transferToChecking(500.0);
+		assertTrue(customer1.getSavingsAccount().getBalance() == customer1.getCheckingAccount().getBalance());
+		assertFalse(customer1.isFlagged());
+		
+		String savingsID = customer1.getSavingsAccount().getID();
+		String checkingID = customer1.getCheckingAccount().getID();
+		customer1.makeNewAccounts();
+		assertFalse(customer1.getSavingsAccount().getID() == savingsID);
+		assertFalse(customer1.getCheckingAccount().getID() == checkingID);
+		assertTrue(customer1.getSavingsAccount().getBalance() == customer1.getCheckingAccount().getBalance() 
+				&& customer1.getSavingsAccount().getBalance() == 0.0);
+	}
+	
+	@Test 
+	public void testLogins() throws InterruptedException {
+		LoginController login = new LoginController();
+		assertTrue(login.loginAsCustomer(customerContainer, "customer", "password") == true);
+		assertTrue(LoginController.getLoggedInCustomer().getCustomerID() == customer1.getCustomerID());
+		
+		login = new LoginController();
+		assertTrue(login.loginAsEmployee(employeeContainer, "employee", "password") == true);
+		assertTrue(LoginController.getLoggedInEmployee().getEmployeeID() == employee1.getEmployeeID());
+		
+		login = new LoginController();
+		assertTrue(login.loginAsAdmin(adminContainer, "admin", "password") == true);
+		assertTrue(LoginController.getLoggedInAdmin().getAdminID() == admin1.getAdminID());
+		
+		assertTrue(LoginController.getLoggedInUsername() == "admin");
+		assertTrue(LoginController.isLoggedIn() == true);
+		LoginController.logout();
+		assertTrue(LoginController.getLoggedInAdmin() == null);
+		assertTrue(LoginController.getLoggedInUsername() == null);
+		assertTrue(LoginController.isLoggedIn() == false);
 	}
 }
 

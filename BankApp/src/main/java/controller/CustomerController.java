@@ -37,6 +37,15 @@ public class CustomerController{
 		this.customerContainer = customerContainer;
 	}
 	public void selectCheckingOption(int selection) throws InterruptedException {
+		customerDAO = new CustomerDAO();
+		Customer jointCustomer = null;
+		int jointCustomerID = customer.getJointCustomerID();
+		if (customer.hasJointAccounts() && jointCustomerID > 0) {
+			if (customerDAO.checkIfCustomerExists(jointCustomerID, false)) jointCustomer = customerDAO.findCustomerByID(jointCustomerID, false);
+			if (jointCustomer != null) customer.resetJointCustomer(jointCustomer);
+		} else {
+		}
+		customerDAO = null;
 		
 		if (selection == 1) {
 			if (checking != null) System.out.println("Checking Balance: $" + checking.getBalance());
@@ -70,7 +79,11 @@ public class CustomerController{
 				checking.deposit(depositAmount);
 				customerDAO = new CustomerDAO();
 				log.debug("Attempting to deposit " + depositAmount + " into checking account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to deposit " + depositAmount + " into joint checking account where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+				}
 				System.out.println("Success! $" + depositAmount + " Has Been Added To Your Checking Account.");
 			}
 			String done = "";
@@ -100,7 +113,11 @@ public class CustomerController{
 				checking.withdraw(withdrawelAmount);
 				customerDAO = new CustomerDAO();
 				log.debug("Attempting to withdraw " + withdrawelAmount + " from checking account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to withdraw " + withdrawelAmount + " from joint checking account where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+				}
 				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Checking Account.");
 			}
 			String done = "";
@@ -130,8 +147,12 @@ public class CustomerController{
 			else {
 				checking.transferToSavings(transferAmount);
 				customerDAO = new CustomerDAO();
-				log.debug("Attempting to transfer " + transferAmount + " from checking account to savings account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(checking.getOwner(), false);
+				log.debug("Attempting to transfer " + transferAmount + " from checking account to savings account for customer where customer_id = " + customer.getID());
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to transfer " + transferAmount + " from checking account to savings account for joint checking account where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+				}
 				System.out.println("Success! $" + transferAmount + " Has Been Deposited To Your Savings Account.");
 			}
 			String done = "";
@@ -143,13 +164,24 @@ public class CustomerController{
 			return;
 		} else if (selection == stop) {
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 		else {
 			System.out.println(selection + " is not a valid input.\n");
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 	}
 	public void selectSavingsOption(int selection) throws InterruptedException {
+		customerDAO = new CustomerDAO();
+		Customer jointCustomer = null;
+		int jointCustomerID = customer.getJointCustomerID();
+		if (customer.hasJointAccounts() && jointCustomerID > 0) {
+			if (customerDAO.checkIfCustomerExists(jointCustomerID, false)) jointCustomer = customerDAO.findCustomerByID(jointCustomerID, false);
+			if (jointCustomer != null) customer.resetJointCustomer(jointCustomer);
+		} else {
+		}
+		customerDAO = null;
 		
 		if (selection == 1) {
 			if (checking != null) System.out.println(String.format("Savings Balance: $%.2f", savings.getBalance()));
@@ -183,7 +215,11 @@ public class CustomerController{
 				savings.deposit(depositAmount);
 				customerDAO = new CustomerDAO();
 				log.debug("Attempting to deposit " + depositAmount + " into savings account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to deposit " + depositAmount + " into joint savings account where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer,  false);
+				}
 				System.out.println(String.format("Success! $%.2f Has Been Added To Your Savings Account.", depositAmount));
 			}
 			String done = "";
@@ -213,7 +249,11 @@ public class CustomerController{
 				savings.withdraw(withdrawelAmount);
 				customerDAO = new CustomerDAO();
 				log.debug("Attempting to withdraw " + withdrawelAmount + " from savings account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to withdraw " + withdrawelAmount + " from joint savings account where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+				}
 				System.out.println("Success! $" + withdrawelAmount + " Has Been Deducted From Your Savings Account.");
 			}
 			String done = "";
@@ -244,7 +284,11 @@ public class CustomerController{
 				savings.transferToChecking(transferAmount);
 				customerDAO = new CustomerDAO();
 				log.debug("Attempting to transfer " + transferAmount + " from savings account to checking account where customer_id = " + customer.getID());
-				customerDAO.updateCustomerAndAccounts(savings.getOwner(), false);
+				customerDAO.updateCustomerAndAccounts(customer, false);
+				if (jointCustomer != null) {
+					log.debug("Attempting to transfer " + transferAmount + " from savings account to checking account for joint customer where customer_id = " + customer.getID());
+					customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+				}
 				System.out.println("Success! $" + transferAmount + " Has Been Deposited To Your Checking Account.");
 			}
 			String done = "";
@@ -254,12 +298,14 @@ public class CustomerController{
 			}
 			System.out.println();
 			return;
-		}else if (selection == stop) {
+		} else if (selection == stop) {
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 		else {
 			System.out.println(selection + " Is Not A Valid Input.\n");
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 	}
 	public void selectCustomerOption(int selection) throws InterruptedException {
@@ -267,7 +313,8 @@ public class CustomerController{
 		else if (selection == 2) begin(CustomerMenus.SAVINGS);
 		else if (selection == 3) {
 			Scanner cin = new Scanner(System.in);
-			System.out.println("If You Know The Unique ID Of The Customer You Wish To Add, \nYou May Type It To Request A Joint Account. ");
+			System.out.println("If You Know The Unique ID Of The Customer You Wish To Add.. You May Type It Now To Request A Joint Account. ");
+			System.out.println();
 			System.out.print("(Type \"0\" To Cancel): ");
 			int customerID = Integer.parseInt(cin.nextLine());
 			if (customerID == 0) {
@@ -275,33 +322,51 @@ public class CustomerController{
 				System.out.println("Returning The Customer Menu...");
 				System.out.println();
 				begin(CustomerMenus.SELECTION);
-			} else if (customer.getCustomerID() == 0){
+				return;
+			} else if (customerID == customer.getCustomerID()) {
+				System.out.println();
+				System.out.println("You Cannot Use Your Own ID In The Joint Customer Application.");
+				System.out.println();
+				begin(CustomerMenus.SELECTION);
+				return;
+			}
+			else if (customer.getCustomerID() == 0){
 				System.out.println();
 				System.out.println("Cannot Link Accounts For This Customer. Returning The Customer Menu...");
 				System.out.println();
 			} else {
 				customerDAO = new CustomerDAO();
 				boolean customerFound = customerDAO.checkIfCustomerExists(customerID, false);
-				if (customerFound) {
+				if (customer.hasJointAccounts()) {
+					System.out.println();
+					System.out.println("Our Record Show That Another Customer Is Already Linked To Your Account.");
+					System.out.println("Customers Are Only Able To Link To One Other Account.");
+					System.out.println("Please Contact An Administrator If You Wish To Unlink Accounts.");
+				} else if (customerFound) {
 					customer.setJointCustomerID(customerID);
 					log.debug("Attempting to create new joint customer application for customer where customer_id = " + customer.getID());
 					customerDAO.updateCustomerAndAccounts(customer,  false);
+					System.out.println();
 					System.out.println("Success! Your Application Has Been Submitted For Administrative Approval. \n" + 
 							"It May Take A Few Days To Process Your Request.");
 				} else {
+					System.out.println();
 					System.out.println("Unable To Find Customer Account With The ID You Specified. Please Contact An Administrator.");
 				}
 			}
 			System.out.println();
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 		else if (selection == stop) {
 			System.out.println("Bye " + customer.getFirstname() + "!\n");
 			LoginController.logout();
 			begin(CustomerMenus.LOGOUT);
+			return;
 		} else {
 			System.out.println(selection + " Is Not A Valid Option.\n");
 			begin(CustomerMenus.SELECTION);
+			return;
 		}
 	}
 	public void begin(CustomerMenus customerMenu) throws InterruptedException {

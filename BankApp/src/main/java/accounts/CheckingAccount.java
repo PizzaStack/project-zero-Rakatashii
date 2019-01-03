@@ -6,8 +6,7 @@ import model.AccountContainer;
 
 public class CheckingAccount implements Account {
 	protected final double maxDepositAmmount = 100000.0;
-	private final double minInitialBalance = 0.0;
-	private final double minBalance = -1000.0;
+	private final double minBalance = 0.0;
 	//public static boolean sampleMode;
 	
 	String checkingID;
@@ -32,7 +31,7 @@ public class CheckingAccount implements Account {
 	}
 	public CheckingAccount(String acc_num, double initial_balance){
 		joint = false;
-		if (initial_balance >= minInitialBalance) balance = initial_balance;
+		if (initial_balance >= minBalance) balance = initial_balance;
 		else this.flag();
 		
 		checkingID = acc_num;
@@ -48,7 +47,7 @@ public class CheckingAccount implements Account {
 			primary.setSavingsAccount(pairedSavingsAccount);
 		} 
 		
-		if (initial_balance >= minInitialBalance) balance = initial_balance;
+		if (initial_balance >= minBalance) balance = initial_balance;
 		else {
 			this.flag();
 			balance = 0.0;
@@ -76,7 +75,7 @@ public class CheckingAccount implements Account {
 			pairedSavingsAccount.sharedHolder = this.sharedHolder;
 		}
 		
-		if (initial_balance >= minInitialBalance) balance = initial_balance;
+		if (initial_balance >= minBalance) balance = initial_balance;
 		else {
 			this.balance = 0.0;
 			this.flag();
@@ -99,13 +98,13 @@ public class CheckingAccount implements Account {
 	}
 	@Override
 	public void deposit(double d) {
-		if (d <= maxDepositAmmount){
+		if (d <= maxDepositAmmount && d >= 0.0){
 			if (this.flagged == false) balance += d;
 		} else this.flag();
 	}
 	@Override
 	public void withdraw(double w) {
-		if ((balance - w) > minBalance) {
+		if ((balance - w) >= minBalance) {
 			if (this.flagged == false) balance -= w;
 		} else this.flag();
 	}

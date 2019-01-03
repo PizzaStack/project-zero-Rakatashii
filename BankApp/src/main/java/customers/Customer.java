@@ -30,7 +30,7 @@ public class Customer extends UnverifiedCustomer{
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
 	//protected static int numCustomers = customerDAO.getNumCustomers(true, sampleMode)+1;
 	protected static int numCustomers = customerDAO.getMaxID(sampleMode)+1;
-	private int custID = numCustomers;
+	private int customerID = numCustomers;
 	private int adminID = -1;
 	
 	static CustomerContainer customerContainer;
@@ -41,15 +41,15 @@ public class Customer extends UnverifiedCustomer{
 	
 	public Customer() { 
 		//super();
-		custID = -1;
+		customerID = -1;
 	}
 	public Customer(String username, String password) {
 		//super();
 		this.username = username;
 		this.password = password;
-		custID = nextOpenID();
-		if (custID == numCustomers) {
-			if (custID > numCustomers) numCustomers = custID;
+		customerID = nextOpenID();
+		if (customerID == numCustomers) {
+			if (customerID > numCustomers) numCustomers = customerID;
 			++numCustomers;
 		} 
 		if (customerContainerIsSet) customerContainer.push(this);
@@ -58,9 +58,9 @@ public class Customer extends UnverifiedCustomer{
 	public Customer(int id, String username, String password, String firstName, String lastName, String telephone, String email, boolean citizen, boolean employed, String employer, boolean joint, int jointCustomerID) {
 		//super(firstName, lastName, telephone, email, citizen, employed, employer);
 		if (id == -1) {
-			custID = numCustomers;
+			customerID = numCustomers;
 			++numCustomers;
-		} else this.custID = id;
+		} else this.customerID = id;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -85,17 +85,17 @@ public class Customer extends UnverifiedCustomer{
 	}
 	@Override
 	public int getID() {
-		return custID;
+		return customerID;
 	}
 	@Override
 	public void setID(int id) {
-		custID = id;
+		customerID = id;
 	}
 	public int getCustomerID() {
-		return custID;
+		return customerID;
 	}
 	public void setCustomerID(int id) {
-		custID = id;
+		customerID = id;
 	}
 	public int getAdminID() {
 		return adminID;
@@ -125,7 +125,7 @@ public class Customer extends UnverifiedCustomer{
 
 	@Override
 	public void getInfo() {
-		System.out.println("ID: " + this.custID);
+		System.out.println("ID: " + this.customerID);
 		if (this.username != null) System.out.println("Username: " + this.username);
 		if (this.password != null) System.out.println("Password: " + this.password);
 		if (this.firstName != null) System.out.println("First name: " + this.firstName);
@@ -217,6 +217,7 @@ public class Customer extends UnverifiedCustomer{
 	public void makeNewAccounts() {
 		this.savingsAccount = new SavingsAccount(this);
 		this.checkingAccount = new CheckingAccount(this);
+		this.savingsAccount.setOwner(this);
 		this.savingsAccount.setPairedAccount(this.checkingAccount);
 		this.checkingAccount.setPairedAccount(this.savingsAccount);
 	}
@@ -284,11 +285,43 @@ public class Customer extends UnverifiedCustomer{
 	
 	public void setJointCustomer(Customer c) {
 		this.jointCustomer = c;
+		double oldPrimarySavingsBalance = c.getSavingsAccount().getBalance();
+		double oldPrimaryCheckingBalance = c.getCheckingAccount().getBalance();
+		double oldJointSavingsBalance = this.jointCustomer.getSavingsAccount().getBalance();
+		double oldJointCheckingBalance = this.jointCustomer.getCheckingAccount().getBalance();
+		double newSavingsBalance = oldPrimarySavingsBalance + oldJointSavingsBalance;
+		double newCheckingBalance = oldPrimaryCheckingBalance + oldJointCheckingBalance;
+		
 		if (jointCustomer != null) {
 			joint = true;
 			this.jointCustomerID = jointCustomer.getCustomerID();
 			this.savingsAccount.setJointCustomer(c);
 			this.checkingAccount.setJointCustomer(c);
+			
+			jointCustomer.setJointCustomerID(this.customerID);
+			jointCustomer.jointCustomer = this;
+			jointCustomer.setSavingsAccount(this.savingsAccount);
+			jointCustomer.setCheckingAccount(this.checkingAccount);
+		}
+		
+		this.savingsAccount.setBalance(newSavingsBalance);
+		this.checkingAccount.setBalance(newCheckingBalance);
+	}
+	
+	public void resetJointCustomer(Customer c) {
+		this.jointCustomer = c;
+		
+		if (jointCustomer != null) {
+			this.joint = true;
+			this.jointCustomerID = jointCustomer.getCustomerID();
+			this.savingsAccount.setJointCustomer(c);
+			this.checkingAccount.setJointCustomer(c);
+			
+			jointCustomer.joint = true;
+			jointCustomer.setJointCustomerID(this.customerID);
+			jointCustomer.jointCustomer = this;
+			jointCustomer.setSavingsAccount(this.savingsAccount);
+			jointCustomer.setCheckingAccount(this.checkingAccount);
 		}
 	}
 	
@@ -307,9 +340,9 @@ public class Customer extends UnverifiedCustomer{
 				this.jointCustomer.setJointCustomerID(-1);
 				if (this.jointCustomer.getJointCustomer() != null)
 					this.jointCustomer.makeNewAccounts();
-					this.jointCustomer.setJointCustomer(null);
+					this.jointCustomer.jointCustomer = null;
 			}
-			setJointCustomer(null);
+			jointCustomer = null;
 			this.joint = false;
 			this.jointCustomerID = -1;
 		}

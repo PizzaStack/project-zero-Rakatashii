@@ -27,6 +27,8 @@ public class Symbols {
 	public static String bottomRight = String.valueOf('\u256F');
 	public static String boxVertical = String.valueOf('\u2502');
 	public static String boxHorizontal = String.valueOf('\u2500');
+	public static String bullet = String.valueOf('\u232F');
+	public static String boxVertRight = String.valueOf('\u257A');
 	
 	public static void printSymbols() {
     	System.out.println(whiteStar);

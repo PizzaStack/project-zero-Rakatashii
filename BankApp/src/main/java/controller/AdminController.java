@@ -110,6 +110,7 @@ public class AdminController{
 				System.out.println("\"6\" - To Alter Checking Account Balance.");
 				System.out.println("\"7\" - To Unlink Joint Accounts (This ID Will Be The New Account Holder).");
 				System.out.println("\"8\" - To Delete Customer.");
+				System.out.println("\"9\" - To Select A Different Customer.");
 				System.out.println();
 				System.out.println(footer);
 				System.out.println();
@@ -120,11 +121,14 @@ public class AdminController{
 				CheckingAccount checking = customer.getCheckingAccount();
 				
 				Customer jointCustomer = null;
-				if (customer.hasJointAccounts())
+				if (customer.hasJointAccounts()) {
 					if (customer.getJointCustomer() == null) {
-						if (customerDAO.checkIfCustomerExists(customer.getJointCustomerID(), false))
+						if (customerDAO.checkIfCustomerExists(customer.getJointCustomerID(), false)) {
 							jointCustomer = customerDAO.findCustomerByID(customer.getJointCustomerID(), false);
-					} else jointCustomer = customer.getJointCustomer();
+							customer.resetJointCustomer(jointCustomer);
+						}
+					} 
+				}
 				
 				boolean finishedOption = false;
 				System.out.println();
@@ -256,6 +260,9 @@ public class AdminController{
 						customerDAO.deleteCustomer(customer, false);
 						System.out.println();
 						finishedOption = true;
+					} else if (option == 9) {
+						finishedOption = true;
+						selectCustomerOption(2);
 					}
 					
 					if (finishedOption == true) {
@@ -270,9 +277,7 @@ public class AdminController{
 							}
 						}
 					}
-
 				}
-				
 			}
 			return;
 		} else if (selection == 3) {
@@ -306,23 +311,48 @@ public class AdminController{
 						System.out.print("Enter \"c\" To Continue or \"e\" To Re-Enable Customer Account. ");
 						done = cin.next();
 						if (done.toLowerCase().contains("e")) {
+							Customer jointCustomer = null;
+							int jointCustomerID = customer.getJointCustomerID();
+							if (customer.hasJointAccounts() && jointCustomerID > 0) {
+								if (customerDAO.checkIfCustomerExists(jointCustomerID, false)) jointCustomer = customerDAO.findCustomerByID(jointCustomerID, false);
+								if (jointCustomer != null) customer.resetJointCustomer(jointCustomer);
+							} 
+							
 							customer.unflag();
 							log.debug("Attempting to unflag customer where customer_id = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
+							
+							if (jointCustomer != null) {
+								jointCustomer.unflag();
+								log.debug("Attempting to flag joint customer where customer_id = " + jointCustomer.getCustomerID());
+								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+							}
 						} else if (done.toLowerCase().contains("c"))
 							break;
 					} else {
 						System.out.print("Enter \"c\" To Continue or \"d\" To Disable Customer Account. ");
 						done = cin.next();
 						if (done.toLowerCase().contains("d")) {
+							Customer jointCustomer = null;
+							int jointCustomerID = customer.getJointCustomerID();
+							
+							if (customer.hasJointAccounts() && jointCustomerID > 0) {
+								if (customerDAO.checkIfCustomerExists(jointCustomerID, false)) jointCustomer = customerDAO.findCustomerByID(jointCustomerID, false);
+								if (jointCustomer != null) customer.resetJointCustomer(jointCustomer);
+							} 
 							customer.flag();
 							log.debug("Attempting to flag customer where customer_id = " + customer.getCustomerID());
 							customerDAO.updateCustomerAndAccounts(customer, false);
+					
+							if (jointCustomer != null) {
+								jointCustomer.flag();
+								log.debug("Attempting to flag joint customer where customer_id = " + jointCustomer.getCustomerID());
+								customerDAO.updateCustomerAndAccounts(jointCustomer, false);
+							}
 						}
 						else if (done.toLowerCase().contains("c")) break;
 					}
 				}
-				
 			} else {
 				String done = "";
 				while (!done.toLowerCase().contains("c")) {
@@ -330,7 +360,6 @@ public class AdminController{
 					done = cin.next();
 				}
 			}
-
 			System.out.println();
 			return;
 		} else if (selection == 4) {

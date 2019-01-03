@@ -65,13 +65,23 @@ CREATE TABLE accounts (
 
 // Test Joint
 INSERT INTO customers_with_accounts VALUES(0, 'user', 'pass', 'first', 'last', '1111111111', 'ex@gmail.org', false, true, 'rev', '1234567', 0.00, '2345678', 0.00, false, true, 1);
-INSERT INTO customers_with_accounts VALUES(1, 'userr', 'passs', 'firstt', 'lastt', '2111111111', 'ex1@gmail.org', false, true, 'rev1', '1234567', 1.00, '2345678', 1.50, false, true, 0);  
+INSERT INTO customers_with_accounts VALUES(1, 'userr', 'passs', 'firstt', 'lastt', '2111111111', 'ex1@gmail.org', false, true, 'rev1', '1234567', 1.00, '2345678', 1.50, false, true, 0);
 
 // So dont need to rewrite
 INSERT INTO customers_with_accounts VALUES(1, 'user', 'pass', 'first', 'last', '1111111111', 'ex@gmail.org', false, true, 'rev', '12342678', 0.00, '23456718', 0.00, false, false, -1);
 INSERT INTO customers_with_accounts VALUES(2, 'userr', 'passs', 'firstt', 'lastt', '2111111111', 'ex1@gmail.org', false, true, 'rev1', '12434567', 1.00, '23495678', 1.50, false, false, -1); 
 INSERT INTO customers_with_accounts VALUES(5, 'dolphin', 'pashwarf', 'henry', 'hacker', '9283452345', 'lwerk@gmail.org', false, true, 'paper', '82434567', 19182.00, '63495678', 20394.50, false, false, -1); 
 INSERT INTO customers_with_accounts VALUES(6, 'warthog', 'pallmoarf', 'daniel', 'sagger', '1283452445', 'doubled@gmail.net', false, true, 'sandfish', '52424567', 282.00, '63491278', 42391.20, false, false, -1);
+
+// For practice joins
+//Fill:
+INSERT INTO customers_with_accounts VALUES(10, 'primary', 'password', 'wolf', 'cola', '1234567098', 'ex@gmail.org', false, true, 'rev', '5678904321', 0.00, '2345678560', 0.00, false, false, -1);
+INSERT INTO customers_with_accounts VALUES(11, 'join_with', 'password', 'bird', 'teeth', '0987654123', 'ex1@gmail.org', false, true, 'rev1', '1234567098', 1.00, '2345678678', 1.50, false, false, -1);
+
+//Undo:
+delete from customers_with_Accounts where customer_id = 10;
+update customers_With_Accounts set savings_number = 1234567098, savings_amount = 0.0, checking_number = 2345678678, checking_amount = 0.0, joint = false, joint_customer_id = -1 where customer_id = 11;
+INSERT INTO customers_with_accounts VALUES(10, 'primary', 'password', 'wolf', 'cola', '1234567098', 'ex@gmail.org', false, true, 'rev', '5678904321', 0.00, '2345678560', 0.00, false, false, -1);
 
 // TO DROP TRIGGER: DROP TRIGGER IF EXISTS insert_customers ON customers_with_Accounts CASCADE;
 ---------------------customers trigger------------------------

@@ -119,14 +119,16 @@ public class SavingsAccount implements Account{
 	}
 	@Override
 	public void deposit(double d) {
-		if (d < maxDepositAmmount)
+		if (d < maxDepositAmmount && d >= 0.0) {
 			if (flagged == false) balance += d;
+		}
 		else this.flag();
 	}
 	@Override
 	public void withdraw(double w) {
-		if (balance - w >= minBalance)
+		if ((balance - w) >= minBalance) {
 			if (flagged == false) balance -= w;
+		}
 		else this.flag();
 	}
 	public void transferToChecking(double amount) {

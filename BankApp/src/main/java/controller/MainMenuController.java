@@ -54,18 +54,7 @@ public class MainMenuController {
 			registrationController.call();
 			System.out.println();
 			begin(Menus.DEFAULT);
-			/*
-			Scanner cin = new Scanner(System.in);
-			String nextOption = "";
 
-			System.out.println("Enter \"o\" To Overide If You Are An Employee Or \"m\" To Return To The Menu.");
-			if (nextOption.toLowerCase().contains("a")) {
-				// TODO if login as employee is successful, convert unverified into customer and return to main menu.
-				begin(Menus.DEFAULT);
-			} else if (nextOption.toLowerCase().contains("m")) begin(Menus.DEFAULT);
-			
-			begin(Menus.DEFAULT);
-			*/
 		} else if (selection == 2) { 
 			
 			login = new LoginController();
@@ -78,9 +67,8 @@ public class MainMenuController {
 				isVerified = true; 
 			}
 			else while (isVerified == false && login.getNumTries() > 0)
-				isVerified = login.loginAsCustomer(customerContainer);
+				isVerified = login.loginAsCustomer(customerContainer, null, null);
 			if (isVerified == true) {
-				//customerController.passCustomerContainer(containers.getCustomerContainer());
 				customerController.begin(CustomerMenus.SELECTION);
 			} else System.out.println("Error. Customer could not be verified.");
 			return;
@@ -98,9 +86,8 @@ public class MainMenuController {
 				isVerified = true; 
 			}
 			else while (isVerified == false && login.getNumTries() > 0) 
-				isVerified = login.loginAsEmployee(employeeContainer);
+				isVerified = login.loginAsEmployee(employeeContainer, null, null);
 			if (isVerified == true) {
-				//employeeController = new EmployeeController();
 				employeeController.begin(EmployeeMenus.SELECTION);
 			} else System.out.println("Error. Employee could not be verified.");
 			return;
@@ -118,15 +105,14 @@ public class MainMenuController {
 				isVerified = true; 
 			}
 			else while (isVerified == false && login.getNumTries() > 0) 
-				isVerified = login.loginAsAdmin(adminContainer);
+				isVerified = login.loginAsAdmin(adminContainer, null, null);
 			if (isVerified == true) {
-				//employeeController = new EmployeeController();
 				adminController.begin(AdminMenus.SELECTION);
 			} else System.out.println("Error. Admin could not be verified.");
 			return;
 			
 		}
-		else if (selection == stop) { System.out.println("Shutting down..."); }
+		else if (selection == stop) { System.out.println("Shutting down..."); return; }
 		else System.out.println(selection + " is not a valid input.\n");
 		return;
 	}

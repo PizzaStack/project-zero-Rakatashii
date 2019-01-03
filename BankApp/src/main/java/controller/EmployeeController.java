@@ -256,17 +256,21 @@ public class EmployeeController {
 	public void selectEmployeeOption(int selection) throws InterruptedException {
 		if (selection == 1) {
 			begin(EmployeeMenus.CUSTOMERS);
+			return;
 		} else if (selection == 2) {
 			begin(EmployeeMenus.UNVERIFIED);
+			return;
 		} else if (selection == stop) {
 			if (employee != null) System.out.println("Bye " + employee.getUsername() + "!\n");
 			else System.out.println("???");
 			LoginController.logout();
 			begin(EmployeeMenus.LOGOUT);
+			return;
 		}
 		else {
 			System.out.println(selection + " is not a valid input.\n");
 			begin(EmployeeMenus.SELECTION);
+			return;
 		}
 	}
 	

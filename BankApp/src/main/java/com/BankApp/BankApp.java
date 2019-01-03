@@ -91,6 +91,8 @@ public class BankApp
     	setup = null;
     	System.gc();
     	
+    	Customer customer = new Customer();
+    	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
@@ -101,7 +103,6 @@ public class BankApp
     /** TODO Checklist
      * Normalize tables (prob skip at this point...)
      * Way More More Tests
-     * Finish Controller Logging
      * May want to add triggers to sample tables as well
        - may want to automatically generate triggers if possible
      
@@ -116,6 +117,10 @@ public class BankApp
        strengths - i.e., grouping related classes in the same package. 
        - Evident especially in problems arising from having the controllers and views
            communicate with one another between packages.
+     * Stored Procedure Is Utilized in Triggers - one for accounts one for customers, which have the same fields as 
+       customers_with_accounts.
+       - Using the triggers, queries are faster on the customers and accounts tables, while can still insert to 
+       all three by inserting to customers_with_accounts
     */
     
 }
