@@ -2,10 +2,8 @@ CREATE OR REPLACE FUNCTION delete_accounts ()
 RETURNS TRIGGER AS 
 $da$
 	BEGIN
-		IF (TG_OP = 'DELETE') THEN
-			
+		IF (TG_OP = 'DELETE') THEN			
 			DELETE FROM accounts WHERE customer_id = OLD.customer_id;
-
 		END IF;
 		RETURN OLD;
 	END;

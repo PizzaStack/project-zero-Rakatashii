@@ -3,6 +3,7 @@ RETURNS TRIGGER AS
 $iude$
 	BEGIN
 		IF (TG_OP = 'INSERT') THEN
+		
 			INSERT INTO employees VALUES(NEW.employee_id, NEW.username, NEW.password, 
 			NEW.admin, NEW.admin_id);
 		
@@ -16,10 +17,10 @@ $iude$
 					admin_id = NEW.admin_id
 				WHERE employee_id = NEW.employee_id;
 			END IF;
+			
 		ELSIF (TG_OP = 'DELETE') THEN
 			
 			DELETE FROM employees WHERE employee_id = OLD.employee_id;
-
 			RETURN OLD;
 			
 		END IF;

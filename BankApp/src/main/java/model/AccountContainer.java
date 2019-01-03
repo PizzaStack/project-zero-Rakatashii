@@ -20,12 +20,10 @@ import database.DBConnection;
 public class AccountContainer {
 	private ArrayList<CheckingAccount> checkingAccounts = new ArrayList<CheckingAccount>();
 	private ArrayList<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-	//String accountsFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
 	File sampleAccountsFile = new File("text_files/account_sample.txt");
 	
 	public AccountContainer(  ) { accountDAO = new AccountDAO(); }
 	
-	//public File getSampleAccountsFile() { return sampleAccountsFile; }
 	private AccountDAO accountDAO;
 	
 	public void readIn(File file) {
@@ -53,7 +51,6 @@ public class AccountContainer {
 			}
 			cin.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -72,38 +69,27 @@ public class AccountContainer {
 		else return false;
 	}
 	public boolean verifyUniqueCheckingID(String id) {
-		//System.out.println("Checking ID is not unique");
 		for (CheckingAccount c : checkingAccounts) {
 			if (id == c.getID()) return false;
 		}
 		return true;
 	}
 	public boolean verifyUniqueSavingsID(String id) {
-		//System.out.println("Savings ID is not unique");
 		for (SavingsAccount s : savingsAccounts) {
 			if (id == s.getID()) return false;
 		}
 		return true;
 	}
-	
-	// Figure out whether it's better to do accountDAO lookup here or not.
+
 	public static String generateNewID(int idLength) {
 		String numChars = "1234567890";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        while (idBuild.length() < idLength) { // length of the random string.
+        while (idBuild.length() < idLength) { 
             int index = (int) (rand.nextFloat() * numChars.length());
             idBuild.append(numChars.charAt(index));
         }
         String newID = idBuild.toString();
         return newID;
 	}
-	/*
-	public String generateUniqueID(String field) {
-		String randomID = "not_working";
-		while (accountDAO.doesNotHaveDuplicateStringField(randomID, field, false))
-			randomID = (UUID.randomUUID().toString()).replaceAll("-", "").substring(0,7);
-		return randomID;
-	}
-	*/
 }

@@ -34,6 +34,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	public UnverifiedCustomerContainer() {
 		super();
 	}
+	
 	public UnverifiedCustomer get(int index){
 		UnverifiedCustomer applicant = null;
 		if (index < unverified.size()) applicant = unverified.get(index);
@@ -48,19 +49,24 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		}
 		return null;
 	}
+	
 	public void remove(UnverifiedCustomer unverifiedCustomer) {
 		unverified.remove(unverifiedCustomer);
 		reindex(unverifiedCustomer.getID());
 	}
+	
 	public ArrayList<UnverifiedCustomer> getArrayList(){
 		return unverified;
 	}
+	
 	public void setArrayList(ArrayList<UnverifiedCustomer> unverified) {
 		this.unverified = unverified;
 	}
+	
 	public Class<?> getType(){
 		return type;
 	}
+	
 	public ArrayList<UnverifiedCustomer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
@@ -77,25 +83,24 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		}
 		return unverified;
 	}
+	
 	public void printColumnNames() {
 		System.out.printf("%-4s%-15s%-15s%-14s%-35s%-10s%-10s%-35s\n", "ID", "FIRST_NAME", "LAST_NAME", "TELEPHONE", "EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER");
 	}
+	
 	public void printAll(boolean columnHeaders) {
 		if (columnHeaders) printColumnNames();
 		for (int i = 0; i < unverified.size(); i++) {
 			unverified.get(i).printRow();
 		}
 	}
+	
 	public void printNthRow(int index) {
 		unverified.get(index).printRow();
 	}
+	
 	public void push(UnverifiedCustomer unverifiedCustomer) {
-		/*if (this.type != person.getClass()) {
-			System.out.println("Failed to push. Object must be of same type as Container class.");
-			return;
-		}*/
  		unverified.add(unverifiedCustomer);
- 		//unverifiedCustomer.setID(unverified.size()-1);
 		if (unverifiedCustomer.getID() < unverified.size()-1) reindex(0);
 	}
 
@@ -107,10 +112,12 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	public void clear() {
 		unverified.clear();
 	}
+	
 	public int getSize() {
 		if (unverified != null) return unverified.size();
 		else return 0;
 	}
+	
 	public void reindex(int start) {
 		if (start >= unverified.size()) return;
 		for (int i = start; i < unverified.size(); i++) {
@@ -123,22 +130,16 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 	public void setTextFileName(String textName) {
 		textFileName = textName;
 	}
+	
 	public void setBinaryFileName(String binaryName) {
 		binaryFileName = binaryName;
 	}
+	
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
 	
 	public void readIn(File file) throws IOException {
-		/*
-		if (file.exists() == false) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				throw e;
-			}
-		} */
 		String line;
 		String[] fields = new String[7];
     	try {
@@ -157,15 +158,14 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 						.withIsEmployed(Boolean.parseBoolean(fields[5]))
 						.withEmployer(fields[6])
 						.makeUnverifiedCustomer();
-				//unverified.add(newUnverified);
 			}
 			reindex(oldArraySize);
-			// TODO - add newUnverified to this.unverified
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
 	public int getRowIndex(String row) {
 		String firstIntInLinePattern = "^\\d+(?=\\W|\\|)";
         Pattern pattern = Pattern.compile(firstIntInLinePattern);
@@ -189,7 +189,6 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
         		ps.print(row);
         	}
 	    } catch (IOException e) {
-	        // TODO System.err.println("Error in writing to file");
 	        throw e;
 	    } finally {
 	        if (ps != null) ps.close();
@@ -201,6 +200,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void writeToBinaryFile(boolean truncate) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -221,7 +221,6 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			data = new byte[size];
 			data = row.getBytes();
 			if (i == 0 && row.charAt(0) != 0) {
-				// TODO LOG: //System.out.println("reindexing UnverifiedCustomerArray...");
 				reindex(0);
 			}
 			if (i == 0 && truncate) {
@@ -240,6 +239,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			}
 		}
 	}
+	
 	public void appendToTextFile(UnverifiedCustomer unverifiedCustomer, boolean binary) {
 		File file = new File(textFileName);
 		try (
@@ -267,6 +267,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void appendToBinaryFile(UnverifiedCustomer unverifiedCustomer, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -284,6 +285,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 			writeToBinaryFile(false);
 		} 
 	}
+	
 	//@Override
 	public void printAll() {
 		for (UnverifiedCustomer e : this.unverified) {
@@ -311,7 +313,7 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
 		String alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((12 - 6) + 1) + 6;
+        int usernameLength = rand.nextInt((10 - 6) + 1) + 6;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphaChars.length());
             idBuild.append(alphaChars.charAt(index));
@@ -319,11 +321,12 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
         String newID = idBuild.toString();
         return newID;
 	}
+	
 	public static String generateNewPassword() {
 		String alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder idBuild = new StringBuilder();
         Random rand = new Random();
-        int usernameLength = rand.nextInt((10 - 8) + 1) + 10;
+        int usernameLength = rand.nextInt((10 - 6) + 1) + 6;
         while (idBuild.length() < usernameLength) { // length of the random string.
             int index = (int) (rand.nextFloat() * alphanumericChars.length());
             idBuild.append(alphanumericChars.charAt(index));
@@ -331,9 +334,4 @@ public class UnverifiedCustomerContainer<T> implements PersonContainer<Person>{
         String newID = idBuild.toString();
         return newID;
 	}
-	
-	/* // TODO Implement these
-	public boolean hasDuplicate(Employee e) { return false; } 
-	public static void rebase(String fileName) throws IOException {}
-	*/
 }

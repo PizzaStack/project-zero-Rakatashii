@@ -3,6 +3,7 @@ RETURNS TRIGGER AS
 $iua$
 	BEGIN
 		IF (TG_OP = 'INSERT') THEN
+		
 			INSERT INTO accounts VALUES(NEW.customer_id, NEW.savings_number, NEW.savings_amount, 
 			NEW.checking_number, NEW.checking_amount, NEW.flagged, NEW.joint, NEW.joint_customer_id);
 		

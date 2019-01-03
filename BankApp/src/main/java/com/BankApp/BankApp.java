@@ -49,18 +49,17 @@ import model.UnverifiedCustomerContainer;
 
 public class BankApp 
 {
-	
 	/* LOGIN INFO:
 	 *  Customer  username = "Guy.Fieri",    password = "password"
+	 *  Customer  usernmae = "Guy.Harvey",   password = "password"
     	Employee  username = "pokemonfreak", password = "charmanderbulbasaur"
     	Admin     username = "rakatashii",   password = "password"
 	*/
-	
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
     	PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator +
     			"\\src\\main\\java\\resources\\log4j.properties");
     	final Logger log = Logger.getLogger(BankApp.class);
-    	log.debug("New Run: ");
+    	log.debug("Program Started. ");
     	
     	DBSetup setup = new DBSetup(true);
     	setup.initializeSampleTables();
@@ -88,22 +87,14 @@ public class BankApp
     	setup.passContainers(containers);
     	setup.initializeActualTables();
     	
-    	AccountDAO accountDAO = new AccountDAO();
-    	CustomerDAO customerDAO = new CustomerDAO();
-    	UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
-    	EmployeeDAO employeeDAO = new EmployeeDAO();
-    	AdminDAO adminDAO = new AdminDAO();
-    	
     	setup.finishDBSetup();
     	setup = null;
     	System.gc();
-    	
-    	Customer customer = new Customer();
     	
     	MainMenuController mainController = new MainMenuController();
     	mainController.passContainers(containers);
     	mainController.begin(Menus.DEFAULT);
     	System.out.println("Program Terminated.");
-    	log.debug("Program Reached End.");
+    	log.debug("Program Terminated.");
     }
 }

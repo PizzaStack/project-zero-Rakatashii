@@ -33,6 +33,8 @@ Tables accounts already exists.
 Tables unverified_customers already exists.
 Tables employees already exists.
 Tables admins already exists.
+SQLException in CustomerDAO#addCustomer
+
 SQLException in AdminDAO#addAdmin
 
 

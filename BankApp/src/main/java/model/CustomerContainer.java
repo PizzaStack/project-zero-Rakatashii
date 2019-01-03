@@ -30,7 +30,6 @@ public class CustomerContainer implements PersonContainer<Person>{
 	private ArrayList<Customer> customers = new ArrayList<Customer>(); 
 	private Class<?> type = new Customer().getClass();
 	private String sampleTextFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/customer_sample.txt";
-	//private String sampleAccountFileName = "/c/Users/Associate/java/project-zero-Rakatashii/BankApp/text_files/account_sample.txt";
 	private String sampleAccountFileName = "text_files/account_sample.txt";
 	private String textFileName = "no_text_file_destination_for_customers";
 	private String binaryFileName = "no_binary_file_destination_for_customers";
@@ -40,10 +39,6 @@ public class CustomerContainer implements PersonContainer<Person>{
 	
 	public CustomerContainer() {
 		super();
-	}
-	
-	public static void refreshDBCustomers() {
-		//DBCustomers = new CustomerDAO().getAllCustomers(Customer.sampleMode);
 	}
 	
 	public Person Get(int index){
@@ -59,17 +54,20 @@ public class CustomerContainer implements PersonContainer<Person>{
 			}
 		}
 		return null;
-		// OLD DEF: return customers.get(index);
 	}
+	
 	public ArrayList<Customer> getArrayList(){
 		return customers;
 	}
+	
 	public void setArrayList(ArrayList<Customer> customers) {
 		this.customers = customers;
 	}
+	
 	public Class<?> getType(){
 		return type;
 	}
+	
 	public boolean userExists(Customer customer) {
 		for (Customer c : customers) {
 			if (customer.getUsername() == c.getUsername()) {
@@ -78,6 +76,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return false;
 	}
+	
 	public ArrayList<Customer> getArrayListFromSample() {
 		File file = new File(this.sampleTextFileName);
 		if (file.exists() == false) {
@@ -94,31 +93,33 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return customers;
 	}
+	
 	public void printColumnNames() {
 		System.out.printf("%-10s%-20s%-20s%-15s%-15s%-15s%-40s%-10s%-10s%-35s%-20s%-20s%-20s%-20s%-20s%-20s%-20s\n", 
 				"ID", "USERNAME", "PASSWORD", "FIRST_NAME", "LAST_NAME", "TELEPHONE", 
 				"EMAIL", "CITIZEN?", "EMPLOYED?", "EMPLOYER", "SAVINGS_NUMBER", "SAVINGS_AMOUNT", 
 				"CHECKING_NUMBER", "CHECKING_AMOUNT", "FLAGGED", "JOINT", "JOINT_CUST_ID");
 	}
+	
 	public void push(Customer customer) {
-		/*if (this.type != person.getClass()) {
-			System.out.println("Failed to push. Object must be of same type as Container class.");
-			return;
-		}*/
  		customers.add(customer);
 		if (customer.getID() < customers.size()-1) reindex(0);
 	}
+	
 	public void removeAt(int index) {
 		customers.remove(index);
 		reindex(index);
 	}
+	
 	public void clear() {
 		customers.clear();
 	}
+	
 	public int getSize() {
 		if (customers != null) return customers.size();
 		else return 0;
 	}
+	
 	public void reindex(int start) {
 		if (start >= customers.size()) return;
 		for (int i = start; i < customers.size(); i++) {
@@ -127,49 +128,40 @@ public class CustomerContainer implements PersonContainer<Person>{
 		new Customer().setCount(customers.size());
 		//System.gc();
 	}
+	
 	public void setTextFileName(String textName) {
 		textFileName = textName;
 	}
+	
 	public void setBinaryFileName(String binaryName) {
 		binaryFileName = binaryName;
 	}
+	
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
+	
 	public void printAll() {
 		for (Customer c : customers) {
 			 c.printRow();
 		}
 	}
+	
 	public void readIn(File file) throws IOException {
-		/*
-		if (file.exists() == false) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				throw e;
-			}
-		}*/
 		String line;//, line2;
 		File accountFile = new File(sampleAccountFileName);
 		
 		String[] fields = new String[9];
-		//String[] accFields = new String[4];
     	try {
-    		// Need to figure out safest way to scan two files at once so that customer
-    		// can be synchronized with account
 			Scanner cin = new Scanner(file);
-			//Scanner cin2 = new Scanner(accountFile);
 			int oldArraySize = getSize();
-			while (cin.hasNextLine() /*&& cin2.hasNextLine()*/) {
+			while (cin.hasNextLine()) {
 				line = cin.nextLine();
-				//line2 = cin2.nextLine();
 				
 				String delimiters = "\\|";
 				fields = line.split(delimiters);
 				Helpers helper = new Helpers();
 				Customer customer = new CustomerBuilder()
-						//.withID(Integer.parseInt(fields[0]))
 						.withUsername(fields[0])
 						.withPassword(fields[1])
 						.withFirstName(fields[2])
@@ -180,29 +172,14 @@ public class CustomerContainer implements PersonContainer<Person>{
 						.withIsEmployed(Boolean.parseBoolean(fields[7]))
 						.withEmployer(fields[8])
 						.makeCustomer();
-				
-				//accFields = line2.split(delimiters);
-				//CheckingAccount checkingAccount = new CheckingAccount(accFields[0], Double.parseDouble(accFields[1]), customer);
-				//customer.setCheckingAccount(checkingAccount);
-				//SavingsAccount savingsAccount = new SavingsAccount(accFields[2], Double.parseDouble(accFields[3]), customer);
-				//customer.setSavingsAccount(savingsAccount);
-				
-				// TODO // May be best to do this in a separate accountContainer, then 
-				// iterate through the customers Array and create the accounts there.
-				/*
-				CheckingAccount checkingAccount = new CheckingAccount(fields[0], Integer.parseInt(fields[1]);
-				SavingsAccount savingsAccount = new SavingsAccount(fields[2], Integer.parseInt(fields[3]);
-				customer.setCheckingAccount(checkingAccount);
-				customer.setSavingsAccount(savingsAccount);
-				*/
 			}
 			reindex(oldArraySize);
-			// TODO - add newUnverified to this.customers
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
 	public int getRowIndex(String row) {
 		String firstIntInLinePattern = "^\\d+(?=\\W|\\|)";
         Pattern pattern = Pattern.compile(firstIntInLinePattern);
@@ -211,6 +188,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 		numString = matcher.matches() ? matcher.group(1) : "0";
 		return Integer.parseInt(numString);
 	}
+	
 	public void writeToTextFile(boolean truncate, boolean binary) throws IOException {
 		File file = new File(textFileName);
 		boolean append = (truncate) ? false : true;
@@ -225,7 +203,6 @@ public class CustomerContainer implements PersonContainer<Person>{
         		ps.print(row);
         	}
 	    } catch (IOException e) {
-	        // TODO System.err.println("Error in writing to file");
 	        throw e;
 	    } finally {
 	        if (ps != null) ps.close();
@@ -237,6 +214,7 @@ public class CustomerContainer implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void writeToBinaryFile(boolean truncate) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -257,7 +235,6 @@ public class CustomerContainer implements PersonContainer<Person>{
 			data = new byte[size];
 			data = row.getBytes();
 			if (i == 0 && row.charAt(0) != 0) {
-				// TODO LOG: //System.out.println("reindexing CustomerArray...");
 				reindex(0);
 			}
 			if (i == 0 && truncate) {
@@ -276,6 +253,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 			}
 		}
 	}
+	
 	public void appendToTextFile(Customer customer, boolean binary) {
 		File file = new File(textFileName);
 		try (
@@ -303,6 +281,7 @@ public class CustomerContainer implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void appendToBinaryFile(Customer customer, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -341,6 +320,7 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return true;
 	}
+	
 	public boolean checkUniqueAccountInfo(Customer customer) {
 		for (Customer c : customers) {
 			if (customer.getSavingsAccount().getID() == c.getSavingsAccount().getID())
@@ -349,19 +329,4 @@ public class CustomerContainer implements PersonContainer<Person>{
 		}
 		return true;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

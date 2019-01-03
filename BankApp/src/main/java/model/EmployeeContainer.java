@@ -38,45 +38,57 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public EmployeeContainer() {
 		super();
 	}
+	
 	public Class<? extends Person> getType(){
 		return type;
 	}
+	
 	public ArrayList<Employee> getArrayList(){
 		return this.employees;
 	}
+	
 	public void setArrayList(ArrayList<Employee> employees) {
 		this.employees = employees;
 	}
+	
 	public void setSampleFile(String sampleFile) {
 		sampleTextFileName = sampleFile;
 	}
+	
 	//@Override
 	public void printColumnNames() {
 		System.out.printf("%-10s%-20s%-20s%-10s%-10s\n", "EMPL_ID", "USERNAME", "PASSWORD", "ADMIN", "ADMIN_ID");
 	}
+	
 	public void printAll() {
 		printColumnNames();
 		for (int i = 0; i < employees.size(); i++) {
 			this.employees.get(i).printRow();
 		}
 	}
+	
 	public void printNthRow(int index) {
 		this.employees.get(index).printRow();
 	}
+	
 	public void push(Employee person) {
  		this.employees.add(person);
 		if (person.getID() < employees.size()-1) reindex(0);
 	}
+	
 	public void removeAt(int index) {
 		this.employees.remove(index);
 		reindex(index);
 	}
+	
 	public void clear() {
 		this.employees.clear();
 	}
+	
 	public int getSize() {
 		return this.employees.size();
 	}
+	
 	public void reindex(int start) {
 		if (start >= this.employees.size()) return;
 		for (int i = start; i < employees.size(); i++) {
@@ -87,9 +99,11 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	public void setTextFileName(String textName) {
 		textFileName = textName;
 	}
+	
 	public void setBinaryFileName(String binaryName) {
 		binaryFileName = binaryName;
 	}
+	
 	public String getSampleFileName() {
 		return sampleTextFileName;
 	}
@@ -121,20 +135,18 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 							.makeAdmin();
 				} else {
 					Employee newEmployee = new EmployeeBuilder()
-							//.withEmployeeID(Integer.parseInt(fields[0]))
 							.withUsername(fields[0])
 							.withPassword(fields[1])
 							.withIsAdmin(adminStatus)
 							.makeEmployee();
 				} 
 			}
-			//reindex(oldArraySize);
-			//TODO this.employees.add(newUnverified)
 			cin.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
 	public int getRowIndex(String row) {
 		String firstIntInLinePattern = "^\\d+(?=\\W|\\|)";
         Pattern pattern = Pattern.compile(firstIntInLinePattern);
@@ -169,6 +181,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void writeToBinaryFile(boolean truncate) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -190,7 +203,6 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			data = new byte[size];
 			data = row.getBytes();
 			if (i == 0 && row.charAt(0) != 0) {
-				// TODO LOG: //System.out.println("reindexing EmployeeArray...");
 				reindex(0);
 			}
 			if (i == 0 && truncate) {
@@ -209,6 +221,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 			}
 		}
 	}
+	
 	public void appendToTextFile(Employee employee, boolean binary) {
 		File file = new File(textFileName);
 		try (
@@ -236,6 +249,7 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
     		System.out.println("Failed to write to binary file from UnverifiedEmployee.writeToTextFile method.");
     	} 
 	}
+	
 	public void appendToBinaryFile(Employee employee, boolean create) throws IOException {
 		File file = new File(binaryFileName);
 		Path path = Paths.get(binaryFileName);
@@ -266,9 +280,4 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 		}
 		return null;
 	}
-
-	/* // TODO Implement these
-	public boolean hasDuplicate(Employee e) { return false; } 
-	public static void rebase(String fileName) throws IOException {}
-	*/
 }

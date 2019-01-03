@@ -150,15 +150,12 @@ public class DBSetup {
         			c.getCheckingAccount().setPairedAccount(c.getSavingsAccount());
         			
         			customerDAO.addCustomerWithAccount(c, true);
-        			//accountDAO.addAccounts(c.getSavingsAccount(),  c.getCheckingAccount(),  true);
         		} else {
         			System.out.println("Customer and Account Containers are not the same size!");
         		} ++i;
         		
-        		//customerDAO.addCustomer(c, true);
         		c.printRowWithAccountInfo();
-        		 		
-        		//TODO make join table for customers and accounts
+
         	} 
         	numSampleCustomersInDB = customerDAO.getNumCustomers(true);
         	numSampleAccountsInDB = accountDAO.getNumAccounts(true);
@@ -267,6 +264,7 @@ public class DBSetup {
 		
 		Customer.sampleModeOff();
 		Employee.sampleModeOff();
+		Admin.sampleModeOff();
 		
 		Customer firstCustomer = new Customer(0, "customer", "password", "firstname", "lastname", 
     			"000-000-0000", "dontusethisdata@email.com", true, true, "employer", false, -1);
@@ -276,7 +274,7 @@ public class DBSetup {
 		customerDAO.updateCustomerAndAccounts(firstCustomer, false);
 		
     	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "unverified", "customer", 
-    			"000-000-0000", "dontusethisdata@email.com", true, true, "UCF employer");
+    			"000-000-0000", "dontusethisdata@email.com", true, true, "employed");
     	unverifiedCustomerDAO.addUnverifiedCustomer(firstUnverified, false);
     	
     	Employee firstEmployee = new Employee("employee", "password", false);
@@ -290,8 +288,8 @@ public class DBSetup {
 		
 		System.out.println();
 		System.out.println("Actual Table Sizes:");
-		//log.debug("Initial Table Sizes: " + util.getActualTableSizes());
 		util.printActualTableSizes();
+		
 		System.out.println();
 		System.out.println("Sample Table Sizes:");
 		util.printSampleTableSizes();

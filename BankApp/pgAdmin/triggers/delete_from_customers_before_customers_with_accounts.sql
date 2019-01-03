@@ -3,9 +3,7 @@ RETURNS TRIGGER AS
 $dc$
 	BEGIN
 		IF (TG_OP = 'DELETE') THEN
-			
 			DELETE FROM customers WHERE customer_id = OLD.customer_id;
-
 		END IF;
 		RETURN OLD;
 	END;
