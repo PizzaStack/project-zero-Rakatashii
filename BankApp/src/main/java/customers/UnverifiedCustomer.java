@@ -6,7 +6,7 @@ import model.UnverifiedCustomerContainer;
 import people.Person;
 import utility.Helpers;
 
-public class UnverifiedCustomer extends Person{
+public class UnverifiedCustomer extends Person {
 	static UnverifiedCustomerDAO unverifiedDAO = new UnverifiedCustomerDAO();
 	
 	protected String firstName = null;
@@ -20,7 +20,7 @@ public class UnverifiedCustomer extends Person{
 	
 	// TODO private static int numUnverifiedCustomers = unverifiedCustomerDAO.getNumUnverifiedCustomersInDB() + 1;
 	//CHANGE BACK TO THIS IF V DOESNT WORK! protected static int numUnverifiedCustomers = unverifiedDAO.getNumUnverifiedCustomers(false)+1;
-	protected static int numUnverifiedCustomers = unverifiedDAO.getMaxID(false);
+	protected static int numUnverifiedCustomers = unverifiedDAO.getMaxID(false)+1;
 	private int unverifiedID = numUnverifiedCustomers;
 	protected static int numTotalCustomers = 0;
 	
@@ -37,7 +37,6 @@ public class UnverifiedCustomer extends Person{
 		lastName = lName;
 		this.unverifiedID = numUnverifiedCustomers;
 		++numUnverifiedCustomers;
-		++numPeople;
 		if (unverifiedContainerIsSet && this.getClass() == UnverifiedCustomer.class) unverifiedContainer.push(this); // when customers call super, don't push them into unverified
 	}
 	public UnverifiedCustomer(int id, String firstName, String lastName, String telephone, String email, boolean isCitizen, boolean isEmployed, String employer) {

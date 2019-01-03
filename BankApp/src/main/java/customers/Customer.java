@@ -24,7 +24,7 @@ public class Customer extends UnverifiedCustomer{
 	
 	private boolean flagged = false;
 	private boolean joint = false;
-	private Customer jointCustomer = null;
+	protected Customer jointCustomer = null;
 	private int jointCustomerID = -1;
 	
 	// TODO private static int numCustomers = customerDAO.getNumCustomersInDB();
@@ -76,7 +76,7 @@ public class Customer extends UnverifiedCustomer{
 			if (customerContainerIsSet) customerContainer.push(this);
 		}
 
-		--numUnverifiedCustomers;
+		//--numUnverifiedCustomers;
 		if (this.hasSavingsAccount() == false) makeNewAccounts();
 	}
 	public static void passCustomerContainer(CustomerContainer customers) {

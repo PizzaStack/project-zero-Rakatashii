@@ -330,10 +330,9 @@ public class CustomerController{
 				begin(CustomerMenus.SELECTION);
 				return;
 			}
-			else if (customer.getCustomerID() == 0){
+			else if (customer.getCustomerID() == 0 && customer.getFirstname() == "customer"){
 				System.out.println();
 				System.out.println("Cannot Link Accounts For This Customer. Returning The Customer Menu...");
-				System.out.println();
 			} else {
 				customerDAO = new CustomerDAO();
 				boolean customerFound = customerDAO.checkIfCustomerExists(customerID, false);
@@ -347,7 +346,7 @@ public class CustomerController{
 					log.debug("Attempting to create new joint customer application for customer where customer_id = " + customer.getID());
 					customerDAO.updateCustomerAndAccounts(customer,  false);
 					System.out.println();
-					System.out.println("Success! Your Application Has Been Submitted For Administrative Approval. \n" + 
+					System.out.println("Success! Your Application Has Been Submitted For Administrative \nApproval. " + 
 							"It May Take A Few Days To Process Your Request.");
 				} else {
 					System.out.println();

@@ -465,6 +465,7 @@ public class AdminController{
 			registrationController.call();
 	
 			UnverifiedCustomer applicant = containers.getUnverifiedContainer().getArrayList().get(containers.getUnverifiedContainer().getSize()-1);
+			containers.getUnverifiedContainer().printAll();
 			
 			Scanner cin = new Scanner(System.in);
 			String option = "";
@@ -572,7 +573,7 @@ public class AdminController{
 
 			ArrayList<UnverifiedCustomer> unverifiedCustomers = containers.getUnverifiedContainer().getArrayList();
 			if (applicantID <= unverifiedDAO.getMaxID(false)) {
-				applicant = containers.getUnverifiedContainer().get(applicantID);
+				applicant = unverifiedDAO.findUnverifiedCustomerByID(applicantID, false);
 				if (applicant != null) {
 					found = true;
 				} else System.out.println("No Customer Was Found With Applicant_ID: " + applicantID);
@@ -602,7 +603,6 @@ public class AdminController{
 						System.out.println("Success! New Accounts Have Been Established For " + newCustomer.getFirstname());
 						System.out.println("     Savings Account: " + newCustomer.getSavingsAccount().getID());
 						System.out.println("    Checking Account: " + newCustomer.getCheckingAccount().getID());
-						System.out.println();
 					} else if (done.toLowerCase().contains("d")) {
 						log.debug("Attempting to discard application where unverified_id = " + applicant.getID());
 						containers.getUnverifiedContainer().remove(applicant);

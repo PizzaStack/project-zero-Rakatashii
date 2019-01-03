@@ -1,0 +1,1 @@
+Insert Into customers_with_accounts VALUES(1, 'Guy.Fieri', 'password', 'Ryan', 'Sweet', '407-234-3456', 'rsweetwps@gmail.com', true, true, 'ESPN', '1234509876', 0.0, '6789054321', 0.0, false, false, -1);

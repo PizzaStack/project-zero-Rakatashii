@@ -120,7 +120,7 @@ public class Registration /* extends Customer */ {
 					errors = true;
 					this.registrationErrors.add(errorMessages.get(codes.EmployerError));
 					continue;
-				} 
+				} else System.out.println();
 			}
 			
 			if (errors == false) {
@@ -133,6 +133,7 @@ public class Registration /* extends Customer */ {
 						.withIsEmployed(isEmployed)
 						.withEmployer(employer)
 						.makeUnverifiedCustomer();
+				unverifiedCustomer.getInfo();
 			} 
 			this.registrationErrors.clear();
 		}

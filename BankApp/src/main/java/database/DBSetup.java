@@ -268,21 +268,21 @@ public class DBSetup {
 		Customer.sampleModeOff();
 		Employee.sampleModeOff();
 		
-		Customer firstCustomer = new Customer(0, "Guy.Fieri", "password", "Ryan", "Sweet", 
-    			"407-234-3456", "rsweetwps@gmail.com", true, true, "ESPN", false, -1);
+		Customer firstCustomer = new Customer(0, "customer", "password", "firstname", "lastname", 
+    			"000-000-0000", "dontusethisdata@email.com", true, true, "employer", false, -1);
 		customerDAO.addCustomerWithAccount(firstCustomer, false);
 		firstCustomer.getSavingsAccount().deposit(10000.00);
 		firstCustomer.getCheckingAccount().deposit(1500.00);
 		customerDAO.updateCustomerAndAccounts(firstCustomer, false);
 		
-    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "Tim", "Leary", 
-    			"407-817-8117", "toleary@florida.edu", true, true, "UCF Medical School");
+    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "unverified", "customer", 
+    			"000-000-0000", "dontusethisdata@email.com", true, true, "UCF employer");
     	unverifiedCustomerDAO.addUnverifiedCustomer(firstUnverified, false);
     	
-    	Employee firstEmployee = new Employee("pokemonfreak", "charmanderbulbasaur", false);
+    	Employee firstEmployee = new Employee("employee", "password", false);
     	employeeDAO.addEmployee(firstEmployee, false);
     	
-    	Admin firstAdmin = new Admin("rakatashii", "password", true);
+    	Admin firstAdmin = new Admin("admin", "password", true);
     	adminDAO.addAdmin(firstAdmin, false);
 		
 		System.out.println();

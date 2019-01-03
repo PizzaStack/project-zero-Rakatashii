@@ -1,0 +1,1 @@
+select * from unverified_customers order by unverified_id;

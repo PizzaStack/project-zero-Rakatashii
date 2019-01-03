@@ -142,6 +142,41 @@ public class UnverifiedCustomerDAO implements UnverifiedCustomerDAOInterface {
         }
     }
     
+	public UnverifiedCustomer findUnverifiedCustomerByID(int id, boolean fromSampleTable) {
+		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
+		try {
+			connection = DBConnection.getConnection();
+			String sql = "SELECT * FROM " + tableName + " WHERE unverified_id = " + id + ";";
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				UnverifiedCustomer unverifiedCustomer = new CustomerBuilder()
+						.withID(rs.getInt(1))
+						.withFirstName(rs.getString(2))
+						.withLastName(rs.getString(3))
+						.withTelephone(rs.getString(4))
+						.withEmail(rs.getString(5))
+						.withIsCitizen(rs.getBoolean(6))
+						.withIsEmployed(rs.getBoolean(7))
+						.withEmployer(rs.getString(8)) 
+						.makeUnverifiedCustomer();
+
+				if (unverifiedCustomer != null) {
+					statement.close(); rs.close();
+					if (!fromSampleTable) log.debug("UnverifiedCustomer Found In Table " + tableName + " With unverified_id = " + id);
+					return unverifiedCustomer;
+				} else if (!fromSampleTable) {
+					statement.close(); rs.close();
+					log.debug("No UnverifiedCustomer Found In Table " + tableName + " With unverified_id = " + id);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace(); System.out.println();
+		}
+		return null;
+	}
+    
 	@Override
 	public int getNumUnverifiedCustomers(boolean fromSampleTable) {
 		String tableName = (fromSampleTable) ? "sample_unverified_customers" : "unverified_customers";
