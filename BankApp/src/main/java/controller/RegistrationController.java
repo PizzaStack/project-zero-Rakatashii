@@ -10,6 +10,7 @@ public class RegistrationController {
 	Containers containers;
 	String lineSeparator = MenuOptions.getLineSeparator();
 	String menuEndLine = MenuOptions.getMenuEndLine();
+	
 	public void call() throws InterruptedException {
 		Registration newCustomerInfo = new Registration();
 		UnverifiedCustomer newUnverifiedCustomer = newCustomerInfo.beginForm();

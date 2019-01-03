@@ -3,7 +3,10 @@ package com.BankApp;
 import org.junit.Before;
 import org.junit.Test;
 
+import accounts.CheckingAccount;
+import accounts.SavingsAccount;
 import controller.LoginController;
+import controller.RegistrationController;
 
 import static org.junit.Assert.*;
 
@@ -102,6 +105,14 @@ public class BankAppTest
 		assertTrue(customerContainer.getSize() == customers.size());
 		assertTrue(unverifiedContainer.getSize() > 0);
 		assertTrue(unverifiedContainer.getSize() == unverifiedCustomers.size());
+		employeeContainer = new EmployeeContainer<Employee>();
+		assertTrue(employeeContainer.getSize() == 0);
+		adminContainer = new EmployeeContainer<Employee>();
+		assertTrue(adminContainer.getSize() == 0);
+		customerContainer = new CustomerContainer();
+		assertTrue(customerContainer.getSize() == 0);
+		unverifiedContainer = new UnverifiedCustomerContainer<UnverifiedCustomer>();
+		assertTrue(unverifiedContainer.getSize() == 0);
 	}
 	
 	@Test
@@ -132,6 +143,7 @@ public class BankAppTest
     	assertFalse(match6);
     	assertFalse(match7);
     	assertFalse(match8);
+    	assertTrue(register.validLastName(name1) == true);
     	
     	String tele1, tele2, tele3, tele4, tele5, tele6, tele7, tele8;
     	tele1 = "321-321-1234";
@@ -178,6 +190,16 @@ public class BankAppTest
     	assertFalse(match4);
     	assertFalse(match5);
     	assertFalse(match6);
+    	
+    	assertTrue(register.validCitizenAnswer("y") == true);
+    	assertTrue(register.validCitizenAnswer("YES") == true);
+    	assertTrue(register.validEmployedAnswer("n") == true);
+    	assertTrue(register.validEmployedAnswer("NO") == true);
+    	assertFalse(register.validCitizenAnswer("ok") == true);
+    	assertFalse(register.validEmployedAnswer("nah") == true);
+    	
+    	assertTrue(register.validEmployer("Revature") == true);
+    	assertFalse(register.validEmployer("") == true);
 	}
 	@Test
 	public void TestJointAccounts() {
@@ -214,6 +236,9 @@ public class BankAppTest
 		assertTrue(customer1.getSavingsAccount().getID() == customer2.getSavingsAccount().getID());
 		assertTrue(customer1.getCheckingAccount().getID() == customer2.getCheckingAccount().getID());
 		
+		assertTrue(customer1.getSavingsAccount().getPairedAccount() == customer2.getCheckingAccount());
+		assertTrue(customer2.getCheckingAccount().getPairedAccount() == customer1.getSavingsAccount());
+		
 		customer1.flag();
 		assertTrue(customer1.isFlagged() == customer2.isFlagged());
 		customer2.unflag();
@@ -221,7 +246,15 @@ public class BankAppTest
 	}
 	
 	@Test
-	public void TestAccountTransfers() {
+	public void TestAccounts() {
+		SavingsAccount savings = new SavingsAccount();
+		assertTrue(savings.getBalance() == 0.0);
+		assertTrue(savings.getID().length() == 10);
+		
+		CheckingAccount checking = new CheckingAccount();
+		assertTrue(checking.getBalance() == 0.0);
+		assertTrue(checking.getID().length() == 10);
+		
 		assertTrue(customer1.hasSavingsAccount());
 		assertTrue(customer1.hasCheckingAccount());
 		assertTrue(customer1.getSavingsAccount().getBalance() == 0.0);
@@ -262,6 +295,11 @@ public class BankAppTest
 		assertTrue(customer1.getSavingsAccount().getBalance() == customer1.getCheckingAccount().getBalance());
 		assertFalse(customer1.isFlagged());
 		
+		customer1.getCheckingAccount().deposit(1000.0);
+		customer1.getCheckingAccount().transferToSavings(500.0);
+		assertTrue(customer1.getCheckingAccount().getBalance() == customer1.getSavingsAccount().getBalance());
+		assertFalse(customer1.isFlagged());
+		
 		String savingsID = customer1.getSavingsAccount().getID();
 		String checkingID = customer1.getCheckingAccount().getID();
 		customer1.makeNewAccounts();
@@ -291,6 +329,29 @@ public class BankAppTest
 		assertTrue(LoginController.getLoggedInAdmin() == null);
 		assertTrue(LoginController.getLoggedInUsername() == null);
 		assertTrue(LoginController.isLoggedIn() == false);
+	}
+	
+	@Test
+	public void testApproveUnverifiedCustomerApplication() {
+		UnverifiedCustomer unverified = new UnverifiedCustomer(-1, "unverified", "customer", "1234567890", "unverified@customer.com", 
+				true, true, "test company");
+		
+		Customer newCustomer = new CustomerBuilder()
+				.withFirstName(unverified.getFirstname())
+				.withLastName(unverified.getLastname())
+				.makeCustomer(unverified);
+		
+		assertTrue(unverified.getFirstname() == newCustomer.getFirstname());
+		assertTrue(unverified.getLastname() == newCustomer.getLastname());
+		assertTrue(unverified.getTelephone() == newCustomer.getTelephone());
+		assertTrue(unverified.getEmail() == newCustomer.getEmail());
+		assertTrue(unverified.getIsCitizen() == newCustomer.getIsCitizen());
+		assertTrue(unverified.getIsEmployed() == newCustomer.getIsEmployed());
+		assertTrue(unverified.getEmployer() == newCustomer.getEmployer());
+		assertTrue(unverified.isAdmin() == newCustomer.isAdmin() && unverified.isAdmin() == false);
+		
+		unverified.convertToCustomer(unverified.getFirstname(), unverified.getLastname());
+		assertTrue(customerContainer.getSize() > unverifiedContainer.getSize());
 	}
 }
 
