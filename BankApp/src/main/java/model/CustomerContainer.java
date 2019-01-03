@@ -323,12 +323,12 @@ public class CustomerContainer implements PersonContainer<Person>{
 
 	public Customer verifyLoginCredentials(String username, String password) {
 		for (Customer c : customers) {
-			if (c.getUsername().equals(username) && c.getPassword().equals(password))
+			if (c.getUsername().toLowerCase().equals(username.toLowerCase()) && c.getPassword().equals(password))
 				return c;
 		}
 		DBCustomers = new CustomerDAO().getAllCustomers(Customer.sampleMode);
 		for (Customer c : DBCustomers) {
-			if (c.getUsername().equals(username) && c.getPassword().equals(password))
+			if (c.getUsername().toLowerCase().equals(username.toLowerCase()) && c.getPassword().equals(password))
 				return c;
 		}
 		return null;

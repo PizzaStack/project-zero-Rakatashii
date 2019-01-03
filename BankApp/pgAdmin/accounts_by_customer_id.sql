@@ -1,0 +1,1 @@
+select * from accounts order by customer_id;

@@ -70,7 +70,7 @@ public class MainMenuController {
 				isVerified = login.loginAsCustomer(customerContainer, null, null);
 			if (isVerified == true) {
 				customerController.begin(CustomerMenus.SELECTION);
-			} else System.out.println("Error. Customer could not be verified.");
+			} else System.out.println("\nError: Customer could not be verified.");
 			return;
 			
 		} else if (selection == 3) {
@@ -89,7 +89,7 @@ public class MainMenuController {
 				isVerified = login.loginAsEmployee(employeeContainer, null, null);
 			if (isVerified == true) {
 				employeeController.begin(EmployeeMenus.SELECTION);
-			} else System.out.println("Error. Employee could not be verified.");
+			} else System.out.println("\nError: Employee could not be verified.");
 			return;
 			
 		} else if (selection == 4) {
@@ -108,7 +108,7 @@ public class MainMenuController {
 				isVerified = login.loginAsAdmin(adminContainer, null, null);
 			if (isVerified == true) {
 				adminController.begin(AdminMenus.SELECTION);
-			} else System.out.println("Error. Admin could not be verified.");
+			} else System.out.println("\nError: Admin could not be verified.");
 			return;
 			
 		}

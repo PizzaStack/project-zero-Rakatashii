@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
+import com.BankApp.BankApp;
+
 import DAO.AccountDAO;
 import DAO.AdminDAO;
 import DAO.CustomerDAO;
@@ -36,6 +40,8 @@ public class DBSetup {
 	UnverifiedCustomerDAO unverifiedCustomerDAO = null;
 	EmployeeDAO employeeDAO = null;
 	AdminDAO adminDAO = null;
+	
+	final Logger log = Logger.getLogger(DBSetup.class);
 	
 	public DBSetup(boolean printToLog) {
 		customerDAO = new CustomerDAO();
@@ -262,21 +268,21 @@ public class DBSetup {
 		Customer.sampleModeOff();
 		Employee.sampleModeOff();
 		
-		Customer firstCustomer = new Customer(0, "customer", "password", "firstname", "lastname", 
-    			"telephone", "email", true, true, "employer", false, -1);
+		Customer firstCustomer = new Customer(0, "Guy.Fieri", "password", "Ryan", "Sweet", 
+    			"407-234-3456", "rsweetwps@gmail.com", true, true, "ESPN", false, -1);
 		customerDAO.addCustomerWithAccount(firstCustomer, false);
 		firstCustomer.getSavingsAccount().deposit(10000.00);
 		firstCustomer.getCheckingAccount().deposit(1500.00);
 		customerDAO.updateCustomerAndAccounts(firstCustomer, false);
 		
-    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "unverified", "customer", 
-    			"000-000-0000", "email@address.com", true, true, "employer");
+    	UnverifiedCustomer firstUnverified = new UnverifiedCustomer(0, "Tim", "Leary", 
+    			"407-817-8117", "toleary@florida.edu", true, true, "UCF Medical School");
     	unverifiedCustomerDAO.addUnverifiedCustomer(firstUnverified, false);
     	
-    	Employee firstEmployee = new Employee("employee", "password");
+    	Employee firstEmployee = new Employee("pokemonfreak", "charmanderbulbasaur", false);
     	employeeDAO.addEmployee(firstEmployee, false);
     	
-    	Admin firstAdmin = new Admin("admin", "password");
+    	Admin firstAdmin = new Admin("rakatashii", "password", true);
     	adminDAO.addAdmin(firstAdmin, false);
 		
 		System.out.println();
@@ -284,6 +290,7 @@ public class DBSetup {
 		
 		System.out.println();
 		System.out.println("Actual Table Sizes:");
+		//log.debug("Initial Table Sizes: " + util.getActualTableSizes());
 		util.printActualTableSizes();
 		System.out.println();
 		System.out.println("Sample Table Sizes:");

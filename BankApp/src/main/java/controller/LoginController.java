@@ -74,6 +74,7 @@ public class LoginController {
 			
 			verified = (loggedInCustomer != null) ? true : false;
 			if (verified) { 
+				this.username = loggedInCustomer.getUsername();
 				System.out.println("\nSuccess! Welcome " + this.username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 
 				logInAs(username);
@@ -107,6 +108,7 @@ public class LoginController {
 			verified = (loggedInEmployee != null) ? true : false;
 			
 			if (verified) { 
+				this.username = loggedInEmployee.getUsername();
 				System.out.println("\nSuccess! Welcome " + this.username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 
 				logInAs(this.username);
@@ -140,6 +142,7 @@ public class LoginController {
 			verified = (loggedInAdmin != null) ? true : false;
 			
 			if (verified) { 
+				this.username = loggedInAdmin.getUsername();
 				System.out.println("\nSuccess! Welcome " + this.username + "."); 
 				if (!isLoggedIn()) Thread.sleep(2000); 
 				logInAs(this.username);

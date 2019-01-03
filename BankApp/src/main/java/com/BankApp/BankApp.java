@@ -49,6 +49,13 @@ import model.UnverifiedCustomerContainer;
 
 public class BankApp 
 {
+	
+	/* LOGIN INFO:
+	 *  Customer  username = "Guy.Fieri",    password = "password"
+    	Employee  username = "pokemonfreak", password = "charmanderbulbasaur"
+    	Admin     username = "rakatashii",   password = "password"
+	*/
+	
     public static void main( String[] args ) throws SQLException, FileNotFoundException, ClassNotFoundException, InterruptedException {
     	PropertyConfigurator.configure(System.getProperty("user.dir") + File.separator +
     			"\\src\\main\\java\\resources\\log4j.properties");
@@ -99,28 +106,4 @@ public class BankApp
     	System.out.println("Program Terminated.");
     	log.debug("Program Reached End.");
     }
-    
-    /** TODO Checklist
-     * Normalize tables (prob skip at this point...)
-     * Way More More Tests
-     * May want to add triggers to sample tables as well
-       - may want to automatically generate triggers if possible
-     
-        TODO (OPTIONAL)
-     * set up H2
-     * DB Testing
-     * Look into Serialization
-     * Expand database features
-    
-   		TODO Presentation
-     * MVC may not be optimal. May be better to organize in a way that would exploit Java's
-       strengths - i.e., grouping related classes in the same package. 
-       - Evident especially in problems arising from having the controllers and views
-           communicate with one another between packages.
-     * Stored Procedure Is Utilized in Triggers - one for accounts one for customers, which have the same fields as 
-       customers_with_accounts.
-       - Using the triggers, queries are faster on the customers and accounts tables, while can still insert to 
-       all three by inserting to customers_with_accounts
-    */
-    
 }

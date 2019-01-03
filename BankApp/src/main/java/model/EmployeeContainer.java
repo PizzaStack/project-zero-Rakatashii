@@ -256,12 +256,12 @@ public class EmployeeContainer<T> implements PersonContainer<Person>{
 	
 	public Employee verifyLoginCredentials(String username, String password) {
 		for (Employee e : employees) {
-			if (e.getUsername().equals(username) && e.getPassword().equals(password))
+			if (e.getUsername().toLowerCase().equals(username.toLowerCase()) && e.getPassword().equals(password))
 				return e;
 		}
 		DBEmployees = new EmployeeDAO().getAllEmployees(Employee.sampleMode);
 		for (Employee e : DBEmployees) {
-			if (e.getUsername().equals(username) && e.getPassword().equals(password))
+			if (e.getUsername().toLowerCase().equals(username.toLowerCase()) && e.getPassword().equals(password))
 				return e;
 		}
 		return null;

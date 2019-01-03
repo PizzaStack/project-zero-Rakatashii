@@ -30,19 +30,20 @@ public class Registration /* extends Customer */ {
 	private String isEmployedAnswer = null;
 	private String employer = null;
 
-	enum codes { FN, LN, T, EM, C, EMPLD, EMPLR }; // just use exceptions...
+	enum codes { FirstnameError, LastnameError, TelephoneError, EmailError, USCitizenError, 
+		EmployedError, EmployerError }; // just use exceptions...
 	Hashtable<codes, String> errorMessages = new Hashtable<codes, String>();	
 	private ArrayList<String> registrationErrors = new ArrayList<String>();
 	
 	Scanner cin;
 	
 	public Registration() { 
-		errorMessages.put(codes.FN, "Invalid first name.");
-		errorMessages.put(codes.LN, "Invalid last name.");
-		errorMessages.put(codes.T, "Invalid telephone number.");
-		errorMessages.put(codes.EM, "Invalid email address.");
-		errorMessages.put(codes.EMPLD, "Invalid input (\"Are you currently isEmployed\").");
-		errorMessages.put(codes.EMPLR, "If you selected \"Yes\" for \'isEmployed\' field, you must specify employer.");
+		errorMessages.put(codes.FirstnameError, "Invalid first name.");
+		errorMessages.put(codes.LastnameError, "Invalid last name.");
+		errorMessages.put(codes.TelephoneError, "Invalid telephone number.");
+		errorMessages.put(codes.EmailError, "Invalid email address.");
+		errorMessages.put(codes.EmployedError, "Invalid input (\"Are you currently isEmployed\").");
+		errorMessages.put(codes.EmployerError, "If you selected \"Yes\" for \'isEmployed\' field, you must specify \nyour employer's name.");
 	}
 	
 	public UnverifiedCustomer beginForm() throws InterruptedException {
@@ -50,8 +51,7 @@ public class Registration /* extends Customer */ {
 		
 		@SuppressWarnings("resource")
 		Scanner cin = new Scanner(System.in);
-		
-		//System.out.println();
+	
 		while (errors || registrationErrors.size() > 0) {
 			
 			if (errors && registrationErrors.size() > 0) {
@@ -70,7 +70,7 @@ public class Registration /* extends Customer */ {
 			this.firstName = cin.nextLine();
 			if (!(validFirstName(firstName))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.FN));
+				this.registrationErrors.add(errorMessages.get(codes.FirstnameError));
 				continue;
 			} else System.out.println();
 			
@@ -78,14 +78,14 @@ public class Registration /* extends Customer */ {
 			this.lastName = cin.nextLine();
 			if (!(validLastName(lastName))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.LN));
+				this.registrationErrors.add(errorMessages.get(codes.LastnameError));
 				continue;
 			} else System.out.println();
 			System.out.print(Symbols.asterisk3 + "  Telephone: ");
 			this.telephone = cin.nextLine();
 			if (!(validTelephone(telephone))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.T));
+				this.registrationErrors.add(errorMessages.get(codes.TelephoneError));
 				continue;
 			} else System.out.println();
 			
@@ -93,7 +93,7 @@ public class Registration /* extends Customer */ {
 			this.email = cin.nextLine();
 			if (!(validEmail(email))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.EM));
+				this.registrationErrors.add(errorMessages.get(codes.EmailError));
 				continue;
 			} else System.out.println();
 			
@@ -101,7 +101,7 @@ public class Registration /* extends Customer */ {
 			this.citizenAnswer = cin.nextLine();
 			if (!(validCitizenAnswer(citizenAnswer))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.C));
+				this.registrationErrors.add(errorMessages.get(codes.USCitizenError));
 				continue;
 			} else System.out.println();
 			
@@ -109,7 +109,7 @@ public class Registration /* extends Customer */ {
 			this.isEmployedAnswer = cin.nextLine();
 			if (!(validEmployedAnswer(isEmployedAnswer))) {
 				errors = true;
-				this.registrationErrors.add(errorMessages.get(codes.EMPLD));
+				this.registrationErrors.add(errorMessages.get(codes.EmployedError));
 				continue;
 			} else System.out.println();
 			
@@ -118,11 +118,10 @@ public class Registration /* extends Customer */ {
 				this.employer = cin.nextLine();
 				if (!(validEmployer(employer))){
 					errors = true;
-					this.registrationErrors.add(errorMessages.get(codes.EMPLR));
+					this.registrationErrors.add(errorMessages.get(codes.EmployerError));
 					continue;
 				} 
 			}
-			//System.out.println();
 			
 			if (errors == false) {
 				unverifiedCustomer = new CustomerBuilder()
@@ -148,7 +147,6 @@ public class Registration /* extends Customer */ {
 		return false;
 	}
 	public boolean validLastName(String lastName) {
-		//String name_pattern = "[a-zA-Z]{0,20}";
 		if (lastName != null && lastName.length() > 0 && lastName.length() <= 20) {
 			if (lastName.matches(this.name_pattern))
 				return true;
@@ -194,8 +192,9 @@ public class Registration /* extends Customer */ {
 		return false;
 	}
 	public boolean validEmployer(String employer) {
+		String pattern = "[a-zA-Z ]{0,20}";
 		if (employer != null && employer.length() > 0 && employer.length() <= 40) {
-			if (employer.matches(name_pattern))
+			if (employer.matches(pattern))
 				return true;
 		}
 		return false;
